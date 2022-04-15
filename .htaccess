@@ -1,0 +1,12 @@
+Options +FollowSymLinks
+RewriteEngine on
+
+#Manda todos los parámetros, como wordpress
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule . /index.php?%{QUERY_STRING} [L,NC]
+
+#manda tres parámetros
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)$ index.php?&accion=$1&%{QUERY_STRING} [NC,L]

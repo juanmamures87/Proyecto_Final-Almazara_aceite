@@ -6,7 +6,7 @@
     el controlador por defecto que se va a utilizar y la acción que se va a coger por defecto respectivamente*/
     const CONTROLADOR_DIRECTORIO = "controlador/";
     const CONTROLADOR_DEFECTO = "inicio";
-    const ACCION_DEFECTO = "comenzar";
+    const ACCION_DEFECTO = "portada";
 
     /*******************************VARIABLES CONTROLADAS CON GET, POST O SESSION****************************************/
 
