@@ -32,7 +32,7 @@
 
     function accesoSocios(){
 
-        require_once "vista/accesoSocios.html";
+        require_once "vista/accesoSocios.php";
 
     }
 

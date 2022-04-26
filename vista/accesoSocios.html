@@ -105,18 +105,18 @@
       <div class="limiter" id="loginSocios">
         <div class="container-login100">
           <div class="wrap-login100">
-            <form class="login100-form validate-form p-l-55 p-r-55 p-t-178" method="post" action="index/socios">
+            <form class="login100-form validate-form p-l-55 p-r-55 p-t-178" method="post" action="index.php">
 					<span class="login100-form-title">
 						Iniciar sesión
 					</span>
 
               <div class="wrap-input100 dni validate-input m-b-16">
-                <input class="input100 dni" type="text" maxlength="9" name="dni" placeholder="Dni">
+                <input class="input100 dni" type="text" maxlength="9" name="dni" id="dni" placeholder="Dni">
                 <span class="focus-input100"></span>
               </div>
 
               <div class="wrap-input100 pass validate-input">
-                <input class="input100 pass" type="password" name="pass" placeholder="Contraseña">
+                <input class="input100 pass" type="password" name="pass" id="pass" placeholder="Contraseña">
                 <span class="focus-input100"></span>
               </div>
 
@@ -135,8 +135,8 @@
                   Iniciar sesión
                 </button>
               </div>
-              <input type="hidden" name="controlador" value="login">
-              <input type="hidden" name="accion" value="inicioAdmin">
+              <input type="hidden" id="controlador" name="controlador" value="login">
+              <input type="hidden" id="accion" name="accion" value="inicioAdmin">
             </form>
           </div>
         </div>
