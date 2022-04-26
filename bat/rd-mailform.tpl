@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head> 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="initial-scale=1.0" />
@@ -76,7 +76,7 @@
                           <td height="30" style="height: 30px; line-height:30px;"></td>
                         </tr>
                         <tr>
-                          <td align="left" valign="top" style="font-family: Arial, sans-serif; font-size: 32px; mso-line-height-rule: exactly; line-height: 32px; font-weight: 400; letter-spacing: 1px;color: #ffffff;">Notification</td>
+                          <td align="left" valign="top" style="font-family: Arial, sans-serif; font-size: 32px; mso-line-height-rule: exactly; line-height: 32px; font-weight: 400; letter-spacing: 1px;color: #ffffff;">Notificación</td>
                         </tr>
                         <tr>
                           <td height="30" style="height: 30px; line-height:30px;"></td>
@@ -91,7 +91,7 @@
                           <td height="30" style="height: 30px; line-height:30px;"></td>
                         </tr> 
                         <tr> 
-                          <td align="left" valign="top" style="font-family: Arial, sans-serif; font-size: 14px; mso-line-height-rule: exactly; line-height: 22px; font-weight: 400;color: #302f35;">Hi, someone left a message for you at <!-- #{SiteName} --></td> 
+                          <td align="left" valign="top" style="font-family: Arial, sans-serif; font-size: 14px; mso-line-height-rule: exactly; line-height: 22px; font-weight: 400;color: #302f35;">Hola, alguien te dejo un mensaje en <!-- #{SiteName} --></td>
                         </tr>
                         <tr> 
                           <td height="20" style="height: 20px; line-height:20px;"></td>
@@ -180,7 +180,7 @@
               <td width="600" align="center" valign="top">
                 <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
                   <tr>
-                    <td align="center" valign="top" style="font-family: Arial, sans-serif; font-size: 12px; mso-line-height-rule: exactly; line-height: 18px; font-weight: 400;color: #a1b4c4;">This is an automatically generated email, please do not reply.</td>
+                    <td align="center" valign="top" style="font-family: Arial, sans-serif; font-size: 12px; mso-line-height-rule: exactly; line-height: 18px; font-weight: 400;color: #a1b4c4;">Este es un correo electrónico generado automáticamente, por favor no responda.</td>
                   </tr>
                 </table>
               </td>

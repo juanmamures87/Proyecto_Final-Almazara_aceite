@@ -10,3 +10,4 @@ RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.+)$ index.php?&accion=$1&%{QUERY_STRING} [NC,L]
+RewriteRule ^index/socios$ index.php?dni=$1&pass=$2&controlador=$3&accion=$4&%{QUERY_STRING} [NC,L]

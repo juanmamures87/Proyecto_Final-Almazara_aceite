@@ -1,2 +1,5 @@
 
-var enlaceQuienesSomosInicio = document.getElementById("enlaceQuienesSomosInicio");
+/********************************** CÓDIGO INTRODUCIDO POR JUANMA ****************************************************/
+/*********************************************************************************************************************/
+const contenedorRegistroInicio = document.getElementById("contenedorRegistroInicio");
+

@@ -23,3 +23,17 @@
         require_once "vista/contacto.html";
 
     }
+
+    function tienda(){
+
+        require_once "vista/tienda.html";
+
+    }
+
+    function accesoSocios(){
+
+        require_once "vista/accesoSocios.html";
+
+    }
+
+

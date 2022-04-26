@@ -1,12 +1,19 @@
 <?php
 
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\SMTP;
+    use PHPMailer\PHPMailer\Exception;
+
+    require_once "./PHPMailerClase/src/Exception.php";
+    require_once "./PHPMailerClase/src/PHPMailer.php";
+    require_once "./PHPMailerClase/src/SMTP.php";
+
 $formConfigFile = file_get_contents("rd-mailform.config.json");
 $formConfig = json_decode($formConfigFile, true);
 
 date_default_timezone_set('Etc/UTC');
 
 try {
-    require './phpmailer/PHPMailerAutoload.php';
 
     $recipients = $formConfig['recipientEmail'];
 
@@ -26,25 +33,25 @@ try {
         return $_SERVER['REMOTE_ADDR'];
     }
 
-    if (preg_match('/^(127\.|192\.168\.)/', getRemoteIPAddress())) {
+    /*if (preg_match('/^(127\.|192\.168\.)/', getRemoteIPAddress())) {
         die('MF002');
-    }
+    }*/
 
     $template = file_get_contents('rd-mailform.tpl');
 
     if (isset($_POST['form-type'])) {
         switch ($_POST['form-type']){
             case 'contact':
-                $subject = 'A message from your site visitor';
+                $subject = 'Un mensaje del visitante de su sitio';
                 break;
             case 'subscribe':
-                $subject = 'Subscribe request';
+                $subject = 'Solicitud de suscripción';
                 break;
             case 'order':
-                $subject = 'Order request';
+                $subject = 'Solicitud de orden';
                 break;
             default:
-                $subject = 'A message from your site visitor';
+                $subject = 'Un mensaje del visitante de su sitio';
                 break;
         }
     }else{
@@ -82,7 +89,7 @@ try {
         array($subject, $_SERVER['SERVER_NAME']),
         $template);
 
-    $mail = new PHPMailer();
+    $mail = new PHPMailer(true);
 
 
     if ($formConfig['useSmtp']) {
