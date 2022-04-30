@@ -33,6 +33,10 @@
     <link rel="stylesheet" href="../css/style.css">
   </head>
   <body>
+
+  <div id="errorSocios"><span id="msgErrorLogin"><?php if (isset($error)) { echo $error; } ?></span></div>
+  <div><i class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i></div>
+
     <div class="preloader">
       <div class="preloader-body">
         <div class="cssload-container"><span></span><span></span><span></span><span></span>
@@ -40,9 +44,9 @@
       </div>
     </div>
     <div class="page">
-      <!-- Page Header-->
+      <!-- Header de la página-->
       <header class="section page-header">
-        <!-- RD Navbar-->
+        <!-- Menú de nave-->
         <div class="rd-navbar-wrap rd-navbar-modern-wrap">
           <nav class="rd-navbar rd-navbar-modern" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-fixed" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-xxl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static" data-lg-stick-up-offset="46px" data-xl-stick-up-offset="46px" data-xxl-stick-up-offset="70px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
             <div class="rd-navbar-main-outer">
@@ -136,7 +140,7 @@
                 </button>
               </div>
               <input type="hidden" id="controlador" name="controlador" value="login">
-              <input type="hidden" id="accion" name="accion" value="inicioAdmin">
+              <input type="hidden" id="accion" name="accion" value="inicioSocios">
             </form>
           </div>
         </div>
@@ -158,7 +162,7 @@
     <!--===============================================================================================-->
     <script src="../vendorLoginSocios/countdowntime/countdowntime.js"></script>
     <!--===============================================================================================-->
-    <script src="../js/scriptSocios.js"></script>
+    <script src="../js/accesoSocios.js"></script>
     <script src="../js/core.min.js"></script>
     <script src="../js/script.js"></script>
   </body>

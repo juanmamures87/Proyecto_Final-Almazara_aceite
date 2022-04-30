@@ -125,3 +125,60 @@ function quitaAlerta(campo,alerta) {
     })
 
 }
+
+/***************************** MENSAJES DE ERROR *********************************************/
+
+//referencia a la ventana de error y el botón de cerrar esta ventana
+const ventanaError = $("#errorSocios");
+const cerrarError = $(".fa.fa-times-circle-o.fa-2x");
+const msgErrorLogin = $("#msgErrorLogin");
+
+//Por defecto el mensaje de error está oculto
+cerrarError.hide();
+ventanaError.hide();
+
+if(msgErrorLogin.text() !== ""){
+
+    mostrarMsgError(msgErrorLogin.text())
+    ocultarMsgRetardo();
+    msgErrorLogin.text("");
+
+}
+//Función para ocultar el mensaje de error en cualquier momento.
+function ocultarMsgError() {
+
+    if (ventanaError.is(':visible')){
+
+        cerrarError.slideUp(200);
+        ventanaError.slideUp(200);
+
+    }
+
+}
+
+//Función para ocultar los mensajes de error con un retardo de 2000 milisegundos
+function ocultarMsgRetardo() {
+
+    setTimeout(ocultarMsgError,3000);
+
+}
+
+//Función para mostrar el mensaje de error en cualquier momento, pasándole como parámetro el mensaje deseado.
+function mostrarMsgError(mensaje) {
+
+    cerrarError.slideDown(200);
+    ventanaError.slideDown(200);
+    ventanaError.text(mensaje);
+
+}
+
+//Evento sobre el botón que cierra el mensaje de error o el mensaje correcto.
+cerrarError.on('click',function () {
+
+    ventanaError.slideUp(200);
+    cerrarError.slideUp(200);
+
+});
+
+
+/*******************************************************************************************************************/

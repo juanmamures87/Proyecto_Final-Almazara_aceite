@@ -2445,4 +2445,4 @@ Popper.Defaults = Defaults;
 return Popper;
 
 })));
-//# sourceMappingURL=popper.js.map
+// sourceMappingURL=popper.js.map Quite la almohadilla que crea como una anotación

@@ -394,3 +394,23 @@ iframe {
     padding-right: 15px;
   }
 }
+
+/************************* Estilos añadidos por JUANMA *********************************/
+/***************************************************************************************/
+
+/************************** Mensaje de error enviado por el controlador *****************************/
+#errorSocios{position: sticky;
+  top: 0;
+  width: 100%;
+  height: 50px;
+  background-color: red;
+  border-radius: 10px;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold}
+
+.fa.fa-times-circle-o.fa-2x{position: fixed;
+  background-color: lightgrey;
+  top: 8px;
+  right: 5px;
+  border-radius: 100%}
