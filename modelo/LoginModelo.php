@@ -21,7 +21,7 @@
 
             try {
 
-                $sql = "SELECT u.id_usuario, u.nombre, u.apellidos, u.password, u.activo, s.id_socio, s.tipo_socio FROM usuarios u 
+                $sql = "SELECT u.id_usuario, u.nombre, u.apellidos, u.dni, u.password, u.activo, s.id_socio, s.tipo_socio FROM usuarios u 
                         INNER JOIN socios s ON u.id_usuario = s.id_usuario WHERE lower(u.dni) LIKE lower('$dni')";
                 $resultado = $conexion->query($sql);
                 if ($resultado->rowCount() !== 0){

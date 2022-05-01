@@ -24,6 +24,11 @@ body {
     display: block;
 }
 
+/* El primer elemento del sidenav por defecto está seleccionado y tiene subrayado y color */
+.sidenav h3:first-child{text-decoration: underline;
+    color: #ecec81;
+}
+
 /*Cuando se pasa el mouse sobre los enlaces de navegación, cambia su color*/
 .sidenav h3:hover {
     color: #ecec81;
@@ -56,3 +61,44 @@ body {
 
     .sidenav a {font-size: 18px;}
 }
+
+/******************************** CONTENEDOR DE TODOS LOS APARTADOS DEL ADMINISTRADOR *****************************/
+
+#contenedorAccionesAdmin{display: grid;
+    width: 89.6%;
+    height: 91vh;
+    background-color: #fafae7;
+    position: relative;
+    top: 70px;
+    left: 160px}
+
+#contenedorAccionesAdmin>article{
+    display: grid;
+    margin: 5px 5px 5px 5px;
+    grid-template-areas: "titulo titulo"
+                         "registro mostrar"
+                         "registro mostrar"
+                         "registro mostrar"
+                         "registro mostrar"
+                         "registro mostrar"
+                         "registro mostrar"
+                         "registro mostrar"
+                         "registro mostrar"
+                         "registro mostrar";
+    grid-template-columns: 0.70fr 2.30fr;
+    grid-template-rows: 0.05fr;
+    column-gap: 10px;
+    overflow-y: scroll;}
+
+.tituloSeccion{display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    grid-area: titulo;}
+.registroSeccion{background-color: greenyellow;
+    grid-area: registro;}
+
+#registroSeccionSocios{overflow-y: scroll;}
+
+.muestraSeccion{background-color: gray;
+    grid-area: mostrar;}

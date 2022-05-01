@@ -4,7 +4,7 @@
 
         session_start();
         session_destroy();
-        header("location: portada");
+        header("location: accesoSocios");
 
     }
 
