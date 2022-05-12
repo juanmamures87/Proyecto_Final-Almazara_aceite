@@ -11,7 +11,9 @@
         public function __construct(){
 
             $this->id_socio = null;
+            $this->tipo_socio = "común";
             $this->fecha_alta = date('Y-m-d');
+            $this->fecha_baja = null;
 
         }
 

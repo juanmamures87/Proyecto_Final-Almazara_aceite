@@ -6,6 +6,7 @@
 
     function inicioSocios(){
 
+        //Si la el dni y la contraseña que se le proporciona al socio concuerdan, puede acceder.
         if (isset($_POST['dni'], $_POST['pass']) && !empty($_POST['dni']) && !empty($_POST['pass'])){
 
             $dni = $_POST['dni'];
@@ -15,6 +16,7 @@
 
             $admin = $logeos->aceptarSocioLogin($dni,$pass);
 
+            //Si puede acceder y es tipo admin, accede a la página del administrador
             if ($admin['codigo'] === 1 && $admin['usuario']->tipo_socio === "admin"){
 
                 session_start();
@@ -24,6 +26,20 @@
                 $tipoUsuario = $admin['usuario']->tipo_socio;
                 $dni = $admin['usuario']->dni;
 
+                /*Llamamos a las funciones correspondientes que nos mostrarán en la vista del admin la variedad
+                de aceituna y el sistema de cultivo para registrar las parcelas*/
+                require_once "modelo/ParcelaModelo.php";
+                $parcelas = new ParcelaModelo();
+                $variedad = $parcelas->mostrarVariedadAceituna();
+                $sistema = $parcelas->mostrarSistemaCultivo();
+
+                //Llamamos a la función para mostrar todos los socios en la página del administrador
+                require_once "modelo/SocioModelo.php";
+                $socios = new SocioModelo();
+                $mostrarSocios = $socios->mostrarSocios();
+
+                //A continuación obtenemos el servicio web del catastro que nos proporciona las provincias de España.
+                //Obtenemos una variable que almacena todos los datos y la pasamos a la vista.
                 // Crear un cliente apuntando al script del servidor (Creado con WSDL)
                 $cliente = new nusoap_client('https://ovc.catastro.meh.es/ovcservweb/ovcswlocalizacionrc/ovccallejero.asmx?wsdl', 'wsdl');
                 //http://tempuri.org/OVCServWeb/OVCCallejero/ConsultaProvincia
@@ -60,7 +76,7 @@
 
                 require_once "vista/admin.php";
 
-            }elseif ($admin['codigo'] === 1 && $admin['usuario']->tipo_socio === "comun"){
+            }elseif ($admin['codigo'] === 1 && $admin['usuario']->tipo_socio === "común"){
 
                 session_start();
 

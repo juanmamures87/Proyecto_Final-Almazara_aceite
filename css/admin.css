@@ -1,24 +1,32 @@
 
+*{box-sizing: border-box;
+    margin: 0;
+    padding: 0}
+
+html{height: 100%}
+
 body {
     font-family: "Lato", sans-serif;
+    min-height: 100%;
 }
 
-.sidenav {
-    height: 100%; /*Altura completa: eliminar esto para una altura "automática"*/
-    width: 160px; /*Establecer el ancho de la barra lateral*/
+/*Tamaño del header*/
+.navbar-expand-sm{height: 50px;
+    background-color: lightgray}
+
+/*Navegador con las diferentes secciones*/
+.sidenav {display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 50px; /*Altura completa: eliminar esto para una altura "automática"*/
+    width: 100%; /*Establecer el ancho de la barra lateral*/
     position: fixed; /*Barra lateral fija (permanece en su sitio al desplazar la página)*/
-    z-index: 1; /*Hace que permanezca en la parte superior*/
-    top: 70px;
-    left: 0;
+    top: 50px;
     background-color: green;
-    overflow-x: hidden; /*Desactiva el scroll horizontal*/
-    padding-top: 20px;
 }
 
 /* *************** ENLACES Y BOTÓN DE CIERRE DE SESIÓN DEL MENÚ DE NAVEGACIÓN ***********************/
 .sidenav h3 {
-    padding: 6px 8px 6px 16px;
-    text-decoration: none;
     font-size: 25px;
     color: white;
     display: block;
@@ -38,67 +46,148 @@ body {
 
 /*Botón de cierre de sesión del panel del administrador*/
 #cierreSesionAdmin{
-    width: 150px;
-    margin: 50px 5px auto 5px;
+    font-size: 12px;
+    width: 100px;
 }
 
-/*En pantallas más pequeñas, donde la altura es inferior a 450 px, cambie el estilo de la barra lateral
-(menos relleno y un tamaño de fuente más pequeño)*/
-@media screen and (max-width: 850px){
-    .sidenav {padding-top: 15px;}
+/************************** ESTILO DE LOS MENSAJES DE ERROR Y CONFIRMACIÓN ***************************************/
 
-    #navegador{display: flex;
-        flex-direction: column;
-        align-items: flex-start}
+#error{position: absolute;
+    top: 90%;
+    right: 0;
+    min-width: 50%;
+    height: 40px;
+    background-color: red;
+    border-radius: 10px;
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+    z-index: 5;}
 
-    .navbar h3{font-size: 16px;}
+#correcto{position: absolute;
+    top: 90%;
+    right: 0;
+    min-width: 50%;
+    height: 40px;
+    background-color: limegreen;
+    border-radius: 10px;
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+    z-index: 5;}
 
-    img{position: absolute;
-        top: 600px;
-        left: 12%}
-
-    #nombreAdmin, #fechaHoraAdmin{font-size: 14px}
-
-    .sidenav a {font-size: 18px;}
-}
-
+.fa.fa-times-circle-o.fa-2x{position: absolute;
+    background-color: lightgrey;
+    top: 90.5%;
+    right: 5px;
+    border-radius: 100%;
+    z-index: 5;}
+/********************************************************************************************************************/
 /******************************** CONTENEDOR DE TODOS LOS APARTADOS DEL ADMINISTRADOR *****************************/
+/********************************************************************************************************************/
 
-#contenedorAccionesAdmin{display: grid;
-    width: 89.6%;
-    height: 91vh;
+/*Sección principal que contiene todos los articles*/
+#contenedorAccionesAdmin{
     background-color: #fafae7;
-    position: relative;
-    top: 70px;
-    left: 160px}
+    height: 600px;
+    position: fixed;
+    top: 100px}
 
-#contenedorAccionesAdmin>article{
+/********************************************************************************************************************/
+/*********************** CONTENEDOR DEL APARTADO DE LOS SOCIOS *******************************/
+/********************************************************************************************************************/
+#seccionSocios{
     display: grid;
-    margin: 5px 5px 5px 5px;
-    grid-template-areas: "titulo titulo"
-                         "registro mostrar"
-                         "registro mostrar"
-                         "registro mostrar"
-                         "registro mostrar"
-                         "registro mostrar"
-                         "registro mostrar"
-                         "registro mostrar"
-                         "registro mostrar"
-                         "registro mostrar";
-    grid-template-columns: 0.70fr 2.30fr;
-    grid-template-rows: 0.05fr;
-    column-gap: 10px;
-    overflow-y: scroll;}
+    grid-template: "titulo      titulo" 50px
+                   "registro    mostrar" 81vh/
+                    250px       auto;
+    column-gap: 10px;}
 
 .tituloSeccion{display: flex;
     justify-content: center;
     align-items: center;
     background-color: white;
     grid-area: titulo;}
-.registroSeccion{background-color: greenyellow;
-    grid-area: registro;}
 
-#registroSeccionSocios{overflow-y: scroll;}
+#registroSeccionSocios{grid-area: registro;
+    background-color: #d6efab;
+    overflow-y: scroll;
+    overflow-x: hidden}
 
-.muestraSeccion{background-color: gray;
-    grid-area: mostrar;}
+#formularioRegistroSocios{margin-left: 20px;
+    margin-right: -20px}
+
+#mostrarSeccionSocios{grid-area: mostrar;
+    background-color: #fffcc2;
+    overflow-x: scroll;
+    overflow-y: hidden}
+
+#mostrarSeccionSocios table tbody{text-align: center;
+    font-size: 14px;
+    align-items: center;}
+#mostrarSeccionSocios table thead{text-align: center;
+    align-items: center;}
+
+/*En pantallas más pequeñas, donde la altura es inferior a 450 px, cambie el estilo del navegador con las secciones
+(menos relleno y un tamaño de fuente más pequeño)*/
+@media screen and (max-width: 850px){
+
+    #contenedorAccionesAdmin>article:first-child{
+        display: grid;
+        grid-template: "titulo"     50px
+                       "mostrar"    50vh
+                       "registro"   31vh/
+                        1fr;
+        column-gap: 10px;}
+
+    #cierreSesionAdmin{}
+    .sidenav{overflow-x: scroll;
+        flex-wrap: wrap}
+
+    .sidenav h3 {font-size: 12px;
+        margin-right: 5px;
+        margin-left: 5px;}
+
+    #navegador{
+        align-items: flex-start}
+
+    .navbar h3{font-size: 16px;}
+
+    img{margin-top: -40px}
+
+    #nombreAdmin, #fechaHoraAdmin{font-size: 14px}
+}
+
+/* clase que añade un asterisco rojo a los campos requeridos del formulario*/
+.is-required:before {
+    content: '*';
+    font-size: 20px;
+    margin-right: 3px;
+    color: red;
+    font-weight: bold;
+}
+
+/* estilo sobre la clase del elemento de borrar y modificar usuario de la tabla de socios */
+
+.fa.fa-trash-o:hover, .fa.fa-pencil-square-o:hover{cursor: pointer;}
+
+/********************************************************************************************************************/
+/************************** CONTENEDOR DEL APARTADO DE LAS PARCELAS ******************************************/
+/********************************************************************************************************************/
+
+#seccionParcelas{display: grid;
+    gap: 10px;
+    grid-template: "tituloParcelas"     50px
+                   "registroParcelas"   100px
+                   "mostrarParcelas"    100vh/
+                    100%;}
+
+#tituloSeccionParcelas{grid-area: tituloParcelas;
+    background-color: white;}
+
+#registroSeccionParcelas{grid-area: registroParcelas;
+    padding: 5px;
+    background-color: #d6efab;}
+
+#mostrarSeccionParcelas{grid-area: mostrarParcelas;
+    background-color: #fffcc2;}

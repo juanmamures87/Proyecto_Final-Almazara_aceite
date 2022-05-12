@@ -14,10 +14,13 @@
   </head>
   <body>
 
+  <div id="error"></div><div><i class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i></div>
+  <div id="correcto"></div><div><i class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i></div>
+
   <header>
     <!-- Barra de navegación -->
-    <nav class="navbar navbar-expand-sm bg-opacity-25 bg-black navbar-light fixed-top">
-      <div class="container-fluid" id="navegador">
+    <nav class="navbar navbar-expand-sm navbar-light fixed-top">
+      <div class="container-fluid d-flex justify-content-between align-items-center" id="navegador">
         <h3>Administrador: <span id="nombreAdmin"><?php if (isset($nombre, $dni)) { echo $nombre . " - " . $dni; } ?></span></h3>
         <h3>Fecha: <span id="fechaHoraAdmin"></span></h3>
         <img src="../images/LogoPaginaAdmin.png" alt="Molino del Sur" class="navbar-brand ml-5">
@@ -25,24 +28,24 @@
     </nav>
   </header>
 
-  <aside>
+  <nav>
     <!-- Menú de navegación lateral -->
     <div class="sidenav">
-      <h3>Socios</h3>
-      <h3>Clientes</h3>
-      <h3>Parcelas</h3>
-      <h3>Producción</h3>
-      <h3>Tienda</h3>
-      <h3>Ventas</h3>
-      <h3>Noticias</h3>
+        <h3>Socios</h3>
+        <h3>Clientes</h3>
+        <h3>Parcelas</h3>
+        <h3>Producción</h3>
+        <h3>Tienda</h3>
+        <h3>Ventas</h3>
+        <h3>Noticias</h3>
 
-      <form action="index.php" method="post">
-        <input type="submit" class="btn btn-warning" id="cierreSesionAdmin" value="Cerrar Sesión">
-        <input type="hidden" name="controlador" value="cerrarSesion">
-        <input type="hidden" name="accion" value="cerrarSesion">
-      </form>
+        <form action="index.php" method="post">
+          <input type="submit" class="btn btn-warning" id="cierreSesionAdmin" value="Cerrar Sesión">
+          <input type="hidden" name="controlador" value="cerrarSesion">
+          <input type="hidden" name="accion" value="cerrarSesion">
+        </form>
     </div>
-  </aside>
+  </nav>
 
   <section id="contenedorAccionesAdmin">
 
@@ -51,35 +54,37 @@
       <h1 class="tituloSeccion">Socios</h1>
       <div class="registroSeccion" id="registroSeccionSocios">
 
-        <form class="p-2">
+        <form id="formularioRegistroSocios">
           <div class="form-group">
-            <label for="nombreSocio" class="col-sm-2 col-form-label">Nombre: </label>
+            <label for="nombreSocio" class="col-sm-2 col-form-label is-required"><b>Nombre: </b></label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="nombreSocio" name="nombreSocio" required>
+              <input type="text" class="form-control" id="nombreSocio" name="nombreSocio" pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+" required>
             </div>
           </div>
           <div class="form-group">
-            <label for="apeSocio" class="col-sm-2 col-form-label">Apellidos: </label>
+            <label for="apeSocio" class="col-sm-2 col-form-label is-required"><b>Apellidos: </b></label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="apeSocio" name="apeSocio" required>
+              <input type="text" class="form-control" id="apeSocio" name="apeSocio"
+                     pattern="^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$" required>
             </div>
           </div>
           <div class="form-group">
-            <label for="dniSocio" class="col-sm-2 col-form-label">DNI: </label>
+            <label for="dniSocio" class="col-sm-2 col-form-label is-required"><b>DNI: </b></label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="dniSocio" name="dniSocio" required>
+              <input type="text" class="form-control" id="dniSocio" name="dniSocio" maxlength="9" placeholder="12345678L" required>
             </div>
           </div>
           <div class="form-group">
-            <label for="telSocio" class="col-sm-2 col-form-label">Teléfono: </label>
+            <label for="telSocio" class="col-sm-2 col-form-label is-required"><b>Teléfono: </b></label>
             <div class="col-sm-10">
-              <input type="tel" class="form-control" id="telSocio" name="telSocio" required>
+              <input type="tel" class="form-control" min="60000000" max="999999999" id="telSocio" name="telSocio" pattern="^(6|7|8|9)[ -]*([0-9][ -]*){8}"
+                     placeholder="000112233" required>
             </div>
           </div>
           <div class="form-group">
-            <label for="provSocio" class="col-sm-2 col-form-label">Provincia: </label>
+            <label for="provSocio" class="col-sm-2 col-form-label is-required"><b>Provincia: </b></label>
             <div class="col-sm-10">
-              <select class="form-control" name="provSocio" id="provSocio" required>
+              <select class="form-control" name="provSocio" id="provSocio">
                 <b><option class="text-center" value="PROVINCIA">PROVINCIA</option></b>
 
                   <?php
@@ -88,11 +93,11 @@
                           $provincias = $resultado['consulta_provinciero']['provinciero']['prov'];
                           foreach ($provincias as $provincia){
 
-                              ?>
+                  ?>
 
                             <option><?php echo utf8_encode($provincia['np'])?></option>
 
-                              <?php
+                  <?php
 
                           }
                       }
@@ -101,87 +106,166 @@
 
               </select>
             </div>
+            <div class="col-sm-10">
+              <label for="provSocioAlterna"><b>Provincia alternativa: </b></label>
+              <input type="text" class="form-control" id="provSocioAlterna" name="provSocioAlterna">
+            </div>
           </div>
           <div class="form-group">
-            <label for="munSocio" class="col-sm-2 col-form-label">Municipio: </label>
+            <label for="munSocio" class="col-sm-2 col-form-label is-required"><b></b>Municipio: </b></label>
             <div class="col-sm-10">
-              <select class="form-control" name="munSocio" id="munSocio" required>
+              <select class="form-control" name="munSocio" id="munSocio">
 
                 <option class="text-center" value="MUNICIPIO">MUNICIPIO</option>
 
               </select>
             </div>
+            <div class="col-sm-10">
+              <label for="munSocioAlterna">Municipio alternativo: </label>
+              <input type="text" class="form-control" id="munSocioAlterna" name="munSocioAlterna">
+            </div>
           </div>
           <div class="form-group">
-            <label for="dirSocio" class="col-sm-2 col-form-label">Dirección: </label>
+            <label for="dirSocio" class="col-sm-2 col-form-label is-required"><b>Dirección: </b></label>
             <div class="col-sm-10">
-              <select class="form-control" name="dirSocio" id="dirSocio" required>
+              <select class="form-control" name="dirSocio" id="dirSocio">
 
                 <option class="text-center" value="DIRECCIÓN">DIRECCIÓN</option>
 
               </select>
             </div>
+            <div class="col-sm-10">
+              <label for="dirSocioAlterna">Dirección alternativa: </label>
+              <input type="text" class="form-control" id="dirSocioAlterna" name="dirSocioAlterna">
+            </div>
           </div>
           <div class="form-group">
-            <label for="cpSocio" class="col-sm-8 col-form-label">Código Postal: </label>
+            <label for="cpSocio" class="col-sm-8 col-form-label is-required"><b>Código Postal: </b></label>
             <div class="col-sm-10">
-              <select class="form-control" name="cpSocio" id="cpSocio" required>
+              <select class="form-control" name="cpSocio" id="cpSocio">
 
                 <option class="text-center" value="CÓDIGO POSTAL">CÓDIGO POSTAL</option>
 
               </select>
             </div>
+            <div class="col-sm-10">
+              <label for="cpSocioAlterna">Código postal alternativo: </label>
+              <input type="number" class="form-control" min="10000" max="99999" id="cpSocioAlterna" name="cpSocioAlterna">
+            </div>
           </div>
           <div class="form-group">
-            <label for="numCasaSocio" class="col-sm-8 col-form-label">Número Casa: </label>
+            <label for="numCasaSocio" class="col-sm-8 col-form-label is-required"><b>Número Casa: </b></label>
             <div class="col-sm-10">
               <input type="number" min="1" max="999" class="form-control" id="numCasaSocio" name="numCasaSocio" required>
             </div>
           </div>
           <div class="form-group">
-            <label for="pisoSocio" class="col-sm-2 col-form-label">Piso: </label>
+            <label for="pisoSocio" class="col-sm-2 col-form-label"><b>Piso: </b></label>
             <div class="col-sm-10">
               <input type="number" min="0" max="99" class="form-control" id="pisoSocio" name="pisoSocio">
             </div>
           </div>
           <div class="form-group">
-            <label for="puertaSocio" class="col-sm-2 col-form-label">Puerta: </label>
+            <label for="puertaSocio" class="col-sm-2 col-form-label"><b>Puerta: </b></label>
             <div class="col-sm-10">
               <input type="text" class="form-control" minlength="1" maxlength="10" id="puertaSocio" name="puertaSocio">
             </div>
           </div>
           <div class="form-group">
-            <label for="emailSocio" class="col-sm-2 col-form-label">Email: </label>
+            <label for="emailSocio" class="col-sm-2 col-form-label is-required"><b>Email: </b></label>
             <div class="col-sm-10">
-              <input type="email" class="form-control" id="emailSocio" name="emailSocio" required>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="passwSocio" class="col-sm-2 col-form-label">Contraseña: </label>
-            <div class="col-sm-10">
-              <input type="password" class="form-control" minlength="6" maxlength="10" id="passwSocio" name="passwSocio" required>
+              <input type="email" class="form-control" id="emailSocio" name="emailSocio"
+                     pattern="^([\da-z_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$" placeholder="correo@yopmail.org" required>
             </div>
           </div>
 
-          <div class="form-group">
-            <div class="col-sm-2">Activo</div>
+          <div class="form-group mt-3">
+            <div class="col-sm-12"><b>Permitir/No permitir acceso</b></div>
             <div class="col-sm-10">
               <div class="form-check">
-                <label class="form-check-label">
+                <label class="form-check-label"><span id="muestraActiv">Desactivado</span></label>
                   <input class="form-check-input" type="checkbox" name="activoSocio" id="activoSocio">
-                </label>
               </div>
             </div>
           </div>
-          <div class="form-group row">
+          <hr class="w-75">
+          <div class="form-group row mb-4 mt-4">
             <div class="col-sm-10">
-              <button type="submit" name="registroSocio" id="registroSocio" class="btn btn-primary">Registrar</button>
+              <button type="submit" name="registroSocio" value="registroEnviado" id="registroSocio" class="btn btn-primary">Registrar</button>
+              <button type="reset" name="borradoRegistroSocio" id="borradoRegistroSocio" class="btn btn-warning">Resetear</button>
             </div>
           </div>
         </form>
 
       </div>
-      <div class="muestraSeccion">Mostrar</div>
+      <div class="muestraSeccion" id="mostrarSeccionSocios">
+
+        <table class="table table-striped" id="tablaSocios">
+          <thead>
+          <tr>
+            <th scope="col">Socio</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellidos</th>
+            <th scope="col">Dni</th>
+            <th scope="col">Teléfono</th>
+            <th scope="col">Provincia</th>
+            <th scope="col">Municipio</th>
+            <th scope="col">Dirección</th>
+            <th scope="col">Cp</th>
+            <th scope="col">Número</th>
+            <th scope="col">Piso</th>
+            <th scope="col">Puerta</th>
+            <th scope="col">Email</th>
+            <th scope="col">Acceso</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">F.Alta</th>
+            <th scope="col">F.Baja</th>
+            <th scope="col">Modificar</th>
+            <th scope="col">Eliminar</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <?php
+
+                if (isset($mostrarSocios) && !empty($mostrarSocios)){
+
+                    foreach ($mostrarSocios as $socio){
+
+            ?>
+
+            <th><?php echo $socio->id_socio; ?></th>
+            <td><?php echo $socio->nombre; ?></td>
+            <td><?php echo $socio->apellidos; ?></td>
+            <td><?php echo $socio->dni; ?></td>
+            <td contenteditable="true"><?php echo $socio->telefono; ?></td>
+            <td contenteditable="true"><?php echo $socio->provincia; ?></td>
+            <td contenteditable="true"><?php echo $socio->municipio; ?></td>
+            <td contenteditable="true"><?php echo $socio->direccion; ?></td>
+            <td contenteditable="true"><?php echo $socio->cp; ?></td>
+            <td contenteditable="true"><?php echo $socio->num_casa; ?></td>
+            <td contenteditable="true"><?php echo $socio->piso; ?></td>
+            <td contenteditable="true"><?php echo $socio->puerta; ?></td>
+            <td contenteditable="true"><?php echo $socio->email; ?></td>
+            <td><?php $socio->activo == 1 ?
+                    $activado = "Activo <br> <input type='checkbox' class='accesoTabla' checked>" : $activado = "Desactivado <br> <input type='checkbox' class='accesoTabla'>"; echo $activado;?></td>
+            <td contenteditable="true"><?php echo $socio->tipo_socio; ?></td>
+            <td><?php echo $socio->fecha_alta; ?></td>
+            <td contenteditable="true"><?php echo $socio->fecha_baja; ?></td>
+            <td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>
+            <td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>
+          </tr>
+
+            <?php
+                    }
+
+                }
+
+            ?>
+          </tbody>
+        </table>
+
+      </div>
 
     </article>
 
@@ -195,9 +279,139 @@
 
     <article id="seccionParcelas" hidden>
 
-      <h1 class="tituloSeccion">Parcelas</h1>
-      <div class="registroSeccion">Registro</div>
-      <div class="muestraSeccion">Mostrar</div>
+      <h1 class="tituloSeccion" id="tituloSeccionParcelas">Parcelas</h1>
+      <div class="registroSeccion" id="registroSeccionParcelas">
+
+        <form class="row gx-3 gy-2 align-items-center" id="formularioRegistroParcelas">
+          <div class="col-sm-2">
+            <label class="visually-hidden" for="selSocioParcela">Socio</label>
+            <select class="form-select" id="selSocioParcela" name="selSocioParcela">
+
+              <option class="text-center" value="SOCIO">SOCIO</option>
+                <?php
+
+                    if (isset($mostrarSocios) && !empty($mostrarSocios)){
+
+                      foreach ($mostrarSocios as $socio){
+
+                ?>
+                      <option value="<?php echo $socio->id_socio; ?>"><?php echo $socio->nombre . " " . $socio->apellidos; ?></option>
+
+                        <?php
+
+                      }
+                    }
+
+                ?>
+
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <label class="visually-hidden" for="selProvParcela">Provincia</label>
+            <select class="form-select" id="selProvParcela" name="selProvParcela">
+
+              <option class="text-center" value="PROVINCIA">PROVINCIA</option>
+
+                <?php
+                    if (isset($resultado) && !empty($resultado)){
+
+                        $provincias = $resultado['consulta_provinciero']['provinciero']['prov'];
+                        foreach ($provincias as $provincia){
+
+                            ?>
+
+                          <option><?php echo utf8_encode($provincia['np'])?></option>
+
+                            <?php
+
+                        }
+                    }
+
+                ?>
+
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <label class="visually-hidden" for="selMunParcela">Municipio</label>
+            <select class="form-select" id="selMunParcela" name="selMunParcela">
+              <option selected>Municipio</option>
+
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <label class="visually-hidden" for="refCatParcela">Ref. Catastral</label>
+            <input type="text" class="form-control" id="refCatParcela" name="refCatParcela" placeholder="Ref. Catastral">
+          </div>
+          <div class="col-sm-1">
+            <label class="visually-hidden" for="polParcela">Polígono</label>
+            <input type="number" class="form-control" id="polParcela" name="polParcela" placeholder="Polígono">
+          </div>
+          <div class="col-sm-1">
+            <label class="visually-hidden" for="parParcela">Parcela</label>
+            <input type="number" class="form-control" id="parParcela" name="parParcela" placeholder="Parcela">
+          </div>
+          <div class="col-sm-2">
+            <label class="visually-hidden" for="superParcela">Superficie</label>
+            <input type="number" step="0.1" class="form-control" id="superParcela" name="superParcela" placeholder="Superficie">
+          </div>
+          <div class="col-sm-2">
+            <label class="visually-hidden" for="selSisParcela">Sistema cultivo</label>
+            <select class="form-select" id="selSisParcela" name="selSisParcela">
+              <option class="text-center" value="SISTEMA CULTIVO">SISTEMA CULTIVO</option>
+
+                <?php
+                    if (isset($sistema) && !empty($sistema)){
+
+                        foreach ($sistema as $sisCultivo){
+
+                            ?>
+
+                          <option value="<?php echo $sisCultivo->id_sistema?>"><?php echo $sisCultivo->nombre?></option>
+
+                            <?php
+
+                        }
+                    }
+
+                ?>
+
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <label class="visually-hidden" for="selVarParcela">Variedad aceituna</label>
+            <select class="form-select" id="selVarParcela" name="selVarParcela">
+              <option value="VARIEDAD ACEITUNA">VARIEDAD ACEITUNA</option>
+
+                <?php
+                    if (isset($variedad) && !empty($variedad)){
+
+                        foreach ($variedad as $varAceituna){
+
+                            ?>
+
+                          <option value="<?php echo $varAceituna->id_aceituna?>"><?php echo $varAceituna->nombre?></option>
+
+                            <?php
+
+                        }
+                    }
+
+                ?>
+
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <label class="visually-hidden" for="plantasParcela">Num. Plantas</label>
+            <input type="number" class="form-control" id="plantasParcela" name="plantasParcela" placeholder="Num. Plantas">
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Registrar</button>
+            <button type="reset" class="btn btn-warning">Resetear</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="muestraSeccion" id="mostrarSeccionParcelas"></div>
 
     </article>
 
@@ -240,6 +454,7 @@
   <script src="https://kit.fontawesome.com/7b55877beb.js" crossorigin="anonymous"></script>
   <!-- Option 1: Bootstrap Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <script src="../js/principal.js"></script>
   <script src="../js/zonaAdmin.js"></script>
   </body>
 </html>

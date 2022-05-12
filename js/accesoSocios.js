@@ -1,5 +1,5 @@
 
-//Referenciamos los campos del dni y su padre para mostrar el error cuando dni sea erroneo
+//Referenciamos los campos del dni y su padre para mostrar el error cuando dni sea incorrecto
 const dni = $(".input100.dni");
 const alertaDni = $(".wrap-input100.dni");
 
@@ -58,7 +58,8 @@ function showValidate(input) {
     $(thisAlert).addClass('alert-validate');
 }
 
-//Función para la comprobación del dni. Si está mal escrito o si la letra no se corresponde.
+/*Función para la comprobación del dni. Pasando como parámetro el dni y un tipo de alerta que manda el elemento.
+Si está mal escrito o si la letra no se corresponde.*/
 function validacionDNI(dni,alertaDni){
 
     let letra = 'TRWAGMYFPDXBNJZSQVHLCKET';

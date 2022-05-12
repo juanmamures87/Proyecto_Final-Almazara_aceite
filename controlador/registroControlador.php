@@ -47,14 +47,26 @@
                     $municipios = $resultado['consulta_municipiero']['municipiero']['muni'];
                     $devolverMuni = array();
 
-                    foreach ($municipios as $muni){
+                    if (count($municipios) > 3) {
+                        foreach ($municipios as $muni) {
 
-                        $devolverMuni[] = (utf8_encode($muni['nm']));
+                            $devolverMuni[] = (utf8_encode($muni['nm']));
+
+                        }
+
+                        $devolverMuni = json_encode($devolverMuni);
+                        echo $devolverMuni;
+
+                    }else{
+
+                        $unicoMunicipio = array(
+
+                            utf8_encode($municipios['nm'])
+
+                        );
+                        echo json_encode($unicoMunicipio);
 
                     }
-
-                    $devolverMuni = json_encode($devolverMuni);
-                    echo $devolverMuni;;
                 }
             }
 
@@ -140,4 +152,129 @@
 
         }
 
+    }
+
+    function registroSocio(){
+
+        $nombre = $_POST['nombreSocio'];
+        $apellidos = $_POST['apeSocio'];
+        $dni = $_POST['dniSocio'];
+        $tel = $_POST['telSocio'];
+        $prov = $_POST['provSocio'];
+        $provAlter = $_POST['provSocioAlterna'];
+        $mun = $_POST['munSocio'];
+        $munAlter = $_POST['munSocioAlterna'];
+        $dir = $_POST['dirSocio'];
+        $dirAlter = $_POST['dirSocioAlterna'];
+        $cp = $_POST['cpSocio'];
+        $cpAlter = $_POST['cpSocioAlterna'];
+        $num = $_POST['numCasaSocio'];
+        $piso = $_POST['pisoSocio'];
+        $puerta = $_POST['puertaSocio'];
+        $email = $_POST['emailSocio'];
+        $clave = "molinoSur_" . rand(100,600) . "_" . rand(600,999);
+
+        if (isset($_POST['activoSocio'])){
+
+            $activado = 1;
+
+        }else {
+
+            $activado = 0;
+
+        }
+
+
+        if ($prov === "PROVINCIA"){
+
+            $prov = $provAlter;
+
+        }
+        if ($mun === "MUNICIPIO"){
+
+            $mun = $munAlter;
+
+        }
+        if ($dir === "DIRECCIÓN"){
+
+            $dir = $dirAlter;
+
+        }
+        if ($cp === "CÓDIGO POSTAL"){
+
+            $cp = $cpAlter;
+
+        }
+        if ($piso === ""){
+
+            $piso = null;
+
+        }
+        if ($puerta === ""){
+
+
+            $puerta = null;
+        }
+
+
+        require_once "modelo/RegistroModelo.php";
+        $usuarios = new RegistroModelo();
+        $usuario = $usuarios->insertarUsuario($nombre, $apellidos, $dni, $tel, $prov, $mun, $dir, $cp, $num, $piso, $puerta, $email, $clave, $activado);
+
+        if ($usuario['resultado'] === true){
+
+            $registroSocio = $usuarios->insertarSocio($usuario['idUsuario']);
+
+            if ($registroSocio){
+
+                require_once "modelo/RegistroModelo.php";
+                $registro = new RegistroModelo();
+                $nombreCompleto = $nombre . " " . $apellidos;
+                $mailConfirm = $registro->correoConfirmacionSocios($nombreCompleto, $dni, $clave, $email);
+
+                $mailConfirm ? $envio = "Correo de verificación enviado correctamente" : $envio = "El correo de verificación no pudo ser enviado";
+                require_once "modelo/SocioModelo.php";
+                $nuevos = new SocioModelo();
+                $nuevoUsuario = $nuevos->mostrarSocioDeterminado($usuario['idUsuario']);
+
+                $resultado = [
+
+                    "codigo"    => 1,
+                    "usuario"   => $nuevoUsuario,
+                    "msgCorreo" => $envio,
+                    "msg"       =>  "USUARIO REGISTRADO CORRECTAMENTE"
+
+                ];
+
+                //var_dump($resultado);
+                echo json_encode($resultado);
+
+            }else{
+
+                $resultado = [
+
+                    "codigo"    => 0,
+                    "msg"       =>  "ERROR AL REGISTRAR AL USUARIO"
+
+                ];
+
+                //var_dump($resultado);
+                echo json_encode($resultado);
+            }
+
+
+
+        }else{
+
+            $resultado = [
+
+                "codigo"    => -1,
+                "msg"       =>  $usuario['msg']
+
+            ];
+
+            //var_dump($resultado);
+            echo json_encode($resultado);
+
+        }
     }
