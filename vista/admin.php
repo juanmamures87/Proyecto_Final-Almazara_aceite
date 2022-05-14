@@ -14,7 +14,7 @@
   </head>
   <body>
 
-  <div id="error"></div><div><i class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i></div>
+  <div id="error"></div><div"><i class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i></div>
   <div id="correcto"></div><div><i class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i></div>
 
   <header>
@@ -334,13 +334,14 @@
           <div class="col-sm-2">
             <label class="visually-hidden" for="selMunParcela">Municipio</label>
             <select class="form-select" id="selMunParcela" name="selMunParcela">
-              <option selected>Municipio</option>
+              <option class="text-center" value="MUNICIPIO">MUNICIPIO</option>
 
             </select>
           </div>
           <div class="col-sm-2">
             <label class="visually-hidden" for="refCatParcela">Ref. Catastral</label>
-            <input type="text" class="form-control" id="refCatParcela" name="refCatParcela" placeholder="Ref. Catastral">
+            <input type="text" class="form-control" minlength="14" maxlength="20" id="refCatParcela" name="refCatParcela"
+                   placeholder="Ref. Catastral">
           </div>
           <div class="col-sm-1">
             <label class="visually-hidden" for="polParcela">Polígono</label>
@@ -352,7 +353,7 @@
           </div>
           <div class="col-sm-2">
             <label class="visually-hidden" for="superParcela">Superficie</label>
-            <input type="number" step="0.1" class="form-control" id="superParcela" name="superParcela" placeholder="Superficie">
+            <input type="number" step="0.1" class="form-control" id="superParcela" name="superParcela" placeholder="Superficie m.cuadrados">
           </div>
           <div class="col-sm-2">
             <label class="visually-hidden" for="selSisParcela">Sistema cultivo</label>
@@ -380,7 +381,7 @@
           <div class="col-sm-2">
             <label class="visually-hidden" for="selVarParcela">Variedad aceituna</label>
             <select class="form-select" id="selVarParcela" name="selVarParcela">
-              <option value="VARIEDAD ACEITUNA">VARIEDAD ACEITUNA</option>
+              <option class="text-center" value="VARIEDAD ACEITUNA">VARIEDAD ACEITUNA</option>
 
                 <?php
                     if (isset($variedad) && !empty($variedad)){
@@ -404,11 +405,134 @@
             <label class="visually-hidden" for="plantasParcela">Num. Plantas</label>
             <input type="number" class="form-control" id="plantasParcela" name="plantasParcela" placeholder="Num. Plantas">
           </div>
-          <div class="col-auto">
-            <button type="submit" class="btn btn-primary">Registrar</button>
-            <button type="reset" class="btn btn-warning">Resetear</button>
+          <div class="col-auto w-50">
+            <button type="submit" class="btn btn-primary" id="registroParcelas">Registrar</button>
+            <button type="reset" class="btn btn-warning" id="resetFormParcelas">Resetear</button>
+            <button class="btn btn-success botonSeleccionDatos float-end" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#seleccionDatosParcelas" aria-controls="seleccionDatosParcelas">
+              Visualizar Datos
+            </button>
           </div>
         </form>
+
+        <!-------------------------------------------------------------------------------------------->
+        <!-- Menú lateral desplegable para seleccionar como ver los datos referentes a las parcelas -->
+        <!-------------------------------------------------------------------------------------------->
+        <div class="offcanvas offcanvas-start mt-5" tabindex="-1" id="seleccionDatosParcelas" aria-labelledby="seleccionDatosParcelasEtiqueta">
+          <div class="offcanvas-header">
+            <h4 class="offcanvas-title" id="seleccionDatosParcelasEtiqueta">DATOS PARCELAS</h4>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <hr>
+            <label for="busSocio"><b>Búsqueda por socio: </b></label>
+            <select class="form-select visualizar" aria-label="Default select example" id="busSocio">
+              <option class="text-center" value="SOCIO">SOCIO</option>
+                <?php
+
+                    if (isset($mostrarSocios) && !empty($mostrarSocios)){
+
+                        foreach ($mostrarSocios as $socio){
+
+                            ?>
+                          <option value="<?php echo $socio->id_socio; ?>"><?php echo $socio->nombre . " " . $socio->apellidos; ?></option>
+
+                            <?php
+
+                        }
+                    }
+
+                ?>
+            </select>
+            <label class="mt-3" for="busProv"><b>Búsqueda por provincia: </b></label>
+            <select class="form-select visualizar" aria-label="Default select example" id="busProv">
+              <option class="text-center" value="PROVINCIA">PROVINCIA</option>
+
+                <?php
+                    if (isset($resultado) && !empty($resultado)){
+
+                        $provincias = $resultado['consulta_provinciero']['provinciero']['prov'];
+                        foreach ($provincias as $provincia){
+
+                            ?>
+
+                          <option><?php echo utf8_encode($provincia['np'])?></option>
+
+                            <?php
+
+                        }
+                    }
+
+                ?>
+            </select>
+            <label class="mt-3" for="busSuper"><b>Búsqueda por superficie en m<sup>2</sup>: </b></label>
+            <select class="form-select visualizar" aria-label="Default select example" id="busSuper">
+              <option class="text-center" value="SUPERFICIE">SUPERFICIE</option>
+              <option value="menos5"> < 5000</option>
+              <option value="mas5menos20"> > 5000m y < 20000</option>
+              <option value="mas20menos50"> > 20000m y < 50000</option>
+              <option value="mas50menos100"> > 50000 y < 100000</option>
+              <option value="mas100"> > 100000</option>
+            </select>
+            <label class="mt-3" for="busSisCul"><b>Sistema de cultivo: </b></label>
+            <select class="form-select visualizar" aria-label="Default select example" id="busSisCul">
+              <option class="text-center" value="SISTEMA CULTIVO">SISTEMA CULTIVO</option>
+
+                <?php
+                    if (isset($sistema) && !empty($sistema)){
+
+                        foreach ($sistema as $sisCultivo){
+
+                            ?>
+
+                          <option value="<?php echo $sisCultivo->id_sistema?>"><?php echo $sisCultivo->nombre?></option>
+
+                            <?php
+
+                        }
+                    }
+
+                ?>
+            </select>
+            <label class="mt-3" for="busVar"><b>Variedad aceituna: </b></label>
+            <select class="form-select visualizar" aria-label="Default select example" id="busVar">
+              <option class="text-center" value="VARIEDAD ACEITUNA">VARIEDAD ACEITUNA</option>
+
+                <?php
+                    if (isset($variedad) && !empty($variedad)){
+
+                        foreach ($variedad as $varAceituna){
+
+                            ?>
+
+                          <option value="<?php echo $varAceituna->id_aceituna?>"><?php echo $varAceituna->nombre?></option>
+
+                            <?php
+
+                        }
+                    }
+
+                ?>
+            </select>
+            <label class="mt-3" for="busPlan"><b>Número de plantas: </b></label>
+            <select class="form-select visualizar" aria-label="Default select example" id="busPlan">
+              <option class="text-center" value="PLANTAS">PLANTAS</option>
+              <option value="menos5"> < 500</option>
+              <option value="mas5menos2"> > 500 y <2000 </option>
+              <option value="menos2mas10"> > 2000 < 10000 </option>
+              <option value="mas10"> > 10000 </option>
+            </select>
+            <div class="dropdown mt-3 text-center">
+              <button class="btn btn-info" type="button" data-bs-dismiss="offcanvas">
+                Mostrar todas las parcelas
+              </button>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-------------------------------------------------------------------------------------------->
+        <!----- ACABA EL MENÚ DESPLEGABLE DE SELECCIÓN DE VISUALIZAR LOS DATOS DE LAS PARCELAS ------->
+        <!-------------------------------------------------------------------------------------------->
       </div>
 
       <div class="muestraSeccion" id="mostrarSeccionParcelas"></div>

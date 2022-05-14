@@ -55,7 +55,7 @@ body {
 #error{position: absolute;
     top: 90%;
     right: 0;
-    min-width: 50%;
+    min-width: 80%;
     height: 40px;
     background-color: red;
     border-radius: 10px;
@@ -67,7 +67,7 @@ body {
 #correcto{position: absolute;
     top: 90%;
     right: 0;
-    min-width: 50%;
+    min-width: 80%;
     height: 40px;
     background-color: limegreen;
     border-radius: 10px;
@@ -191,3 +191,7 @@ body {
 
 #mostrarSeccionParcelas{grid-area: mostrarParcelas;
     background-color: #fffcc2;}
+
+/********************** MENÚ LATERAL DESPLEGABLE PARA MOSTRAR LOS DATOS REFERENTES A LAS PARCELAS ********************/
+
+#seleccionDatosParcelas{background-color: #d6efab;}

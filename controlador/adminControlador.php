@@ -100,3 +100,81 @@
         }
 
     }
+
+    //No hay manera de que funcione, no recoge la RC de ninguna manera. Dejarla y probar si responde catastro
+    function mostrarPoliParceSuperf(){
+
+        require_once "librerias/nusoap/lib/nusoap.php";
+
+        if (isset($_POST['provincia'], $_POST['municipio'], $_POST['refcat']) && !empty($_POST['provincia']) &&
+            !empty($_POST['municipio']) && !empty($_POST['refcat'])) {
+
+            $provincia = $_POST['provincia'];
+            $municipio = $_POST['municipio'];
+            $refcat = $_POST['refcat'];
+            $datosParcela = [
+                'Provincia' => $provincia,
+                'Municipio' => $municipio,
+                'RC'        => $refcat
+            ];
+
+            /*A continuación obtenemos el servicio web del catastro que nos proporciona todo lo referente a una parcela, pasándole
+            una provincia, un municipio y su referencia catastral.
+            Obtenemos una variable que almacena todos los datos y la pasamos a la vista.*/
+
+            //Crear un cliente apuntando al script del servidor (Creado con WSDL)
+            $cliente = new nusoap_client('https://ovc.catastro.meh.es/ovcservweb/OVCSWLocalizacionRC/OVCCallejero.asmx?wsdl', true);
+            //SOAPAction: "http://tempuri.org/OVCServWeb/OVCCallejero/Consulta_DNPRC"
+            // Se comprueba si se puede conectar con el servicio
+            $error = $cliente->getError();
+            if ($error) {
+
+                echo '<pre style="color: red">' . $error . '</pre>';
+                echo '<p style="color:red;' > htmlspecialchars($cliente->getDebug(), ENT_QUOTES) . '</p>';
+                die();
+
+            }
+            // 2. Llamar a la función getCliente del servidor
+
+            $resultado = $cliente->call('Consulta_DNPRC', $datosParcela);
+
+            // Verificación que los parámetros están ok, y si lo están. mostrar rta.
+            if ($cliente->fault) {
+
+                echo '<b>Error: ';
+                print_r($resultado);
+                echo '</b>';
+
+            } else {
+
+                $error = $cliente->getError();
+                if ($error) {
+
+                    echo '<b style="color: red">Error: ' . $error . '</b>';
+
+                } else {
+
+                    //echo json_encode($resultado);
+                    var_dump($resultado);
+                    var_dump($refcat);
+                    var_dump($provincia);
+                    var_dump($municipio);
+
+                }
+            }
+
+        }else{
+
+            $respuesta = [
+
+                "codigo"    => -2,
+                "msg"       => "DEBE INTRODUCIR UNA PROVINCIA, MUNICIPIO Y REF. CATASTRAL PARA CONSULTAR LOS DATOS"
+
+            ];
+
+            echo json_encode($respuesta);
+            //var_dump($respuesta);
+
+        }
+
+    }

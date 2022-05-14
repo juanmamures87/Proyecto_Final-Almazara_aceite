@@ -156,23 +156,23 @@
 
     function registroSocio(){
 
-        $nombre = $_POST['nombreSocio'];
-        $apellidos = $_POST['apeSocio'];
-        $dni = $_POST['dniSocio'];
-        $tel = $_POST['telSocio'];
-        $prov = $_POST['provSocio'];
-        $provAlter = $_POST['provSocioAlterna'];
-        $mun = $_POST['munSocio'];
-        $munAlter = $_POST['munSocioAlterna'];
-        $dir = $_POST['dirSocio'];
-        $dirAlter = $_POST['dirSocioAlterna'];
-        $cp = $_POST['cpSocio'];
-        $cpAlter = $_POST['cpSocioAlterna'];
-        $num = $_POST['numCasaSocio'];
-        $piso = $_POST['pisoSocio'];
-        $puerta = $_POST['puertaSocio'];
-        $email = $_POST['emailSocio'];
-        $clave = "molinoSur_" . rand(100,600) . "_" . rand(600,999);
+        $nombre     = $_POST['nombreSocio'];
+        $apellidos  = $_POST['apeSocio'];
+        $dni        = $_POST['dniSocio'];
+        $tel        = $_POST['telSocio'];
+        $prov       = $_POST['provSocio'];
+        $provAlter  = $_POST['provSocioAlterna'];
+        $mun        = $_POST['munSocio'];
+        $munAlter   = $_POST['munSocioAlterna'];
+        $dir        = $_POST['dirSocio'];
+        $dirAlter   = $_POST['dirSocioAlterna'];
+        $cp         = $_POST['cpSocio'];
+        $cpAlter    = $_POST['cpSocioAlterna'];
+        $num        = $_POST['numCasaSocio'];
+        $piso       = $_POST['pisoSocio'];
+        $puerta     = $_POST['puertaSocio'];
+        $email      = $_POST['emailSocio'];
+        $clave      = "molinoSur_" . rand(100,600) . "_" . rand(600,999);
 
         if (isset($_POST['activoSocio'])){
 
@@ -277,4 +277,64 @@
             echo json_encode($resultado);
 
         }
+    }
+
+    function insertarParcela(){
+
+        if (isset($_POST['selSocioParcela']) && !empty($_POST['selSocioParcela'])){
+
+            $idSocio    = $_POST['selSocioParcela'];
+            $provincia  = $_POST['selProvParcela'];
+            $municipio  = $_POST['selMunParcela'];
+            $refCat     = $_POST['refCatParcela'];
+            $poligono   = $_POST['polParcela'];
+            $parcela    = $_POST['parParcela'];
+            $superficie = $_POST['superParcela'];
+            $sistema    = $_POST['selSisParcela'];
+            $variedad   = $_POST['selVarParcela'];
+            $plantas    = $_POST['plantasParcela'];
+
+            require_once "modelo/ParcelaModelo.php";
+            $parcelas = new ParcelaModelo();
+            $nuevaParcela = $parcelas->insertarParcela($idSocio, $provincia, $municipio, $refCat, $poligono, $parcela,
+                $superficie, $sistema, $variedad, $plantas);
+
+            if ($nuevaParcela){
+
+                $resultado = [
+
+                    "codigo"    => 1,
+                    "msg"       =>  "PARCELA REGISTRADA CORRECTAMENTE"
+
+                ];
+
+            }else{
+
+                $resultado = [
+
+                    "codigo"    => 0,
+                    "msg"       =>  "SE PRODUJO UN ERROR Y NO SE PUDO REGISTRAR LA PARCELA"
+
+                ];
+
+            }
+
+            //var_dump($resultado);
+            echo json_encode($resultado);
+
+        }else{
+
+            $resultado = [
+
+                "codigo"    => -2,
+                "msg"       =>  "DEBE SELECCIONAR UN USUARIO CORRECTO PARA INSERTAR LA PARCELA"
+
+            ];
+
+            //var_dump($resultado);
+            echo json_encode($resultado);
+
+        }
+
+
     }
