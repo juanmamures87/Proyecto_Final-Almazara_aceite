@@ -14,7 +14,7 @@
   </head>
   <body>
 
-  <div id="error"></div><div"><i class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i></div>
+  <div id="error"></div><div><i class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i></div>
   <div id="correcto"></div><div><i class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i></div>
 
   <header>
@@ -85,7 +85,7 @@
             <label for="provSocio" class="col-sm-2 col-form-label is-required"><b>Provincia: </b></label>
             <div class="col-sm-10">
               <select class="form-control" name="provSocio" id="provSocio">
-                <b><option class="text-center" value="PROVINCIA">PROVINCIA</option></b>
+                <option class="text-center" value="PROVINCIA">PROVINCIA</option>
 
                   <?php
                       if (isset($resultado) && !empty($resultado)){
@@ -225,38 +225,46 @@
           </tr>
           </thead>
           <tbody>
-          <tr>
             <?php
 
                 if (isset($mostrarSocios) && !empty($mostrarSocios)){
 
-                    foreach ($mostrarSocios as $socio){
+                    //Aquí guardamos el número de páginas que tendremos en la paginación, recogido del modelo a través del controlador
+                    $paginasPaginacion = $mostrarSocios['paginas'];
+                    //Eliminamos el valor de la paginación del array de los usuarios para no tener problemas al sacar datos
+                    unset($mostrarSocios['paginas']);
+                    foreach ($mostrarSocios as $valor){
+
+                      foreach ($valor as $socio){
+
+
 
             ?>
-
-            <th><?php echo $socio->id_socio; ?></th>
-            <td><?php echo $socio->nombre; ?></td>
-            <td><?php echo $socio->apellidos; ?></td>
-            <td><?php echo $socio->dni; ?></td>
-            <td contenteditable="true"><?php echo $socio->telefono; ?></td>
-            <td contenteditable="true"><?php echo $socio->provincia; ?></td>
-            <td contenteditable="true"><?php echo $socio->municipio; ?></td>
-            <td contenteditable="true"><?php echo $socio->direccion; ?></td>
-            <td contenteditable="true"><?php echo $socio->cp; ?></td>
-            <td contenteditable="true"><?php echo $socio->num_casa; ?></td>
-            <td contenteditable="true"><?php echo $socio->piso; ?></td>
-            <td contenteditable="true"><?php echo $socio->puerta; ?></td>
-            <td contenteditable="true"><?php echo $socio->email; ?></td>
-            <td><?php $socio->activo == 1 ?
-                    $activado = "Activo <br> <input type='checkbox' class='accesoTabla' checked>" : $activado = "Desactivado <br> <input type='checkbox' class='accesoTabla'>"; echo $activado;?></td>
-            <td contenteditable="true"><?php echo $socio->tipo_socio; ?></td>
-            <td><?php echo $socio->fecha_alta; ?></td>
-            <td contenteditable="true"><?php echo $socio->fecha_baja; ?></td>
-            <td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>
-            <td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>
-          </tr>
+                          <tr>
+                            <th><?php echo $socio->id_socio; ?></th>
+                            <td><?php echo $socio->nombre; ?></td>
+                            <td><?php echo $socio->apellidos; ?></td>
+                            <td><?php echo $socio->dni; ?></td>
+                            <td contenteditable="true"><?php echo $socio->telefono; ?></td>
+                            <td contenteditable="true"><?php echo $socio->provincia; ?></td>
+                            <td contenteditable="true"><?php echo $socio->municipio; ?></td>
+                            <td contenteditable="true"><?php echo $socio->direccion; ?></td>
+                            <td contenteditable="true"><?php echo $socio->cp; ?></td>
+                            <td contenteditable="true"><?php echo $socio->num_casa; ?></td>
+                            <td contenteditable="true"><?php echo $socio->piso; ?></td>
+                            <td contenteditable="true"><?php echo $socio->puerta; ?></td>
+                            <td contenteditable="true"><?php echo $socio->email; ?></td>
+                            <td><?php $socio->activo == 1 ?
+                                    $activado = "Activo <br> <input type='checkbox' class='accesoTabla' checked>" : $activado = "Desactivado <br> <input type='checkbox' class='accesoTabla'>"; echo $activado;?></td>
+                            <td contenteditable="true"><?php echo $socio->tipo_socio; ?></td>
+                            <td><?php echo $socio->fecha_alta; ?></td>
+                            <td contenteditable="true"><?php echo $socio->fecha_baja; ?></td>
+                            <td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>
+                            <td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>
+                          </tr>
 
             <?php
+                        }
                     }
 
                 }
@@ -264,6 +272,23 @@
             ?>
           </tbody>
         </table>
+
+        <nav aria-label="Page navigation example" id="navPaginacionSocios">
+          <ul class="pagination justify-content-center">
+            <?php
+
+                if (isset($paginasPaginacion)) {
+                    for ($i = 1; $i <= $paginasPaginacion;$i++){
+            ?>
+
+                      <li class="page-item"><a data-pagina="<?php echo $i ?>" class="page-link" href="#"><?php echo $i ?></a></li>
+
+              <?php
+                    }
+                }
+            ?>
+          </ul>
+        </nav>
 
       </div>
 
@@ -526,7 +551,6 @@
               <button class="btn btn-info" type="button" data-bs-dismiss="offcanvas">
                 Mostrar todas las parcelas
               </button>
-              </ul>
             </div>
           </div>
         </div>

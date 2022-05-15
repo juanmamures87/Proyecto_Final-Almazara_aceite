@@ -36,7 +36,8 @@
                 //Llamamos a la función para mostrar todos los socios en la página del administrador
                 require_once "modelo/SocioModelo.php";
                 $socios = new SocioModelo();
-                $mostrarSocios = $socios->mostrarSocios();
+                $pagina = 1;
+                $mostrarSocios = $socios->mostrarSocios($pagina);
 
                 //A continuación obtenemos el servicio web del catastro que nos proporciona las provincias de España.
                 //Obtenemos una variable que almacena todos los datos y la pasamos a la vista.

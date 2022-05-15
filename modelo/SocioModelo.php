@@ -17,15 +17,28 @@
 
         }
 
-        function mostrarSocios(){
+        function mostrarSocios($pagina){
 
             $conexion = $this->conexion;
+
+            /*Para realizar la paginación hay que poner la cláusula LIMIT, pero antes hay que apagar las preparaciones
+            de consulta emuladas cambiando este atributo a false porque si no la cláusula LIMIT no será aceptada*/
+            $conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES,false);
             $usuarios = [];
+            $datosFinales = [];
 
             try{
 
+                $tamagnoPaginas = 5;
+                $empezarDesde = ($pagina - 1)*$tamagnoPaginas;
                 $sql = "SELECT * FROM usuarios u INNER JOIN socios s ON u.id_usuario = s.id_usuario ORDER BY apellidos ASC";
                 $resultado = $conexion->query($sql);
+                $numRegistros = $resultado->rowCount();
+                $totalPaginas = ceil($numRegistros/$tamagnoPaginas);
+                $resultado->closeCursor();
+
+                $sql_limit = "SELECT * FROM usuarios u INNER JOIN socios s ON u.id_usuario = s.id_usuario ORDER BY apellidos ASC LIMIT $empezarDesde,$tamagnoPaginas";
+                $resultado = $conexion->query($sql_limit);
                 if ($resultado->rowCount() !== 0) {
 
                     while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
@@ -34,12 +47,18 @@
 
                     }
 
-                }
+                    $datosFinales = [
 
+                        "usuarios" => $usuarios,
+                        "paginas" => $totalPaginas
+
+                    ];
+
+                }
             }catch (PDOException $e){
 
                 $errorName = $e->getMessage();
-                $usuarios = [
+                $datosFinales = [
 
                     "codigo" => -2,
                     "errorConex" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
@@ -49,7 +68,7 @@
             }
 
             unset($conexion);
-            return $usuarios;
+            return $datosFinales;
 
         }
 

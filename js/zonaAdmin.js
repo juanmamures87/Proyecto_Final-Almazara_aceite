@@ -817,8 +817,9 @@ selProvParcela.addEventListener("change",function () {
 
 })
 
-let introducirRefCat;
+//Evento sobre el campo de la ref. catastral para validarla y que muestre mapa del catastro con datos
 refCatParcela.addEventListener('keydown', () => {
+    let introducirRefCat;
     clearTimeout(introducirRefCat)
 
     introducirRefCat = setTimeout(() => {
@@ -1080,3 +1081,109 @@ function validarCamposParcelas() {
     return true;
 
 }
+
+/** PRUEBA DE PAGINACIÓN CON PETICIONES AJAX **/
+
+const tablaJQsocios = $("#tablaSocios tbody");
+const numeracionPaginacion = $("#navPaginacionSocios ul");
+
+    $(document).on("click",".page-link",function (e) {
+
+        e.preventDefault();
+
+        let datos = new FormData();
+        datos.append("pagina",this.dataset.pagina);
+        datos.append("controlador","admin");
+        datos.append("accion","paginarSocios");
+
+        fetch("index.php", {
+
+            method: "POST",
+            body: datos
+
+        })
+
+            .then(response => {
+
+                if (response.ok){
+
+                    return response.json();//tipo de respuesta que esperamos recibir
+
+                }else{
+
+                    throw 'alert("¡¡ERROR EN LA RESPUESTA DEL SERVIDOR!!")'
+
+                }
+
+            })
+
+            .then(data => {
+
+                if (data !== null) {
+
+                    let paginas = data.paginas;
+                    let activado;
+                    let fechaBaja;
+                    tablaJQsocios.empty();
+
+                    for (let j = 0; j < data.usuarios.length; j++) {
+
+                        if (data.usuarios[j].activo == 1){
+
+                            activado = "Activo <br><input type='checkbox' class='accesoTabla' checked>";
+
+                        }else{
+
+                            activado = "Desactivado <br><input type='checkbox' class='accesoTabla'>";
+
+                        }
+                        data.usuarios[j].fecha_baja === null ? fechaBaja = "" : fechaBaja = data.usuarios[j].fecha_baja;
+                        tablaJQsocios.append('<tr>' +
+                            '<th>' + data.usuarios[j].id_socio + '</th>' +
+                            '<td>' + data.usuarios[j].nombre + '</td>' +
+                            '<td>' + data.usuarios[j].apellidos + '</td>' +
+                            '<td>' + data.usuarios[j].dni + '</td>' +
+                            '<td contenteditable="true">' + data.usuarios[j].telefono + '</td>'+
+                            '<td contenteditable="true">' + data.usuarios[j].provincia + '</td>'+
+                            '<td contenteditable="true">' + data.usuarios[j].municipio + '</td>' +
+                            '<td contenteditable="true">' + data.usuarios[j].direccion + '</td>' +
+                            '<td contenteditable="true">' + data.usuarios[j].cp + '</td>' +
+                            '<td contenteditable="true">' + data.usuarios[j].num_casa + '</td>' +
+                            '<td contenteditable="true">' + data.usuarios[j].piso + '</td>' +
+                            '<td contenteditable="true">' + data.usuarios[j].puerta + '</td>' +
+                            '<td contenteditable="true">' + data.usuarios[j].email + '</td>' +
+                            '<td>' + activado + '</td>' +
+                            '<td contenteditable="true">' + data.usuarios[j].tipo_socio + '</td>' +
+                            '<td>' + data.usuarios[j].fecha_alta + '</td>' +
+                            '<td contenteditable="true">' + fechaBaja + '</td>' +
+                            '<td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>' +
+                            '<td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>' +
+                            '</tr>');
+
+                    }
+
+                    numeracionPaginacion.empty();
+
+                    for (let i = 1; i <= paginas; i++) {
+
+                        numeracionPaginacion.append('<li class="page-item"><a data-pagina="' + i + '" class="page-link" ' +
+                            'href="#">' + i + '</a></li>');
+
+                    }
+                }else{
+
+                    alert("¡¡OBJETO RECIBIDO INCORRECTO!!")
+
+                }
+
+            })
+            .catch(err => {
+
+                alert(err);
+
+            })
+
+    })
+
+
+

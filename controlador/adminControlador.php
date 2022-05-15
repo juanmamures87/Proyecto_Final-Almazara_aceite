@@ -178,3 +178,16 @@
         }
 
     }
+
+    function paginarSocios(){
+
+        if (isset($_POST['pagina'])) {
+
+            require_once "modelo/SocioModelo.php";
+            $socios = new SocioModelo();
+            $paginar = $socios->mostrarSocios($_POST['pagina']);
+            echo json_encode($paginar);
+
+        }
+
+    }
