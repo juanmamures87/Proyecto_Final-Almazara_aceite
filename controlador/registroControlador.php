@@ -235,7 +235,7 @@
                 $mailConfirm ? $envio = "Correo de verificación enviado correctamente" : $envio = "El correo de verificación no pudo ser enviado";
                 require_once "modelo/SocioModelo.php";
                 $nuevos = new SocioModelo();
-                $nuevoUsuario = $nuevos->mostrarSocioDeterminado($usuario['idUsuario']);
+                $nuevoUsuario = $nuevos->mostrarSocioXid($usuario['idUsuario']);
 
                 $resultado = [
 

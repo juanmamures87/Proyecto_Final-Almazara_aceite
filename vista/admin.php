@@ -309,26 +309,12 @@
 
         <form class="row gx-3 gy-2 align-items-center" id="formularioRegistroParcelas">
           <div class="col-sm-2">
-            <label class="visually-hidden" for="selSocioParcela">Socio</label>
-            <select class="form-select" id="selSocioParcela" name="selSocioParcela">
-
-              <option class="text-center" value="SOCIO">SOCIO</option>
-                <?php
-
-                    if (isset($mostrarSocios) && !empty($mostrarSocios)){
-
-                      foreach ($mostrarSocios as $socio){
-
-                ?>
-                      <option value="<?php echo $socio->id_socio; ?>"><?php echo $socio->nombre . " " . $socio->apellidos; ?></option>
-
-                        <?php
-
-                      }
-                    }
-
-                ?>
-
+            <label class="visually-hidden" for="busSocioParcela">Socio</label>
+            <input type="search" class="form-control" id="busSocioParcela" name="busSocioParcela" placeholder="Socio">
+          </div>
+          <div class="col-sm-2">
+            <select class="form-select" name="selSocioParcela" id="selSocioParcela">
+              <option class="text-center" value="SOCIOS">SOCIOS</option>
             </select>
           </div>
           <div class="col-sm-2">
@@ -430,10 +416,10 @@
             <label class="visually-hidden" for="plantasParcela">Num. Plantas</label>
             <input type="number" class="form-control" id="plantasParcela" name="plantasParcela" placeholder="Num. Plantas">
           </div>
-          <div class="col-auto w-50">
-            <button type="submit" class="btn btn-primary" id="registroParcelas">Registrar</button>
-            <button type="reset" class="btn btn-warning" id="resetFormParcelas">Resetear</button>
-            <button class="btn btn-success botonSeleccionDatos float-end" type="button" data-bs-toggle="offcanvas"
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary mx-3" id="registroParcelas">Registrar</button>
+            <button type="reset" class="btn btn-warning mx-2" id="resetFormParcelas">Resetear</button>
+            <button class="btn btn-success botonSeleccionDatos mx-4" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#seleccionDatosParcelas" aria-controls="seleccionDatosParcelas">
               Visualizar Datos
             </button>
@@ -559,7 +545,12 @@
         <!-------------------------------------------------------------------------------------------->
       </div>
 
-      <div class="muestraSeccion" id="mostrarSeccionParcelas"></div>
+      <div class="muestraSeccion" id="mostrarSeccionParcelas">
+
+          <table class="table table-striped" id="tablaParcelas"></table>
+          <nav aria-label="Page navigation example" id="navPaginacionParcelas"></nav>
+
+      </div>
 
     </article>
 
@@ -604,5 +595,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
   <script src="../js/principal.js"></script>
   <script src="../js/zonaAdmin.js"></script>
+  <script src="../js/zonaAdminParcelas.js"></script>
   </body>
 </html>

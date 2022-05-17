@@ -138,4 +138,62 @@
 
         }
 
+        function mostrarParcelasXsocio($apellido, $pagina){
+
+            $conexion = $this->conexion;
+
+            /*Para realizar la paginación hay que poner la cláusula LIMIT, pero antes hay que apagar las preparaciones
+            de consulta emuladas cambiando este atributo a false porque si no la cláusula LIMIT no será aceptada*/
+            $conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES,false);
+            $parcelas = [];
+            $datosFinales = [];
+
+            try{
+
+                $tamagnoPaginas = 5;
+                $empezarDesde = ($pagina - 1)*$tamagnoPaginas;
+                $sql = "SELECT * FROM parcela p INNER JOIN socios s ON p.id_socio = s.id_socio INNER JOIN usuarios u 
+                        ON s.id_usuario = u.id_usuario WHERE lower(u.apellidos) like lower('$apellido%')  ORDER BY apellidos ASC";
+                $resultado = $conexion->query($sql);
+                $numRegistros = $resultado->rowCount();
+                $totalPaginas = ceil($numRegistros/$tamagnoPaginas);
+                $resultado->closeCursor();
+
+                $sql_limit = "SELECT * FROM parcela p INNER JOIN socios s ON p.id_socio = s.id_socio INNER JOIN usuarios u 
+                              ON s.id_usuario = u.id_usuario WHERE u.apellidos like '$apellido%'  
+                              ORDER BY apellidos ASC LIMIT $empezarDesde,$tamagnoPaginas";
+                $resultado = $conexion->query($sql_limit);
+                if ($resultado->rowCount() !== 0) {
+
+                    while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
+
+                        $parcelas[] = $fila;
+
+                    }
+
+                    $datosFinales = [
+
+                        "usuarios" => $parcelas,
+                        "paginas" => $totalPaginas
+
+                    ];
+
+                }
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                $datosFinales = [
+
+                    "codigo" => -2,
+                    "errorConex" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+
+                ];
+
+            }
+
+            unset($conexion);
+            return $datosFinales;
+
+        }
+
     }

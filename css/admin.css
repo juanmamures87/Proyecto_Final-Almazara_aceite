@@ -183,14 +183,17 @@ body {
                     100%;}
 
 #tituloSeccionParcelas{grid-area: tituloParcelas;
-    background-color: white;}
+    background-color: white;
+}
 
 #registroSeccionParcelas{grid-area: registroParcelas;
     padding: 5px;
-    background-color: #d6efab;}
+    background-color: #d6efab;
+}
 
 #mostrarSeccionParcelas{grid-area: mostrarParcelas;
-    background-color: #fffcc2;}
+    background-color: #fffcc2;
+}
 
 /********************** MENÚ LATERAL DESPLEGABLE PARA MOSTRAR LOS DATOS REFERENTES A LAS PARCELAS ********************/
 

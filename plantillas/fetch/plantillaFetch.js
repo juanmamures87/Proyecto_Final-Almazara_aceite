@@ -14,7 +14,7 @@ fetch("index.php", {
 
         }else{
 
-            throw 'alert("¡¡ERROR EN LA RESPUESTA DEL SERVIDOR!!")'
+            throw 'ERROR EN LA LLAMADA AJAX';
 
         }
 
@@ -28,7 +28,7 @@ fetch("index.php", {
 
         }else{
 
-            alert("¡¡OBJETO RECIBIDO INCORRECTO!!")
+            alert('ERROR EN EL OBJETO RECIBIDO')
 
         }
 

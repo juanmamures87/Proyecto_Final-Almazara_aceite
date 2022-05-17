@@ -115,7 +115,7 @@
             $datosParcela = [
                 'Provincia' => $provincia,
                 'Municipio' => $municipio,
-                'RC'        => $refcat
+                'RC'        => strval($refcat)
             ];
 
             /*A continuación obtenemos el servicio web del catastro que nos proporciona todo lo referente a una parcela, pasándole
@@ -190,4 +190,45 @@
 
         }
 
+    }
+
+    function mostrarParcialParcelaXsocio(){
+
+        if (isset($_POST['apellido'], $_POST['pagina']) && !empty($_POST['apellido'])) {
+
+            $apellido = $_POST['apellido'];
+            $_POST['pagina'] === "" ? $pagina = 1 : $pagina = $_POST['pagina'];
+
+            require_once "modelo/ParcelaModelo.php";
+            $parcelas = new ParcelaModelo();
+            $parcelaXsocio = $parcelas->mostrarParcelasXsocio($apellido,$pagina);
+            echo json_encode($parcelaXsocio);
+        }
+    }
+
+    function mostrarSociosXApellidosRegistroParcela(){
+
+        if (isset($_POST['apellido'])) {
+
+            $apellido = $_POST['apellido'];
+
+            require_once "modelo/SocioModelo.php";
+            $socios = new SocioModelo();
+            $socioXapellido = $socios->mostrarSocioXApellido($apellido);
+            echo json_encode($socioXapellido);
+            //var_dump($socioXapellido);
+
+        }else{
+
+            $respuesta = [
+
+                "codigo"    => -2,
+                "msg"       => "DEBE INTRODUCIR UN APELLIDO VÁLIDO PARA MOSTAR A LOS SOCIOS"
+
+            ];
+
+            echo json_encode($respuesta);
+            //var_dump($respuesta);
+
+        }
     }

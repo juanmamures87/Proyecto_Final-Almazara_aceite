@@ -72,7 +72,7 @@
 
         }
 
-        function mostrarSocioDeterminado($idUsuario){
+        function mostrarSocioXid($idUsuario){
 
             $conexion = $this->conexion;
             $usuarios = [];
@@ -86,6 +86,42 @@
                     $fila = $resultado->fetch(PDO::FETCH_OBJ);
 
                         $usuarios[] = $fila;
+
+                }
+
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                $usuarios = [
+
+                    "codigo" => -2,
+                    "msg" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+
+                ];
+
+            }
+
+            unset($conexion);
+            return $usuarios;
+
+        }
+
+        function mostrarSocioXApellido($apellido){
+
+            $conexion = $this->conexion;
+            $usuarios = [];
+
+            try{
+
+                $sql = "SELECT * FROM usuarios u INNER JOIN socios s ON u.id_usuario = s.id_usuario WHERE LOWER(u.apellidos) like LOWER('$apellido%')";
+                $resultado = $conexion->query($sql);
+                if ($resultado->rowCount() !== 0) {
+
+                    while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
+
+                        $usuarios[] = $fila;
+
+                    }
 
                 }
 
