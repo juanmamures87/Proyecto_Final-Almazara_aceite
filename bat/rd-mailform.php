@@ -68,7 +68,7 @@ try {
     if (isset($_POST['message'])) {
         $template = str_replace(
             array("<!-- #{MessageState} -->", "<!-- #{MessageDescription} -->"),
-            array("Message:", $_POST['message']),
+            array("Mensaje:", $_POST['message']),
             $template);
     }
 
