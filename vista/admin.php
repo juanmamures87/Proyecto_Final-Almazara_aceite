@@ -289,6 +289,9 @@
                 }
             ?>
           </ul>
+          <div class="text-center w-25 m-auto text-decoration-underline">
+          <span id="muestraPaginaSocios"></span>
+          </div>
         </nav>
 
       </div>
@@ -311,7 +314,7 @@
         <form class="row gx-3 gy-2 align-items-center" id="formularioRegistroParcelas">
           <div class="col-sm-2">
             <label class="visually-hidden" for="busSocioParcela">Socio</label>
-            <input type="search" class="form-control" id="busSocioParcela" name="busSocioParcela" placeholder="Socio">
+            <input type="search" class="form-control" id="busSocioParcela" name="busSocioParcela" placeholder="Búsqueda parcial">
           </div>
           <div class="col-sm-2">
             <select class="form-select" name="selSocioParcela" id="selSocioParcela">
@@ -361,7 +364,7 @@
           </div>
           <div class="col-sm-1">
             <label class="visually-hidden" for="parParcela">Parcela</label>
-            <input type="number" class="form-control" id="parParcela" name="parParcela" placeholder="Parcela">
+            <input type="text" class="form-control" id="parParcela" name="parParcela" placeholder="Parcela">
           </div>
           <div class="col-sm-2">
             <label class="visually-hidden" for="superParcela">Superficie</label>

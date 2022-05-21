@@ -745,8 +745,10 @@ function reinicioSelectDir(campoProv, campoMun, campoDir, campoCp) {
 /** Evento sobre los botones de las páginas de paginación de la zona de los socios **/
 const tablaJQsocios = $("#tablaSocios tbody");
 const numeracionPaginacion = $("#navPaginacionSocios ul");
+const muestraPaginaSocios = $("#muestraPaginaSocios");
 $(document).on("click",".page-item",function (e) {
 
+    e.preventDefault();
     this.classList.add('active')
 
     let datos = new FormData();
@@ -834,6 +836,7 @@ $(document).on("click",".page-item",function (e) {
 
                 }
 
+                muestraPaginaSocios.text(this.dataset.pagina);
 
             }else{
 
@@ -847,8 +850,6 @@ $(document).on("click",".page-item",function (e) {
             alert(err);
 
         })
-
-    e.preventDefault();
 
 })
 

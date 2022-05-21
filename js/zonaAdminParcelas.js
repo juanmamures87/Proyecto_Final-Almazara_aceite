@@ -17,6 +17,7 @@ const superParcela = document.getElementById("superParcela");
 const selSisParcela = document.getElementById("selSisParcela");
 const selVarParcela = document.getElementById("selVarParcela");
 const plantasParcela = document.getElementById("plantasParcela");
+var ventanaParcela;
 
 //Referencia a los botones de registrar parcela y resetear campos
 const registroParcelas = document.getElementById("registroParcelas");
@@ -104,7 +105,7 @@ refCatParcela.addEventListener('keydown', () => {
 
         if (validacionRefCat()) {
 
-            window.open('https://www1.sedecatastro.gob.es/Cartografia/mapa.aspx?refcat=' + refCatParcela.value + '',
+           ventanaParcela = window.open('https://www1.sedecatastro.gob.es/Cartografia/mapa.aspx?refcat=' + refCatParcela.value + '',
                 "_blank", "width=400, height=500, toolbar=no, menubar=no, location=no, status=no, " +
                 "resizable=yes, popup=yes, top=400px, left=1200px")
 
@@ -165,15 +166,11 @@ refCatParcela.addEventListener('keydown', () => {
 
 })
 
-//Evento sobre el botón de resetear los campos de registro de las parcelas. Que además de hacer su función resetea el select de municipio
+//Evento sobre el botón de resetear los campos de registro de las parcelas. Que además de hacer su función resetea el
+//select de municipio y el de la búsqueda parcial de socio
 resetFormParcelas.addEventListener("click",function () {
 
-    selMunParcela.length = 0;
-    let optionMunPar = document.createElement("option");
-    optionMunPar.textContent = "MUNICIPIO";
-    optionMunPar.value = "MUNICIPIO";
-    optionMunPar.className = "text-center";
-    selMunParcela.appendChild(optionMunPar);
+    resetearSocioMunicipio()
 
 })
 
@@ -216,6 +213,11 @@ registroParcelas.addEventListener("click",function (e){
 
                         mostrarMsgCorrecto(data.msg);
                         ocultarMsgRetardo();
+
+                        //reseteo del formulario de parcelas y campo select de búsqueda parcial
+                        formularioRegistroParcelas.reset();
+                        resetearSocioMunicipio()
+                        ventanaParcela.clone();
 
                     }else{
 
@@ -529,3 +531,22 @@ selSocioParcela.addEventListener("keyup",function () {
         })
 
 })*/
+
+//función que resetea los campos de selección de socio y selección de municipio, que por defecto no lo hacen
+function resetearSocioMunicipio() {
+
+    selMunParcela.length = 0;
+    let optionMunPar = document.createElement("option");
+    optionMunPar.textContent = "MUNICIPIO";
+    optionMunPar.value = "MUNICIPIO";
+    optionMunPar.className = "text-center";
+    selMunParcela.appendChild(optionMunPar);
+
+    selSocioParcela.length = 0;
+    let opcion = document.createElement("option");
+    opcion.value = 'SOCIOS';
+    opcion.textContent = 'SOCIOS';
+    opcion.className = "text-center";
+    selSocioParcela.append(opcion);
+
+}

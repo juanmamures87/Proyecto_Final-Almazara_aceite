@@ -160,15 +160,17 @@
             $destinatario   = $email;
             $titulo         = "Verificación de cuenta";
             $mensaje        = "¡Ha sido registrado exitosamente en Molino del Sur!\r\n
-                    Su cuenta ha sido creada y puede iniciar sesión con\r\n 
-                    las siguientes credenciales.\r\n
+                               Le damos la BIENVENIDA COMO NUEVO SOCIO DE NUESTRA COOPERATIVA.\r\n
+            
+                    Su cuenta ha sido creada y puede iniciar sesión con las siguientes credenciales.\r\n
                 -----------------------------------------
                     Usuario - DNI: $dni
                     Contraseña: $clave
                 -----------------------------------------
                     
-                Por favor, guarde su clave en un sitio seguro para poder utilizarla con total seguridad. \r\n
-                Le damos la BIENVENIDA COMO NUEVO SOCIO DE NUESTRA COOPERATIVA.";
+                Por favor, guarde su clave en un sitio seguro. \r\n
+                Un saludo y gracias por confiar en nosotros\r\n\r\n
+                ALMAZARA COOPERATIVA MOLINO DEL SUR.";
             $mail = new PHPMailer(true);
 
             try {
@@ -187,9 +189,9 @@
                 $mail->Port       = 587;//                                   //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
                 //Recipients
-                $mail->setFrom('pruebas2cfgs@gmail.com', 'Correo');
+                $mail->setFrom('molino_sur_coop@hotmail.com', 'Correo');
                 $mail->addAddress($destinatario, $nombre);
-                $mail->addReplyTo('pruebas2cfgs@gmail.com', 'Información');
+                $mail->addReplyTo('molino_sur_coop@hotmail.com', 'Información');
 
                 //Content
                 $mail->Subject = $titulo;
