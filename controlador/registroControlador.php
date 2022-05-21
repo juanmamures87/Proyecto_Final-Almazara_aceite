@@ -207,13 +207,13 @@
         }
         if ($piso === ""){
 
-            $piso = null;
+            $piso = "-";
 
         }
         if ($puerta === ""){
 
 
-            $puerta = null;
+            $puerta = "-";
         }
 
 
@@ -247,22 +247,17 @@
                 ];
 
                 //var_dump($resultado);
-                echo json_encode($resultado);
 
             }else{
 
                 $resultado = [
 
                     "codigo"    => 0,
-                    "msg"       =>  "ERROR AL REGISTRAR AL USUARIO"
+                    "msg"       =>  "ERROR AL REGISTRAR AL USUARIO ALGUNO DE LOS DATOS YA SE ENCUENTRA EN EL REGISTRO"
 
                 ];
 
-                //var_dump($resultado);
-                echo json_encode($resultado);
             }
-
-
 
         }else{
 
@@ -273,10 +268,10 @@
 
             ];
 
-            //var_dump($resultado);
-            echo json_encode($resultado);
-
         }
+
+        echo json_encode($resultado);
+        //var_dump($resultado);
     }
 
     function insertarParcela(){

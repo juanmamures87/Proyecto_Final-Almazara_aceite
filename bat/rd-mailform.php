@@ -42,7 +42,7 @@ try {
     if (isset($_POST['form-type'])) {
         switch ($_POST['form-type']){
             case 'contact':
-                $subject = 'Un mensaje del visitante de su sitio';
+                $subject = 'Mensaje de un visitante de su sitio web';
                 break;
             case 'subscribe':
                 $subject = 'Solicitud de suscripción';
@@ -51,7 +51,7 @@ try {
                 $subject = 'Solicitud de orden';
                 break;
             default:
-                $subject = 'Un mensaje del visitante de su sitio';
+                $subject = 'Mensaje de un visitante de su sitio web';
                 break;
         }
     }else{
@@ -112,7 +112,7 @@ try {
 
         // Whether to use SMTP authentication
         $mail->SMTPAuth = true;
-        $mail->SMTPSecure = "ssl";
+        $mail->SMTPSecure = "tls";
 
         // Username to use for SMTP authentication
         $mail->Username = $formConfig['username'];

@@ -337,6 +337,7 @@ dniSocio.addEventListener("blur",function () {
 })
 
 //Evento sobre el botón de envío del formulario donde se validan los datos y se mandan al controlador
+//Aquí el socio introducido se inserta en la tabla
 registroSocio.addEventListener("click", function (e) {
 
     e.preventDefault();
@@ -383,93 +384,112 @@ registroSocio.addEventListener("click", function (e) {
 
                     if (data !== null) {
 
-                        let tablaMuestra = tablaSocios.insertRow(tablaSocios.rows.length);
+                        if (data.codigo === 1) {
 
-                        let thId = document.createElement("th");
-                        let col1 = tablaMuestra.appendChild(thId);
-                        let col2 = tablaMuestra.insertCell(1);
-                        let col3 = tablaMuestra.insertCell(2);
-                        let col4 = tablaMuestra.insertCell(3);
-                        let col5 = tablaMuestra.insertCell(4);
-                        let col6 = tablaMuestra.insertCell(5);
-                        let col7 = tablaMuestra.insertCell(6);
-                        let col8 = tablaMuestra.insertCell(7);
-                        let col9 = tablaMuestra.insertCell(8);
-                        let col10 = tablaMuestra.insertCell(9);
-                        let col11 = tablaMuestra.insertCell(10);
-                        let col12 = tablaMuestra.insertCell(11);
-                        let col13 = tablaMuestra.insertCell(12);
+                            let extraerFecha = data['usuario'][0].fecha_alta.split("-");
+                            let nuevaFechaAlta = extraerFecha[2] + "/" + extraerFecha[1] + "/" + extraerFecha[0];
 
-                        let checkModiftrue = document.createElement("input");
-                        checkModiftrue.type = "checkbox";
-                        checkModiftrue.checked = true;
-                        checkModiftrue.className = "accesoTabla";
-                        let checkModifalse = document.createElement("input");
-                        checkModifalse.type = "checkbox";
-                        checkModifalse.checked = false;
-                        checkModiftrue.className = "accesoTabla";
-                        let activo;
-                        data['usuario'][0].activo == 1 ? activo = "Activo" : activo = "Desactivado";
-                        let col14 = tablaMuestra.insertCell(13)
-                        let col15 = tablaMuestra.insertCell(14);
-                        let col16 = tablaMuestra.insertCell(15);
-                        let col17 = tablaMuestra.insertCell(16);
+                            let lineaVacia = document.createElement("tr")
+                            let tdVacio = document.createElement("td");
+                            tdVacio.colSpan = 19;
+                            tdVacio.style.backgroundColor = "#989998";
+                            tdVacio.style.textAlign = "center";
+                            tdVacio.style.alignItems = 'center;'
+                            tdVacio.textContent = 'NUEVO USUARIO REGISTRADO';
+                            lineaVacia.appendChild(tdVacio);
+                            tablaSocios.appendChild(lineaVacia);
 
-                        let salto = document.createElement("br");
-                        let modificar = document.createElement("i");
-                        modificar.className = "fa fa-pencil-square-o fa-2x";
-                        modificar.ariaHidden = "true";
-                        let col18 = tablaMuestra.insertCell(17);
+                            let tablaMuestra = tablaSocios.insertRow(tablaSocios.rows.length);
 
-                        let borrar = document.createElement("i");
-                        borrar.className = "fa fa-trash-o fa-2x";
-                        borrar.ariaHidden = "true";
-                        let col19 = tablaMuestra.insertCell(18);
+                            let thId = document.createElement("th");
+                            let col1 = tablaMuestra.appendChild(thId);
+                            let col2 = tablaMuestra.insertCell(1);
+                            let col3 = tablaMuestra.insertCell(2);
+                            let col4 = tablaMuestra.insertCell(3);
+                            let col5 = tablaMuestra.insertCell(4);
+                            let col6 = tablaMuestra.insertCell(5);
+                            let col7 = tablaMuestra.insertCell(6);
+                            let col8 = tablaMuestra.insertCell(7);
+                            let col9 = tablaMuestra.insertCell(8);
+                            let col10 = tablaMuestra.insertCell(9);
+                            let col11 = tablaMuestra.insertCell(10);
+                            let col12 = tablaMuestra.insertCell(11);
+                            let col13 = tablaMuestra.insertCell(12);
 
-                        col1.textContent = data['usuario'][0].id_socio;
-                        col2.textContent = data['usuario'][0].nombre;
-                        col3.textContent = data['usuario'][0].apellidos;
-                        col4.textContent = data['usuario'][0].dni;
-                        col5.textContent = data['usuario'][0].telefono;
-                        col5.contentEditable = "true";
-                        col6.textContent = data['usuario'][0].provincia;
-                        col6.contentEditable = "true";
-                        col7.textContent = data['usuario'][0].municipio;
-                        col7.contentEditable = "true";
-                        col8.textContent = data['usuario'][0].direccion;
-                        col8.contentEditable = "true";
-                        col9.textContent = data['usuario'][0].cp;
-                        col9.contentEditable = "true";
-                        col10.textContent = data['usuario'][0].num_casa;
-                        col10.contentEditable = "true";
-                        col11.textContent = data['usuario'][0].piso;
-                        col11.contentEditable = "true";
-                        col12.textContent = data['usuario'][0].puerta;
-                        col12.contentEditable = "true";
-                        col13.textContent = data['usuario'][0].email;
-                        col13.contentEditable = "true";
-                        col14.textContent = activo;
-                        col14.appendChild(salto);
-                        if (activo === "Activo"){
+                            let checkModiftrue = document.createElement("input");
+                            checkModiftrue.type = "checkbox";
+                            checkModiftrue.checked = true;
+                            checkModiftrue.className = "accesoTabla";
+                            let checkModifalse = document.createElement("input");
+                            checkModifalse.type = "checkbox";
+                            checkModifalse.checked = false;
+                            checkModiftrue.className = "accesoTabla";
+                            let activo;
+                            data['usuario'][0].activo == 1 ? activo = "Activo" : activo = "Desactivado";
+                            let col14 = tablaMuestra.insertCell(13)
+                            let col15 = tablaMuestra.insertCell(14);
+                            let col16 = tablaMuestra.insertCell(15);
+                            let col17 = tablaMuestra.insertCell(16);
 
-                            col14.appendChild(checkModiftrue);
+                            let salto = document.createElement("br");
+                            let modificar = document.createElement("i");
+                            modificar.className = "fa fa-pencil-square-o fa-2x";
+                            modificar.ariaHidden = "true";
+                            let col18 = tablaMuestra.insertCell(17);
 
-                        }else{
+                            let borrar = document.createElement("i");
+                            borrar.className = "fa fa-trash-o fa-2x";
+                            borrar.ariaHidden = "true";
+                            let col19 = tablaMuestra.insertCell(18);
 
-                            col14.appendChild(checkModifalse);
+                            col1.textContent = data['usuario'][0].id_socio;
+                            col2.textContent = data['usuario'][0].nombre;
+                            col3.textContent = data['usuario'][0].apellidos;
+                            col4.textContent = data['usuario'][0].dni;
+                            col5.textContent = data['usuario'][0].telefono;
+                            col5.contentEditable = "true";
+                            col6.textContent = data['usuario'][0].provincia;
+                            col6.contentEditable = "true";
+                            col7.textContent = data['usuario'][0].municipio;
+                            col7.contentEditable = "true";
+                            col8.textContent = data['usuario'][0].direccion;
+                            col8.contentEditable = "true";
+                            col9.textContent = data['usuario'][0].cp;
+                            col9.contentEditable = "true";
+                            col10.textContent = data['usuario'][0].num_casa;
+                            col10.contentEditable = "true";
+                            col11.textContent = data['usuario'][0].piso;
+                            col11.contentEditable = "true";
+                            col12.textContent = data['usuario'][0].puerta;
+                            col12.contentEditable = "true";
+                            col13.textContent = data['usuario'][0].email;
+                            col13.contentEditable = "true";
+                            col14.textContent = activo;
+                            col14.appendChild(salto);
+                            if (activo === "Activo"){
+
+                                col14.appendChild(checkModiftrue);
+
+                            }else{
+
+                                col14.appendChild(checkModifalse);
+
+                            }
+
+                            col15.textContent = data['usuario'][0].tipo_socio;
+                            col16.textContent = nuevaFechaAlta;
+                            col17.textContent = data['usuario'][0].fecha_baja;
+                            col17.contentEditable = "true";
+                            col18.appendChild(modificar);
+                            col19.appendChild(borrar);
+
+                            mostrarMsgCorrecto(data.msg + " - (" + data.msgCorreo + ")");
+
+                        }else if(data.codigo === 0 || data.codigo === -1){
+
+                            mostrarMsgError(data.msg);
 
                         }
-
-                        col15.textContent = data['usuario'][0].tipo_socio;
-                        col16.textContent = data['usuario'][0].fecha_alta;
-                        col17.textContent = data['usuario'][0].fecha_baja;
-                        col17.contentEditable = "true";
-                        col18.appendChild(modificar);
-                        col19.appendChild(borrar);
-
-                        let msgEnvio = data.msgCorreo.style.fontSize = "12px";
-                        mostrarMsgCorrecto(data.msg + msgEnvio);
-                        ocultarMsgRetardo();
 
                     }else{
 
@@ -532,7 +552,8 @@ activoSocio.addEventListener("click",function (){
         let idUsuarioBorrar = $(this).parent().siblings(':first').html();
         sessionStorage.setItem("idBorrar",idUsuarioBorrar);
 
-        if (confirm("¿Está seguro de eliminar a este socio de la BBDD?")) {
+        if (confirm('¿Está seguro de eliminar a ' + $(this).parent().siblings(':nth-child(3)').html() + ", "
+            + $(this).parent().siblings(':nth-child(2)').html() + '?')) {
 
             $(this).closest('tr').remove();
             let datos = new FormData();
@@ -633,61 +654,63 @@ $(document).on("click",".fa.fa-pencil-square-o.fa-2x",function () {
 
     }
 
-    let datos = new FormData();
-    datos.append("controlador","admin");
-    datos.append("accion","actualizarSocio");
-    datos.append("datosUsuario", JSON.stringify(cambioDatos));
-    datos.append("idUsuarioAct", sessionStorage.getItem("idActualizar"));
-    fetch("index.php", {
+    if (confirm('Va a proceder a modificar a ' + $(this).parent().siblings(':nth-child(3)').html() + ", "
+        + $(this).parent().siblings(':nth-child(2)').html() + '\n¿Está seguro?')) {
+        let datos = new FormData();
+        datos.append("controlador", "admin");
+        datos.append("accion", "actualizarSocio");
+        datos.append("datosUsuario", JSON.stringify(cambioDatos));
+        datos.append("idUsuarioAct", sessionStorage.getItem("idActualizar"));
+        fetch("index.php", {
 
-        method: "POST",
-        body: datos
-
-    })
-
-        .then(response => {
-
-            if (response.ok){
-
-                return response.json();//tipo de respuesta que esperamos recibir
-
-            }else{
-
-                throw 'alert("¡¡ERROR EN LA RESPUESTA DEL SERVIDOR!!")'
-
-            }
+            method: "POST",
+            body: datos
 
         })
 
-        .then(data => {
+            .then(response => {
 
-            if (data !== null) {
+                if (response.ok) {
 
-                if (data.codigo === 1) {
+                    return response.json();//tipo de respuesta que esperamos recibir
 
-                    mostrarMsgCorrecto(data.msg);
-                    ocultarMsgRetardo();
+                } else {
 
-                } else if (data.codigo === 0 || data.codigo === -1) {
-
-                    mostrarMsgError(data.msg);
-                    ocultarMsgRetardo();
+                    throw 'alert("¡¡ERROR EN LA RESPUESTA DEL SERVIDOR!!")'
 
                 }
 
-            }else{
+            })
 
-                alert("¡¡OBJETO RECIBIDO INCORRECTO!!")
+            .then(data => {
 
-            }
+                if (data !== null) {
 
-        })
-        .catch(err => {
+                    if (data.codigo === 1) {
 
-            alert(err);
+                        mostrarMsgCorrecto(data.msg);
+                        ocultarMsgRetardo();
 
-        })
+                    } else if (data.codigo === 0 || data.codigo === -1) {
 
+                        mostrarMsgError(data.msg);
+                        ocultarMsgRetardo();
+
+                    }
+
+                } else {
+
+                    alert("¡¡OBJETO RECIBIDO INCORRECTO!!")
+
+                }
+
+            })
+            .catch(err => {
+
+                alert(err);
+
+            })
+    }
 })
 
 /* FUNCIÓN QUE REINICIA LOS CAMPOS DE LOS SELECT DE LA DIRECCIÓN DEL SOCIO */
@@ -722,9 +745,9 @@ function reinicioSelectDir(campoProv, campoMun, campoDir, campoCp) {
 /** Evento sobre los botones de las páginas de paginación de la zona de los socios **/
 const tablaJQsocios = $("#tablaSocios tbody");
 const numeracionPaginacion = $("#navPaginacionSocios ul");
-$(document).on("click",".page-link",function (e) {
+$(document).on("click",".page-item",function (e) {
 
-    e.preventDefault();
+    this.classList.add('active')
 
     let datos = new FormData();
     datos.append("pagina",this.dataset.pagina);
@@ -773,6 +796,9 @@ $(document).on("click",".page-link",function (e) {
                         activado = "Desactivado <br><input type='checkbox' class='accesoTabla'>";
 
                     }
+
+                    let extraerFecha = data.usuarios[j].fecha_alta.split("-");
+                    let nuevaFechaAlta = extraerFecha[2] + "/" + extraerFecha[1] + "/" + extraerFecha[0];
                     data.usuarios[j].fecha_baja === null ? fechaBaja = "" : fechaBaja = data.usuarios[j].fecha_baja;
                     data.usuarios[j].puerta === null ? puerta = "" : puerta = data.usuarios[j].puerta;
                     tablaJQsocios.append('<tr>' +
@@ -791,7 +817,7 @@ $(document).on("click",".page-link",function (e) {
                         '<td contenteditable="true">' + data.usuarios[j].email + '</td>' +
                         '<td>' + activado + '</td>' +
                         '<td contenteditable="true">' + data.usuarios[j].tipo_socio + '</td>' +
-                        '<td>' + data.usuarios[j].fecha_alta + '</td>' +
+                        '<td>' + nuevaFechaAlta + '</td>' +
                         '<td contenteditable="true">' + fechaBaja + '</td>' +
                         '<td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>' +
                         '<td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>' +
@@ -803,10 +829,12 @@ $(document).on("click",".page-link",function (e) {
 
                 for (let i = 1; i <= paginas; i++) {
 
-                    numeracionPaginacion.append('<li class="page-item"><a data-pagina="' + i + '" class="page-link" ' +
-                        'href="#">' + i + '</a></li>');
+                    numeracionPaginacion.append('<li data-pagina="' + i + '" class="page-item"><a class="page-link" ' +
+                        'href="">' + i + '</a></li>');
 
                 }
+
+
             }else{
 
                 alert("¡¡OBJETO RECIBIDO INCORRECTO!!")
@@ -819,6 +847,8 @@ $(document).on("click",".page-link",function (e) {
             alert(err);
 
         })
+
+    e.preventDefault();
 
 })
 

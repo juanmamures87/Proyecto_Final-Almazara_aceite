@@ -94,8 +94,9 @@
                 $usuarioInsertado = [
 
                     "resultado" => $correcto,
-                    "idUsuario" => $lastId,
-                    "msg"       => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+                    //"idUsuario" => $lastId,
+                    'msg'       => 'ERROR AL REGISTRAR AL USUARIO. ALGUNO DE LOS DATOS YA SE ENCUENTRA EN EL REGISTRO'
+                    //"msg"       => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
 
                 ];
 
@@ -171,23 +172,24 @@
             $mail = new PHPMailer(true);
 
             try {
+
                 //Server settings
                 $mail->CharSet = "UTF-8";
                 $mail->Encoding = "quoted-printable";
-                //$mail->SMTPDebug = SMTP::DEBUG_SERVER;//Enable verbose debug output Modo desarrollo
-                $mail->SMTPDebug = SMTP::DEBUG_OFF;//Modo producción
-                $mail->isSMTP();                                            //Send using SMTP
-                $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-                $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-                $mail->Username   = 'pruebas2cfgs@gmail.com';                     //SMTP username
-                $mail->Password   = 'pruebasJuanma2CfgsPHP';                               //SMTP password
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-                $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+                //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                        //Enable verbose debug output Modo desarrollo
+                $mail->SMTPDebug = SMTP::DEBUG_OFF;                             //Modo producción
+                $mail->isSMTP();                                                //Send using SMTP
+                $mail->Host       = 'in-v3.mailjet.com';                        //Set the SMTP server to send through
+                $mail->SMTPAuth   = true;                                       //Enable SMTP authentication
+                $mail->Username   = 'c1ae0c1d43cc1a7cb45d63e468a4ce78';                   //SMTP username
+                $mail->Password   = 'eee413e8a167317b3a2f11de712eabf6';                    //SMTP password
+                $mail->SMTPSecure = 'tls';                //Enable implicit TLS encryption
+                $mail->Port       = 587;//                                   //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
                 //Recipients
-                $mail->setFrom('noreply@molinodelsur.es', 'Correo');
+                $mail->setFrom('pruebas2cfgs@gmail.com', 'Correo');
                 $mail->addAddress($destinatario, $nombre);
-                $mail->addReplyTo('noreply@molinodelsur.es', 'Información');
+                $mail->addReplyTo('pruebas2cfgs@gmail.com', 'Información');
 
                 //Content
                 $mail->Subject = $titulo;

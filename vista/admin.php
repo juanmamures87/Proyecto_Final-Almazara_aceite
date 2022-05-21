@@ -237,7 +237,8 @@
 
                       foreach ($valor as $socio){
 
-
+                        $extraerFecha = explode('-',$socio->fecha_alta) ;//date($socio->fecha_alta);
+                        $nuevaFechaAlta = $extraerFecha[2] . "/" . $extraerFecha[1] . "/" . $extraerFecha[0];
 
             ?>
                           <tr>
@@ -257,7 +258,7 @@
                             <td><?php $socio->activo == 1 ?
                                     $activado = "Activo <br> <input type='checkbox' class='accesoTabla' checked>" : $activado = "Desactivado <br> <input type='checkbox' class='accesoTabla'>"; echo $activado;?></td>
                             <td contenteditable="true"><?php echo $socio->tipo_socio; ?></td>
-                            <td><?php echo $socio->fecha_alta; ?></td>
+                            <td><?php echo $nuevaFechaAlta; ?></td>
                             <td contenteditable="true"><?php echo $socio->fecha_baja; ?></td>
                             <td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>
                             <td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>
@@ -281,7 +282,7 @@
                     for ($i = 1; $i <= $paginasPaginacion;$i++){
             ?>
 
-                      <li class="page-item"><a data-pagina="<?php echo $i ?>" class="page-link" href="#"><?php echo $i ?></a></li>
+                      <li data-pagina="<?php echo $i ?>" class="page-item"><a class="page-link" href=""><?php echo $i ?></a></li>
 
               <?php
                     }

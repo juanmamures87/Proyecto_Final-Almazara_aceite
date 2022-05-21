@@ -37,7 +37,8 @@
                 $totalPaginas = ceil($numRegistros/$tamagnoPaginas);
                 $resultado->closeCursor();
 
-                $sql_limit = "SELECT * FROM usuarios u INNER JOIN socios s ON u.id_usuario = s.id_usuario ORDER BY apellidos ASC LIMIT $empezarDesde,$tamagnoPaginas";
+                $sql_limit = "SELECT * FROM usuarios u INNER JOIN socios s ON u.id_usuario = s.id_usuario 
+                              ORDER BY apellidos ASC LIMIT $empezarDesde,$tamagnoPaginas";
                 $resultado = $conexion->query($sql_limit);
                 if ($resultado->rowCount() !== 0) {
 
