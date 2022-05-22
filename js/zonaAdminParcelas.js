@@ -2,6 +2,8 @@
  * ************************ APARTADO DE LAS PARCELAS. REGISTRO Y CONSULTAS ******************************************
  * ********************************************************************************************************************/
 
+////////////////////////////// REFERENCIA A LOS ELEMENTOS DE LA PÁGINA /////////////////////////////////////////////
+
 //Referencia al formulario del registro de las parcelas
 const formularioRegistroParcelas = document.getElementById("formularioRegistroParcelas");
 
@@ -17,11 +19,49 @@ const superParcela = document.getElementById("superParcela");
 const selSisParcela = document.getElementById("selSisParcela");
 const selVarParcela = document.getElementById("selVarParcela");
 const plantasParcela = document.getElementById("plantasParcela");
-var ventanaParcela;
+const tablaParcelasBody = $("#tablaParcelas tbody")
+const navPaginacionParcelas = $("#navPaginacionParcelas ul");
+
+//Zona de selección para muestra de parcelas
+const busSocioParcelaMuestra = document.getElementById("busSocioParcelaMuestra");
+const selSocioParcelaMuestra = document.getElementById("selSocioParcelaMuestra");
+const busProv = document.getElementById("busProv");
+const busSuper = document.getElementById("busSuper");
+const busSisCul = document.getElementById("busSisCul");
+const busVar = document.getElementById("busVar");
+const busPlan = document.getElementById("busPlan");
+
+let ventanaParcela; //Variable para la apertura y cierrre de la ventana del catastro con la parcela
+let introducirRefCat; //Variable con el nombre del setTimeout y la función para la validación de la ref.Catastral introducida
 
 //Referencia a los botones de registrar parcela y resetear campos
 const registroParcelas = document.getElementById("registroParcelas");
 const resetFormParcelas = document.getElementById("resetFormParcelas");
+
+////////////////////////////////////////////// UTILIZACIÓN DE FUNCIONES //////////////////////////////////////////////
+
+//Búsqueda parcial en la zona de registro de las parcelas
+busquedaParcialSocios(busSocioParcela,selSocioParcela)
+
+//Búsqueda parcial en la zona de muestra de parcelas
+busquedaParcialSocios(busSocioParcelaMuestra,selSocioParcelaMuestra)
+
+//Muestra de las parcelas seleccionadas por provincia
+muestraDatosParcelas(busProv, 'mostrarParcelaXprov', 'PROVINCIA')
+
+//Muestra de las parcelas seleccionadas por sistema de cultivo
+muestraDatosParcelas(busSisCul, 'mostrarParcelaXsistema', 'SISTEMA CULTIVO')
+
+//Muestra de las parcelas seleccionadas por variedad de cultivo
+muestraDatosParcelas(busVar, 'mostrarParcelaXvariedad', 'VARIEDAD ACEITUNA')
+
+//Muestra de las parcelas seleccionadas por superficie de cultivo
+muestraDatosParcelas(busSuper, 'mostrarParcelaXsuperficie', 'SUPERFICIE')
+
+//Muestra de las parcelas seleccionadas por número de plantas
+muestraDatosParcelas(busPlan, 'mostrarPracelaXplantas', 'PLANTAS')
+
+/////////////////////////////////////////////////// EVENTOS /////////////////////////////////////////////////////////
 
 //Con este evento añadimos los municipios al select correspondiente según la provincia seleccionada
 selProvParcela.addEventListener("change",function () {
@@ -98,14 +138,14 @@ selProvParcela.addEventListener("change",function () {
 
 //Evento sobre el campo de la ref. catastral para validarla y que muestre mapa del catastro con datos
 refCatParcela.addEventListener('keydown', () => {
-    let introducirRefCat;
+
     clearTimeout(introducirRefCat)
 
     introducirRefCat = setTimeout(() => {
 
         if (validacionRefCat()) {
 
-           ventanaParcela = window.open('https://www1.sedecatastro.gob.es/Cartografia/mapa.aspx?refcat=' + refCatParcela.value + '',
+            ventanaParcela = window.open('https://www1.sedecatastro.gob.es/Cartografia/mapa.aspx?refcat=' + refCatParcela.value + '',
                 "_blank", "width=400, height=500, toolbar=no, menubar=no, location=no, status=no, " +
                 "resizable=yes, popup=yes, top=400px, left=1200px")
 
@@ -217,7 +257,8 @@ registroParcelas.addEventListener("click",function (e){
                         //reseteo del formulario de parcelas y campo select de búsqueda parcial
                         formularioRegistroParcelas.reset();
                         resetearSocioMunicipio()
-                        ventanaParcela.clone();
+                        //Cerramos la ventana emergente con la parcela
+                        ventanaParcela.close();
 
                     }else{
 
@@ -244,6 +285,103 @@ registroParcelas.addEventListener("click",function (e){
 
 
 })
+
+//Evento sobre el select de elegir socio para mostrar parcelas por socio en el menú lateral de muestra de parcelas
+selSocioParcelaMuestra.addEventListener("change",function () {
+
+    let datos = new FormData();
+    datos.append("controlador","admin");
+    datos.append("accion","mostrarParcelaXsocio");
+    datos.append("idSocio",selSocioParcelaMuestra.value);
+
+    fetch("index.php", {
+
+        method: "POST",
+        body: datos
+
+    })
+
+        .then(response => {
+
+            if (response.ok){
+
+                return response.json();//tipo de respuesta que esperamos recibir
+
+            }else{
+
+                throw 'ERROR EN LA LLAMADA AJAX';
+
+            }
+
+        })
+
+        .then(data => {
+
+            if (data !== null) {
+
+                let paginas = data.paginas;
+                tablaParcelasBody.empty();
+
+                for (let i = 0; i < data.usuarios.length; i++) {
+
+                    tablaParcelasBody.append('<tr>' +
+                        '<th>' + data.usuarios[i].id_parcela + '</th>' +
+                        '<th>' + data.usuarios[i].id_socio + '</th>' +
+                        '<td>' + data.usuarios[i].apellidos + '</td>' +
+                        '<td>' + data.usuarios[i].nombre_socio + '</td>' +
+                        '<td>' + data.usuarios[i].provincia + '</td>' +
+                        '<td>' + data.usuarios[i].municipio + '</td>'+
+                        '<td>' + data.usuarios[i].ref_catastral + '</td>'+
+                        '<td>' + data.usuarios[i].poligono + '</td>' +
+                        '<td>' + data.usuarios[i].parcela + '</td>' +
+                        '<td>' + data.usuarios[i].superficie + ' m<sup>2</sup></td>' +
+                        '<td>' + data.usuarios[i].nombre_sistema + '</td>' +
+                        '<td>' + data.usuarios[i].nombre_variedad + '</td>' +
+                        '<td>' + data.usuarios[i].num_plantas + '</td>' +
+                        '<td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>' +
+                        '<td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>' +
+                        '</tr>');
+
+                }
+
+                navPaginacionParcelas.empty();
+
+                for (let i = 1; i <= paginas; i++) {
+
+                    navPaginacionParcelas.append('<li data-pagina="' + i + '" class="page-item"><a class="page-link" ' +
+                        'href="">' + i + '</a></li>');
+
+                }
+
+                muestraPaginaSocios.text(this.dataset.pagina);
+
+                //Reinicia los campos de busqueda
+                busSocioParcelaMuestra.value = "";
+                selSocioParcelaMuestra.length = 0;
+                let opcion = document.createElement("option");
+                opcion.value = 'SELECCIONE SOCIO';
+                opcion.textContent = 'SELECCIONE SOCIO';
+                opcion.style.textAlign = "center";
+                selSocioParcelaMuestra.append(opcion);
+
+            }else{
+
+                alert('ERROR EN EL OBJETO RECIBIDO')
+
+            }
+
+        })
+        .catch(err => {
+
+            alert(err);
+
+        })
+
+
+
+})
+
+//////////////////////////////////////////////////// FUNCIONES ////////////////////////////////////////////////////////
 
 //Función para validar la referencia catastral cuando se escribe solo en ese campo.
 function validacionRefCat() {
@@ -362,175 +500,82 @@ function validarCamposParcelas() {
 
 }
 
-//Evento sobre el campo de socio para escribir por el apellido y recoger las coincidencias
-busSocioParcela.addEventListener("keyup",function () {
+//Función sobre los campos de búsqueda parcial de socio para escribir por el apellido y recoger las coincidencias
+//Se la pasa el campo de escritura, la acción que va a realizar del controlador y el campo de muestra de las coincidencias
+function busquedaParcialSocios(campoEscritura,campoMuestra) {
 
-    let datos = new FormData();
-    datos.append("controlador","admin");
-    datos.append("accion","mostrarSociosXApellidosRegistroParcela");
-    datos.append("apellido",busSocioParcela.value);
+    campoEscritura.addEventListener("keyup", function () {
 
-    fetch("index.php", {
+        let datos = new FormData();
+        datos.append("controlador", "admin");
+        datos.append("accion", "mostrarSociosXApellidosRegistroParcela");
+        datos.append("apellido", campoEscritura.value);
 
-        method: "POST",
-        body: datos
+        fetch("index.php", {
 
-    })
-
-        .then(response => {
-
-            if (response.ok){
-
-                return response.json();//tipo de respuesta que esperamos recibir
-
-            }else{
-
-                throw 'ERROR EN LA LLAMADA AJAX';
-
-            }
+            method: "POST",
+            body: datos
 
         })
 
-        .then(data => {
+            .then(response => {
 
-            if (data !== null) {
+                if (response.ok) {
 
-                selSocioParcela.length = 0;
-                if (data.length === 0){
+                    return response.json();//tipo de respuesta que esperamos recibir
 
-                    let opcion = document.createElement("option");
-                    opcion.textContent = "No existen coincidencias";
-                    selSocioParcela.append(opcion);
+                } else {
 
+                    throw 'ERROR EN LA LLAMADA AJAX';
 
-                }else {
+                }
 
-                    for (let i = 0; i < data.length; i++) {
+            })
+
+            .then(data => {
+
+                if (data !== null) {
+
+                    campoMuestra.length = 0;
+                    if (data.length === 0) {
 
                         let opcion = document.createElement("option");
-                        opcion.value = data[i].id_socio;
-                        opcion.textContent = data[i].apellidos + ", " + data[i].nombre;
-                        selSocioParcela.append(opcion);
+                        opcion.textContent = "No existen coincidencias";
+                        campoMuestra.append(opcion);
 
+
+                    } else {
+
+                        let opcionInicial = document.createElement("option");
+                        opcionInicial.value = 'SELECCIONE SOCIO';
+                        opcionInicial.textContent = 'SELECCIONE SOCIO';
+                        opcionInicial.style.textAlign = "center";
+                        campoMuestra.append(opcionInicial);
+
+                        for (let i = 0; i < data.length; i++) {
+
+                            let opcion = document.createElement("option");
+                            opcion.value = data[i].id_socio;
+                            opcion.textContent = data[i].apellidos + ", " + data[i].nombre;
+                            campoMuestra.append(opcion);
+
+                        }
                     }
+                } else {
+
+                    alert('ERROR EN EL OBJETO RECIBIDO')
+
                 }
-            }else{
 
-                alert('ERROR EN EL OBJETO RECIBIDO')
+            })
+            .catch(err => {
 
-            }
+                alert(err);
 
-        })
-        .catch(err => {
-
-            alert(err);
-
-        })
-
-})
-
-/*const tablaParcelas = document.getElementById("tablaParcelas");
-const navPaginacionParcelas = document.getElementById("navPaginacionParcelas");
-selSocioParcela.addEventListener("keyup",function () {
-
-    let datos = new FormData();
-    datos.append("controlador","admin");
-    datos.append("accion","mostrarParcialParcelaXsocio");
-    datos.append("pagina","");
-    datos.append("apellido",selSocioParcela.value);
-    console.log(datos.get("pagina"))
-
-    fetch("index.php", {
-
-        method: "POST",
-        body: datos
+            })
 
     })
-
-        .then(response => {
-
-            if (response.ok){
-
-                return response.json();//tipo de respuesta que esperamos recibir
-
-            }else{
-
-                throw 'ERROR EN LA LLAMADA AJAX';
-
-            }
-
-        })
-
-        .then(data => {
-
-            if (data !== null) {
-
-                let paginas = data.paginas;
-                let activado;
-                let fechaBaja;
-                let puerta;
-                tablaJQsocios.empty();
-
-                for (let j = 0; j < data.usuarios.length; j++) {
-
-                    if (data.usuarios[j].activo == 1){
-
-                        activado = "Activo <br><input type='checkbox' class='accesoTabla' checked>";
-
-                    }else{
-
-                        activado = "Desactivado <br><input type='checkbox' class='accesoTabla'>";
-
-                    }
-                    data.usuarios[j].fecha_baja === null ? fechaBaja = "" : fechaBaja = data.usuarios[j].fecha_baja;
-                    data.usuarios[j].puerta === null ? puerta = "" : puerta = data.usuarios[j].puerta;
-                    tablaJQsocios.append('<tr>' +
-                        '<th>' + data.usuarios[j].id_socio + '</th>' +
-                        '<td>' + data.usuarios[j].nombre + '</td>' +
-                        '<td>' + data.usuarios[j].apellidos + '</td>' +
-                        '<td>' + data.usuarios[j].dni + '</td>' +
-                        '<td contenteditable="true">' + data.usuarios[j].telefono + '</td>'+
-                        '<td contenteditable="true">' + data.usuarios[j].provincia + '</td>'+
-                        '<td contenteditable="true">' + data.usuarios[j].municipio + '</td>' +
-                        '<td contenteditable="true">' + data.usuarios[j].direccion + '</td>' +
-                        '<td contenteditable="true">' + data.usuarios[j].cp + '</td>' +
-                        '<td contenteditable="true">' + data.usuarios[j].num_casa + '</td>' +
-                        '<td contenteditable="true">' + data.usuarios[j].piso + '</td>' +
-                        '<td contenteditable="true">' + puerta + '</td>' +
-                        '<td contenteditable="true">' + data.usuarios[j].email + '</td>' +
-                        '<td>' + activado + '</td>' +
-                        '<td contenteditable="true">' + data.usuarios[j].tipo_socio + '</td>' +
-                        '<td>' + data.usuarios[j].fecha_alta + '</td>' +
-                        '<td contenteditable="true">' + fechaBaja + '</td>' +
-                        '<td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>' +
-                        '<td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>' +
-                        '</tr>');
-
-                }
-
-                numeracionPaginacion.empty();
-
-                for (let i = 1; i <= paginas; i++) {
-
-                    numeracionPaginacion.append('<li class="page-item"><a data-pagina="' + i + '" class="page-link" ' +
-                        'href="#">' + i + '</a></li>');
-
-                }
-
-            }else{
-
-                alert('ERROR EN EL OBJETO RECIBIDO')
-
-            }
-
-        })
-        .catch(err => {
-
-            alert(err);
-
-        })
-
-})*/
+}
 
 //función que resetea los campos de selección de socio y selección de municipio, que por defecto no lo hacen
 function resetearSocioMunicipio() {
@@ -548,5 +593,103 @@ function resetearSocioMunicipio() {
     opcion.textContent = 'SOCIOS';
     opcion.className = "text-center";
     selSocioParcela.append(opcion);
+
+}
+
+//Función para mostrar las parcelas por las diferentes búsquedas de selección: provincia, superficie, sistema de cultivo,
+//variedad de aceituna y plantas. Se pasa por parámetro el select, la acción del controlador y el mensaje de reinicio del select.
+function muestraDatosParcelas(campoSelect, accion, mensajeSelect) {
+
+    campoSelect.addEventListener("change",function () {
+
+        let datos = new FormData();
+        datos.append("controlador","admin");
+        datos.append("accion",accion);
+        datos.append("eleccion",campoSelect.value);
+        console.log(datos.get('eleccion'));
+
+        fetch("index.php", {
+
+            method: "POST",
+            body: datos
+
+        })
+
+            .then(response => {
+
+                if (response.ok){
+
+                    return response.json();//tipo de respuesta que esperamos recibir
+
+                }else{
+
+                    throw 'ERROR EN LA LLAMADA AJAX';
+
+                }
+
+            })
+
+            .then(data => {
+
+                console.log(data)
+                if (data.length !== 0) {
+
+                    let paginas = data.paginas;
+                    tablaParcelasBody.empty();
+
+                    for (let i = 0; i < data.usuarios.length; i++) {
+
+                        tablaParcelasBody.append('<tr>' +
+                            '<th>' + data.usuarios[i].id_parcela + '</th>' +
+                            '<th>' + data.usuarios[i].id_socio + '</th>' +
+                            '<td>' + data.usuarios[i].apellidos + '</td>' +
+                            '<td>' + data.usuarios[i].nombre_socio + '</td>' +
+                            '<td>' + data.usuarios[i].provincia + '</td>' +
+                            '<td>' + data.usuarios[i].municipio + '</td>'+
+                            '<td>' + data.usuarios[i].ref_catastral + '</td>'+
+                            '<td>' + data.usuarios[i].poligono + '</td>' +
+                            '<td>' + data.usuarios[i].parcela + '</td>' +
+                            '<td>' + data.usuarios[i].superficie + ' m<sup>2</sup></td>' +
+                            '<td>' + data.usuarios[i].nombre_sistema + '</td>' +
+                            '<td>' + data.usuarios[i].nombre_variedad + '</td>' +
+                            '<td>' + data.usuarios[i].num_plantas + '</td>' +
+                            '<td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>' +
+                            '<td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>' +
+                            '</tr>');
+
+                    }
+
+                    navPaginacionParcelas.empty();
+
+                    for (let i = 1; i <= paginas; i++) {
+
+                        navPaginacionParcelas.append('<li data-pagina="' + i + '" class="page-item"><a class="page-link" ' +
+                            'href="">' + i + '</a></li>');
+
+                    }
+
+                    muestraPaginaSocios.text(this.dataset.pagina);
+
+                    //Reinicia los campos de busqueda
+                    campoSelect.value = mensajeSelect;
+
+                }else{
+
+                    tablaParcelasBody.empty();
+                    campoSelect.value = mensajeSelect;
+                    navPaginacionParcelas.empty();
+                    mostrarMsgError('NO EXISTEN PARCELAS CON ESOS PARÁMETROS');
+                    ocultarMsgRetardo();
+
+                }
+
+            })
+            .catch(err => {
+
+                alert(err);
+
+            })
+
+    })
 
 }

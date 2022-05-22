@@ -3,6 +3,9 @@
     require_once "modelo/SocioModelo.php";
     $socios = new SocioModelo();
 
+    require_once "modelo/ParcelaModelo.php";
+    $parcelas = new ParcelaModelo();
+
     function eliminarSocio(){
 
         if (isset($_POST['idBorrar']) && !empty($_POST['idBorrar'])){
@@ -101,6 +104,20 @@
 
     }
 
+    function paginarSocios(){
+
+        if (isset($_POST['pagina'])) {
+
+            global $socios;
+            $paginar = $socios->mostrarSocios($_POST['pagina']);
+            echo json_encode($paginar);
+
+        }
+
+    }
+
+    //////////////////////////////////////////// ZONA DE LAS PARCELAS /////////////////////////////////////////////////
+
     //No hay manera de que funcione, no recoge la RC de ninguna manera. Dejarla y probar si responde catastro
     function mostrarPoliParceSuperf(){
 
@@ -179,44 +196,16 @@
 
     }
 
-    function paginarSocios(){
-
-        if (isset($_POST['pagina'])) {
-
-            require_once "modelo/SocioModelo.php";
-            $socios = new SocioModelo();
-            $paginar = $socios->mostrarSocios($_POST['pagina']);
-            echo json_encode($paginar);
-
-        }
-
-    }
-
-    function mostrarParcialParcelaXsocio(){
-
-        if (isset($_POST['apellido'], $_POST['pagina']) && !empty($_POST['apellido'])) {
-
-            $apellido = $_POST['apellido'];
-            $_POST['pagina'] === "" ? $pagina = 1 : $pagina = $_POST['pagina'];
-
-            require_once "modelo/ParcelaModelo.php";
-            $parcelas = new ParcelaModelo();
-            $parcelaXsocio = $parcelas->mostrarParcelasXsocio($apellido,$pagina);
-            echo json_encode($parcelaXsocio);
-        }
-    }
-
+    //Función que muestra el nombre y apellidos de los socios que se realiza en la búsqueda parcial.
     function mostrarSociosXApellidosRegistroParcela(){
 
         if (isset($_POST['apellido'])) {
 
             $apellido = $_POST['apellido'];
 
-            require_once "modelo/SocioModelo.php";
-            $socios = new SocioModelo();
+            global $socios;
             $socioXapellido = $socios->mostrarSocioXApellido($apellido);
             echo json_encode($socioXapellido);
-            //var_dump($socioXapellido);
 
         }else{
 
@@ -228,7 +217,175 @@
             ];
 
             echo json_encode($respuesta);
-            //var_dump($respuesta);
 
         }
     }
+
+    //Función que lanza como resultado todas las parcelas de un socio determinado por su id
+    function mostrarParcelaXsocio(){
+
+        if (isset($_POST['idSocio']) && !empty($_POST['idSocio'])) {
+
+            $idSocio = $_POST['idSocio'];
+            $pagina = 1;
+            $busqueda = 'p.id_socio = ' . $idSocio;
+
+            global $parcelas;
+            $parcelaXsocio = $parcelas->busquedas($busqueda, $pagina);
+            echo json_encode($parcelaXsocio);
+        }else{
+
+            $respuesta = [
+
+                "codigo"    => -2,
+                "msg"       => "DEBE INTRODUCIR UN APELLIDO Y NOMBRE DE USUARIO VÁLIDO"
+
+            ];
+
+            echo json_encode($respuesta);
+
+        }
+    }
+
+    function mostrarParcelaXprov(){
+
+        if (isset($_POST['eleccion']) && !empty($_POST['eleccion'])) {
+
+            $provincia = $_POST['eleccion'];
+            $pagina = 1;
+
+            global $parcelas;
+            $parcelaXprov = $parcelas->busquedaParcelaXprov($provincia,$pagina);
+            echo json_encode($parcelaXprov);
+
+        }else{
+
+            $respuesta = [
+
+                "codigo"    => -2,
+                "msg"       => "DEBE INTRODUCIR UNA PROVINCIA VÁLIDA"
+
+            ];
+
+            echo json_encode($respuesta);
+
+        }
+
+    }
+
+    function mostrarParcelaXsistema(){
+
+        if (isset($_POST['eleccion']) && !empty($_POST['eleccion'])) {
+
+            $idSistema = $_POST['eleccion'];
+            $pagina = 1;
+            $busqueda = 'sis.id_sistema = ' . $idSistema;
+
+            global $parcelas;
+            $parcelaXsistema = $parcelas->busquedas($busqueda,$pagina);
+            echo json_encode($parcelaXsistema);
+
+        }else{
+
+            $respuesta = [
+
+                "codigo"    => -2,
+                "msg"       => "DEBE INTRODUCIR UNA PROVINCIA VÁLIDA"
+
+            ];
+
+            echo json_encode($respuesta);
+
+        }
+
+    }
+
+    function mostrarParcelaXvariedad(){
+
+        if (isset($_POST['eleccion']) && !empty($_POST['eleccion'])) {
+
+            $idVariedad = $_POST['eleccion'];
+            $campo = "v.id_aceituna";
+            $pagina = 1;
+            $busqueda = 'v.id_aceituna = ' . $idVariedad;
+
+            global $parcelas;
+            $parcelaXvariedad = $parcelas->busquedas($busqueda,$pagina);
+            echo json_encode($parcelaXvariedad);
+
+        }else{
+
+            $respuesta = [
+
+                "codigo"    => -2,
+                "msg"       => "DEBE INTRODUCIR UNA PROVINCIA VÁLIDA"
+
+            ];
+
+            echo json_encode($respuesta);
+
+        }
+
+    }
+
+    function mostrarParcelaXsuperficie(){
+
+        if (isset($_POST['eleccion']) && !empty($_POST['eleccion'])) {
+
+            $superficie = $_POST['eleccion'];
+            $valoresSuperficie = explode('-',$superficie);
+            $menor = $valoresSuperficie[0];
+            $mayor = $valoresSuperficie[1];
+            $pagina = 1;
+            $busqueda = "p.superficie BETWEEN $menor AND $mayor ";
+
+            global $parcelas;
+            $parcelaXsuperficie = $parcelas->busquedas($busqueda,$pagina);
+            echo json_encode($parcelaXsuperficie);
+
+        }else{
+
+            $respuesta = [
+
+                "codigo"    => -2,
+                "msg"       => "DEBE INTRODUCIR UNA PROVINCIA VÁLIDA"
+
+            ];
+
+            echo json_encode($respuesta);
+
+        }
+
+    }
+
+    function mostrarPracelaXplantas(){
+
+        if (isset($_POST['eleccion']) && !empty($_POST['eleccion'])) {
+
+            $plantas = $_POST['eleccion'];
+            $valoresPlantas = explode('-',$plantas);
+            $menor = $valoresPlantas[0];
+            $mayor = $valoresPlantas[1];
+            $pagina = 1;
+            $busqueda = "p.num_plantas BETWEEN $menor AND $mayor ";
+
+            global $parcelas;
+            $parcelaXplantas = $parcelas->busquedas($busqueda,$pagina);
+            echo json_encode($parcelaXplantas);
+
+        }else{
+
+            $respuesta = [
+
+                "codigo"    => -2,
+                "msg"       => "DEBE INTRODUCIR UNA PROVINCIA VÁLIDA"
+
+            ];
+
+            echo json_encode($respuesta);
+
+        }
+
+    }
+
+

@@ -308,7 +308,7 @@
                 $resultado = [
 
                     "codigo"    => 0,
-                    "msg"       =>  "SE PRODUJO UN ERROR Y NO SE PUDO REGISTRAR LA PARCELA"
+                    "msg"       =>  'SE PRODUJO UN ERROR. NO SE PUDO REGISTRAR LA PARCELA O YA ESTÁ REGISTRADA'
 
                 ];
 

@@ -138,7 +138,7 @@
 
         }
 
-        function mostrarParcelasXsocio($apellido, $pagina){
+        function busquedas($busqueda, $pagina){
 
             $conexion = $this->conexion;
 
@@ -152,16 +152,96 @@
 
                 $tamagnoPaginas = 5;
                 $empezarDesde = ($pagina - 1)*$tamagnoPaginas;
-                $sql = "SELECT * FROM parcela p INNER JOIN socios s ON p.id_socio = s.id_socio INNER JOIN usuarios u 
-                        ON s.id_usuario = u.id_usuario WHERE lower(u.apellidos) like lower('$apellido%')  ORDER BY apellidos ASC";
+                $sql = "SELECT p.id_parcela, p.id_socio, u.apellidos, u.nombre AS 'nombre_socio', p.provincia, p.municipio, 
+                        p.ref_catastral, p.poligono, p.parcela, p.superficie, v.nombre AS 'nombre_variedad', 
+                        sis.nombre AS 'nombre_sistema' FROM parcela p 
+                        INNER JOIN socios s ON p.id_socio = s.id_socio 
+                        INNER JOIN usuarios u ON s.id_usuario = u.id_usuario
+                        INNER JOIN variedad_aceituna v ON v.id_aceituna = p.variedad_aceituna
+                        INNER JOIN sistema_cultivo sis ON sis.id_sistema = p.sistema_cultivo                                                        
+                        WHERE $busqueda";
                 $resultado = $conexion->query($sql);
                 $numRegistros = $resultado->rowCount();
                 $totalPaginas = ceil($numRegistros/$tamagnoPaginas);
                 $resultado->closeCursor();
 
-                $sql_limit = "SELECT * FROM parcela p INNER JOIN socios s ON p.id_socio = s.id_socio INNER JOIN usuarios u 
-                              ON s.id_usuario = u.id_usuario WHERE u.apellidos like '$apellido%'  
-                              ORDER BY apellidos ASC LIMIT $empezarDesde,$tamagnoPaginas";
+                $sql_limit = "SELECT p.id_parcela, p.id_socio, u.apellidos, u.nombre AS 'nombre_socio', p.provincia, p.municipio, 
+                        p.ref_catastral, p.poligono, p.parcela, p.superficie, p.num_plantas, v.nombre AS 'nombre_variedad', 
+                        sis.nombre AS 'nombre_sistema' FROM parcela p 
+                        INNER JOIN socios s ON p.id_socio = s.id_socio 
+                        INNER JOIN usuarios u ON s.id_usuario = u.id_usuario
+                        INNER JOIN variedad_aceituna v ON v.id_aceituna = p.variedad_aceituna
+                        INNER JOIN sistema_cultivo sis ON sis.id_sistema = p.sistema_cultivo                                                        
+                        WHERE $busqueda LIMIT $empezarDesde,$tamagnoPaginas";
+                $resultado = $conexion->query($sql_limit);
+                if ($resultado->rowCount() !== 0) {
+
+                    while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
+
+                        $parcelas[] = $fila;
+
+                    }
+
+                    $datosFinales = [
+
+                        "usuarios" => $parcelas,
+                        "paginas" => $totalPaginas
+
+                    ];
+
+                }
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                $datosFinales = [
+
+                    "codigo" => -2,
+                    "errorConex" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+
+                ];
+
+            }
+
+            unset($conexion);
+            return $datosFinales;
+
+        }
+
+        function busquedaParcelaXprov($provincia, $pagina){
+
+            $conexion = $this->conexion;
+
+            /*Para realizar la paginación hay que poner la cláusula LIMIT, pero antes hay que apagar las preparaciones
+            de consulta emuladas cambiando este atributo a false porque si no la cláusula LIMIT no será aceptada*/
+            $conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES,false);
+            $parcelas = [];
+            $datosFinales = [];
+
+            try{
+
+                $tamagnoPaginas = 5;
+                $empezarDesde = ($pagina - 1)*$tamagnoPaginas;
+                $sql = "SELECT p.id_parcela, p.id_socio, u.apellidos, u.nombre AS 'nombre_socio', p.provincia, p.municipio, 
+                        p.ref_catastral, p.poligono, p.parcela, p.superficie, v.nombre AS 'nombre_variedad', 
+                        sis.nombre AS 'nombre_sistema' FROM parcela p 
+                        INNER JOIN socios s ON p.id_socio = s.id_socio 
+                        INNER JOIN usuarios u ON s.id_usuario = u.id_usuario
+                        INNER JOIN variedad_aceituna v ON v.id_aceituna = p.variedad_aceituna
+                        INNER JOIN sistema_cultivo sis ON sis.id_sistema = p.sistema_cultivo                                                        
+                        WHERE p.provincia = '$provincia'";
+                $resultado = $conexion->query($sql);
+                $numRegistros = $resultado->rowCount();
+                $totalPaginas = ceil($numRegistros/$tamagnoPaginas);
+                $resultado->closeCursor();
+
+                $sql_limit = "SELECT p.id_parcela, p.id_socio, u.apellidos, u.nombre AS 'nombre_socio', p.provincia, p.municipio, 
+                        p.ref_catastral, p.poligono, p.parcela, p.superficie, p.num_plantas, v.nombre AS 'nombre_variedad', 
+                        sis.nombre AS 'nombre_sistema' FROM parcela p 
+                        INNER JOIN socios s ON p.id_socio = s.id_socio 
+                        INNER JOIN usuarios u ON s.id_usuario = u.id_usuario
+                        INNER JOIN variedad_aceituna v ON v.id_aceituna = p.variedad_aceituna
+                        INNER JOIN sistema_cultivo sis ON sis.id_sistema = p.sistema_cultivo                                                        
+                        WHERE p.provincia = '$provincia' LIMIT $empezarDesde,$tamagnoPaginas";
                 $resultado = $conexion->query($sql_limit);
                 if ($resultado->rowCount() !== 0) {
 

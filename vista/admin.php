@@ -107,12 +107,12 @@
               </select>
             </div>
             <div class="col-sm-10">
-              <label for="provSocioAlterna"><b>Provincia alternativa: </b></label>
+              <label for="provSocioAlterna">Provincia alternativa: </label>
               <input type="text" class="form-control" id="provSocioAlterna" name="provSocioAlterna">
             </div>
           </div>
           <div class="form-group">
-            <label for="munSocio" class="col-sm-2 col-form-label is-required"><b></b>Municipio: </b></label>
+            <label for="munSocio" class="col-sm-2 col-form-label is-required"><b>Municipio: </b></label>
             <div class="col-sm-10">
               <select class="form-control" name="munSocio" id="munSocio">
 
@@ -306,6 +306,10 @@
 
     </article>
 
+    <!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////// SECCIÓN DE LAS PARCELAS //////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+
     <article id="seccionParcelas" hidden>
 
       <h1 class="tituloSeccion" id="tituloSeccionParcelas">Parcelas</h1>
@@ -440,25 +444,18 @@
           </div>
           <div class="offcanvas-body">
             <hr>
-            <label for="busSocio"><b>Búsqueda por socio: </b></label>
-            <select class="form-select visualizar" aria-label="Default select example" id="busSocio">
-              <option class="text-center" value="SOCIO">SOCIO</option>
-                <?php
-
-                    if (isset($mostrarSocios) && !empty($mostrarSocios)){
-
-                        foreach ($mostrarSocios as $socio){
-
-                            ?>
-                          <option value="<?php echo $socio->id_socio; ?>"><?php echo $socio->nombre . " " . $socio->apellidos; ?></option>
-
-                            <?php
-
-                        }
-                    }
-
-                ?>
-            </select>
+            <label class="mt-3" for="busProv"><b>Búsqueda por socio: </b></label>
+            <div class="d-flex flex-row">
+              <div class="col-sm-4">
+                <label class="visually-hidden" for="busSocioParcelaMuestra">Socio</label>
+                <input type="search" class="form-control" id="busSocioParcelaMuestra" placeholder="B. Parcial">
+              </div>
+              <div class="col-sm-8">
+                <select class="form-select" id="selSocioParcelaMuestra">
+                  <option class="text-center" value="SOCIOS">SOCIOS</option>
+                </select>
+              </div>
+            </div>
             <label class="mt-3" for="busProv"><b>Búsqueda por provincia: </b></label>
             <select class="form-select visualizar" aria-label="Default select example" id="busProv">
               <option class="text-center" value="PROVINCIA">PROVINCIA</option>
@@ -483,11 +480,11 @@
             <label class="mt-3" for="busSuper"><b>Búsqueda por superficie en m<sup>2</sup>: </b></label>
             <select class="form-select visualizar" aria-label="Default select example" id="busSuper">
               <option class="text-center" value="SUPERFICIE">SUPERFICIE</option>
-              <option value="menos5"> < 5000</option>
-              <option value="mas5menos20"> > 5000m y < 20000</option>
-              <option value="mas20menos50"> > 20000m y < 50000</option>
-              <option value="mas50menos100"> > 50000 y < 100000</option>
-              <option value="mas100"> > 100000</option>
+              <option value="0-5000"> < 5000</option>
+              <option value="5000-20000"> > 5000 y < 20000</option>
+              <option value="20000-50000"> > 20000 y < 50000</option>
+              <option value="50000-100000"> > 50000 y < 100000</option>
+              <option value="100000-1000000"> > 100000</option>
             </select>
             <label class="mt-3" for="busSisCul"><b>Sistema de cultivo: </b></label>
             <select class="form-select visualizar" aria-label="Default select example" id="busSisCul">
@@ -532,16 +529,11 @@
             <label class="mt-3" for="busPlan"><b>Número de plantas: </b></label>
             <select class="form-select visualizar" aria-label="Default select example" id="busPlan">
               <option class="text-center" value="PLANTAS">PLANTAS</option>
-              <option value="menos5"> < 500</option>
-              <option value="mas5menos2"> > 500 y <2000 </option>
-              <option value="menos2mas10"> > 2000 < 10000 </option>
-              <option value="mas10"> > 10000 </option>
+              <option value="0-100"> < 100</option>
+              <option value="100-500"> > 100 y < 500 </option>
+              <option value="500-2000"> > 500 < 2000 </option>
+              <option value="2000-10000"> > 2000 </option>
             </select>
-            <div class="dropdown mt-3 text-center">
-              <button class="btn btn-info" type="button" data-bs-dismiss="offcanvas">
-                Mostrar todas las parcelas
-              </button>
-            </div>
           </div>
         </div>
         <!-------------------------------------------------------------------------------------------->
@@ -551,8 +543,32 @@
 
       <div class="muestraSeccion" id="mostrarSeccionParcelas">
 
-          <table class="table table-striped" id="tablaParcelas"></table>
-          <nav aria-label="Page navigation example" id="navPaginacionParcelas"></nav>
+          <table class="table table-striped h6 text-sm-center" id="tablaParcelas">
+
+            <thead>
+            <tr>
+              <th scope="col">Id Parcela</th>
+              <th scope="col">Id Socio</th>
+              <th scope="col">Apellidos</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Provincia</th>
+              <th scope="col">Municipio</th>
+              <th scope="col">Ref. Catastral</th>
+              <th scope="col">Polígono</th>
+              <th scope="col">Parcela</th>
+              <th scope="col">Superficie</th>
+              <th scope="col">Sistema</th>
+              <th scope="col">Variedad</th>
+              <th scope="col">Plantas</th>
+              <th scope="col">Modificar</th>
+              <th scope="col">Eliminar</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <nav aria-label="Page navigation example" id="navPaginacionParcelas">
+            <ul class="pagination justify-content-center"></ul>
+          </nav>
 
       </div>
 

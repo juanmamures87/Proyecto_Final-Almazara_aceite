@@ -65,7 +65,7 @@ for (let i = 0; i < enlaces.length; i++){
 *********************** APARTADO DE LOS SOCIOS, REGISTRO, MODIFICACIÓN Y BORRADO *************************************
  **********************************************************************************************************************/
 
-/******* Selección del municipio, dirección y código postal según los elementos seleccionados en los select **********/
+////////////////////////////// REFERENCIA A LOS ELEMENTOS DE LA PÁGINA /////////////////////////////////////////////
 
 //Referencia a los campos de provincia, municipio, dirección y código postal y sus respectivos campos alternativos.
 const provSocio = document.getElementById("provSocio");
@@ -76,6 +76,29 @@ const dirSocio = document.getElementById("dirSocio");
 const dirSocioAlterna = document.getElementById("dirSocioAlterna");
 const cpSocio = document.getElementById("cpSocio");
 const cpSocioAlterna = document.getElementById("cpSocioAlterna");
+
+//Referencia a los botones de mandar y resetear el formulario, al formulario, al campo del dni del socio y a la tabla de los socios.
+const registroSocio = document.querySelector("#registroSocio");
+const borradoRegistroSocio = document.getElementById("borradoRegistroSocio");
+const formularioRegistroSocios = document.querySelector("#formularioRegistroSocios");
+const dniSocio = document.getElementById("dniSocio");
+const tablaSocios = document.querySelector("#tablaSocios tbody");
+
+//Elemento check para mostrar situación según marcado
+const activoSocio = document.getElementById("activoSocio");
+//Span para mostrar mensaje de situación
+const muestraActiv = document.getElementById("muestraActiv");
+
+/** Evento sobre los botones de las páginas de paginación de la zona de los socios **/
+const tablaJQsocios = $("#tablaSocios tbody");
+const numeracionPaginacion = $("#navPaginacionSocios ul");
+const muestraPaginaSocios = $("#muestraPaginaSocios");
+
+
+////////////////////////////////////////////// UTILIZACIÓN DE FUNCIONES //////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////// EVENTOS /////////////////////////////////////////////////////////
 
 //Evento sobre el cambio del select de las provincias
 provSocio.addEventListener("change",function () {
@@ -243,72 +266,6 @@ munSocio.addEventListener("change",function () {
         });
 
 })
-
-//Función que muestra los códigos postales en un select según el municipio seleccionado anteriormente
-function mostrarCodPost() {
-
-    const datos = new FormData();
-    datos.append('controlador', 'registro');
-    datos.append('accion', 'muestraCp');
-    datos.append("Municipio", munSocio.value);
-    datos.append("codPost", "codigos");
-
-    fetch("index.php", {
-
-        method: 'POST',
-        body: datos
-
-    })
-
-        .then(function (response) {
-
-            if (response.ok){
-
-                return response.json();
-
-            }else{
-
-                throw 'alert("¡¡ERROR EN LA RESPUESTA DEL SERVIDOR!!")'
-
-            }
-
-        })
-        .then(data => {
-
-            let Obj = data;
-            if (Obj !== null){
-
-                cpSocio.length = 0;
-
-                for (let i=0;i<Obj.length;i++){
-
-                    let option = document.createElement("option");
-                    option.textContent = Obj[i];
-                    option.value = Obj[i];
-                    cpSocio.appendChild(option);
-
-                }
-
-            }else{
-
-                alert("¡¡ERROR EN LA SELECCIÓN DE LOS CÓDIGOS POSTALES!!")
-
-            }
-        })
-        .catch(function(err) {
-            console.log(err);
-        });
-
-}
-
-/****** Eventos para validar los campos del formulario de registro de los socios. Y hacer la petición al servidor ******/
-
-//Referencia a los botones de mandar y resetear el formulario, al formulario, al campo del dni del socio y a la tabla de los socios.
-const registroSocio = document.querySelector("#registroSocio");
-const borradoRegistroSocio = document.getElementById("borradoRegistroSocio");
-const formularioRegistroSocios = document.querySelector("#formularioRegistroSocios");
-const dniSocio = document.getElementById("dniSocio");
-const tablaSocios = document.querySelector("#tablaSocios tbody");
 
 //Evento sobre el botón de resetear los datos del formulario para eliminar datos adicionales
 borradoRegistroSocio.addEventListener("click",function (e){
@@ -529,13 +486,6 @@ $(document).on("click",".accesoTabla",function () {
 
 })
 
-/**** Recogemos situación del botón de activar o desactivar a un usuario durante su registro mostrando mensaje correspondiente ********/
-
-//Elemento check para mostrar situación según marcado
-const activoSocio = document.getElementById("activoSocio");
-//Span para mostrar mensaje de situación
-const muestraActiv = document.getElementById("muestraActiv");
-
 //Evento sobre elemento check de la página
 activoSocio.addEventListener("click",function (){
 
@@ -543,76 +493,73 @@ activoSocio.addEventListener("click",function (){
 
 })
 
-/****************** Evento click en el documento sobre el icono de la papelera de la tabla para eliminar a los socios,
- * ******************** y por lo tanto a los usuarios de la BBDDD ****************************************************/
+//Evento sobre el icono de la papelera de la tabla para eliminar a los socios y por lo tanto al usuario de la BBDD
+$(document).on("click", ".fa.fa-trash-o.fa-2x",function () {
 
-    $(document).on("click", ".fa.fa-trash-o.fa-2x",function () {
+    //Seleccionamos el primer hermano td que contiene el id de socio
+    let idUsuarioBorrar = $(this).parent().siblings(':first').html();
+    sessionStorage.setItem("idBorrar",idUsuarioBorrar);
 
-        //Seleccionamos el primer hermano td que contiene el id de socio
-        let idUsuarioBorrar = $(this).parent().siblings(':first').html();
-        sessionStorage.setItem("idBorrar",idUsuarioBorrar);
+    if (confirm('¿Está seguro de eliminar a ' + $(this).parent().siblings(':nth-child(3)').html() + ", "
+        + $(this).parent().siblings(':nth-child(2)').html() + '?')) {
 
-        if (confirm('¿Está seguro de eliminar a ' + $(this).parent().siblings(':nth-child(3)').html() + ", "
-            + $(this).parent().siblings(':nth-child(2)').html() + '?')) {
+        $(this).closest('tr').remove();
+        let datos = new FormData();
+        datos.append("controlador", "admin");
+        datos.append("accion", "eliminarSocio");
+        datos.append("idBorrar", sessionStorage.getItem("idBorrar"));
+        fetch("index.php", {
 
-            $(this).closest('tr').remove();
-            let datos = new FormData();
-            datos.append("controlador", "admin");
-            datos.append("accion", "eliminarSocio");
-            datos.append("idBorrar", sessionStorage.getItem("idBorrar"));
-            fetch("index.php", {
+            method: "POST",
+            body: datos
 
-                method: "POST",
-                body: datos
+        })
+
+            .then(response => {
+
+                if (response.ok) {
+
+                    return response.json();//tipo de respuesta que esperamos recibir
+
+                } else {
+
+                    throw 'alert("¡¡ERROR EN LA RESPUESTA DEL SERVIDOR!!")'
+
+                }
 
             })
 
-                .then(response => {
+            .then(data => {
 
-                    if (response.ok) {
+                if (data !== null) {
 
-                        return response.json();//tipo de respuesta que esperamos recibir
+                    if (data.codigo === 1) {
 
-                    } else {
+                        mostrarMsgCorrecto(data.msg);
+                        ocultarMsgRetardo();
 
-                        throw 'alert("¡¡ERROR EN LA RESPUESTA DEL SERVIDOR!!")'
+                    } else if (data.codigo === 0 || data.codigo === -1) {
 
-                    }
-
-                })
-
-                .then(data => {
-
-                    if (data !== null) {
-
-                        if (data.codigo === 1) {
-
-                            mostrarMsgCorrecto(data.msg);
-                            ocultarMsgRetardo();
-
-                        } else if (data.codigo === 0 || data.codigo === -1) {
-
-                            mostrarMsgError(data.msg);
-                            ocultarMsgRetardo();
-
-                        }
-
-                    } else {
-
-                        alert("¡¡OBJETO RECIBIDO INCORRECTO!!")
+                        mostrarMsgError(data.msg);
+                        ocultarMsgRetardo();
 
                     }
 
-                })
-                .catch(err => {
+                } else {
 
-                    alert(err);
+                    alert("¡¡OBJETO RECIBIDO INCORRECTO!!")
 
-                })
-        }
+                }
 
-    })
-/**********************************************************************************************************************/
+            })
+            .catch(err => {
+
+                alert(err);
+
+            })
+    }
+
+})
 
 //Evento sobre el icono de modificar socio
 $(document).on("click",".fa.fa-pencil-square-o.fa-2x",function () {
@@ -713,39 +660,7 @@ $(document).on("click",".fa.fa-pencil-square-o.fa-2x",function () {
     }
 })
 
-/* FUNCIÓN QUE REINICIA LOS CAMPOS DE LOS SELECT DE LA DIRECCIÓN DEL SOCIO */
-function reinicioSelectDir(campoProv, campoMun, campoDir, campoCp) {
-
-    campoProv.selectedOptions = "PROVINCIA";
-
-    campoMun.length = 0;
-    let optionMun = document.createElement("option");
-    optionMun.textContent = "MUNICIPIO";
-    optionMun.value = "MUNICIPIO";
-    optionMun.style.textAlign = "center";
-    campoMun.appendChild(optionMun);
-
-    campoDir.length = 0;
-    let optionDir = document.createElement("option");
-    optionDir.textContent = "DIRECCIÓN";
-    optionDir.value = "DIRECCIÓN";
-    optionDir.style.textAlign = "center";
-    campoDir.appendChild(optionDir);
-
-    campoCp.length = 0;
-    let optionCp = document.createElement("option");
-    optionCp.textContent = "CÓDIGO POSTAL";
-    optionCp.value = "CÓDIGO POSTAL";
-    optionCp.style.textAlign = "center";
-    campoCp.appendChild(optionCp);
-
-}
-
-
-/** Evento sobre los botones de las páginas de paginación de la zona de los socios **/
-const tablaJQsocios = $("#tablaSocios tbody");
-const numeracionPaginacion = $("#navPaginacionSocios ul");
-const muestraPaginaSocios = $("#muestraPaginaSocios");
+//Evento sobre los botones de la paginación de la tabla de los socios
 $(document).on("click",".page-item",function (e) {
 
     e.preventDefault();
@@ -854,9 +769,93 @@ $(document).on("click",".page-item",function (e) {
 })
 
 
-/*********************************************************************************************************************
- * ************************************ FINALIZA LA PARTE DE LOS SOCIOS ***********************************************
- * ********************************************************************************************************************/
+//////////////////////////////////////////////////// FUNCIONES ////////////////////////////////////////////////////////
+
+//Función que muestra los códigos postales en un select según el municipio seleccionado anteriormente
+function mostrarCodPost() {
+
+    const datos = new FormData();
+    datos.append('controlador', 'registro');
+    datos.append('accion', 'muestraCp');
+    datos.append("Municipio", munSocio.value);
+    datos.append("codPost", "codigos");
+
+    fetch("index.php", {
+
+        method: 'POST',
+        body: datos
+
+    })
+
+        .then(function (response) {
+
+            if (response.ok){
+
+                return response.json();
+
+            }else{
+
+                throw 'alert("¡¡ERROR EN LA RESPUESTA DEL SERVIDOR!!")'
+
+            }
+
+        })
+        .then(data => {
+
+            let Obj = data;
+            if (Obj !== null){
+
+                cpSocio.length = 0;
+
+                for (let i=0;i<Obj.length;i++){
+
+                    let option = document.createElement("option");
+                    option.textContent = Obj[i];
+                    option.value = Obj[i];
+                    cpSocio.appendChild(option);
+
+                }
+
+            }else{
+
+                alert("¡¡ERROR EN LA SELECCIÓN DE LOS CÓDIGOS POSTALES!!")
+
+            }
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
+
+}
+
+/* FUNCIÓN QUE REINICIA LOS CAMPOS DE LOS SELECT DE LA DIRECCIÓN DEL SOCIO */
+function reinicioSelectDir(campoProv, campoMun, campoDir, campoCp) {
+
+    campoProv.selectedOptions = "PROVINCIA";
+
+    campoMun.length = 0;
+    let optionMun = document.createElement("option");
+    optionMun.textContent = "MUNICIPIO";
+    optionMun.value = "MUNICIPIO";
+    optionMun.style.textAlign = "center";
+    campoMun.appendChild(optionMun);
+
+    campoDir.length = 0;
+    let optionDir = document.createElement("option");
+    optionDir.textContent = "DIRECCIÓN";
+    optionDir.value = "DIRECCIÓN";
+    optionDir.style.textAlign = "center";
+    campoDir.appendChild(optionDir);
+
+    campoCp.length = 0;
+    let optionCp = document.createElement("option");
+    optionCp.textContent = "CÓDIGO POSTAL";
+    optionCp.value = "CÓDIGO POSTAL";
+    optionCp.style.textAlign = "center";
+    campoCp.appendChild(optionCp);
+
+}
+
 
 
 

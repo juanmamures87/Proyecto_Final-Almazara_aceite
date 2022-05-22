@@ -1,13 +1,11 @@
 
-*{box-sizing: border-box;
-    margin: 0;
-    padding: 0}
+*{box-sizing: border-box;}
 
-html{height: 100%}
+html{min-height: 100vh}
 
 body {
     font-family: "Lato", sans-serif;
-    min-height: 100%;
+    min-height: 100vh;
 }
 
 /*Tamaño del header*/
@@ -198,3 +196,8 @@ body {
 /********************** MENÚ LATERAL DESPLEGABLE PARA MOSTRAR LOS DATOS REFERENTES A LAS PARCELAS ********************/
 
 #seleccionDatosParcelas{background-color: #d6efab;}
+
+
+/************************************* TABLA DE MUESTRA DE LAS PARCELAS ***********************************************/
+
+#tablaParcelas{font-size: 14px}
