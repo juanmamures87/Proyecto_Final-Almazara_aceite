@@ -4,6 +4,8 @@
 
 ////////////////////////////// REFERENCIA A LOS ELEMENTOS DE LA PÁGINA /////////////////////////////////////////////
 
+const seccionParcelas = $("#seccionParcelas");
+
 //Referencia al formulario del registro de las parcelas
 const formularioRegistroParcelas = document.getElementById("formularioRegistroParcelas");
 
@@ -21,6 +23,7 @@ const selVarParcela = document.getElementById("selVarParcela");
 const plantasParcela = document.getElementById("plantasParcela");
 const tablaParcelasBody = $("#tablaParcelas tbody")
 const navPaginacionParcelas = $("#navPaginacionParcelas ul");
+const muestraPaginaParcelas = $("#muestraPaginaParcelas");
 
 //Zona de selección para muestra de parcelas
 const busSocioParcelaMuestra = document.getElementById("busSocioParcelaMuestra");
@@ -292,7 +295,7 @@ selSocioParcelaMuestra.addEventListener("change",function () {
     let datos = new FormData();
     datos.append("controlador","admin");
     datos.append("accion","mostrarParcelaXsocio");
-    datos.append("idSocio",selSocioParcelaMuestra.value);
+    datos.append("eleccion",selSocioParcelaMuestra.value);
 
     fetch("index.php", {
 
@@ -320,40 +323,19 @@ selSocioParcelaMuestra.addEventListener("change",function () {
             if (data !== null) {
 
                 let paginas = data.paginas;
-                tablaParcelasBody.empty();
-
-                for (let i = 0; i < data.usuarios.length; i++) {
-
-                    tablaParcelasBody.append('<tr>' +
-                        '<th>' + data.usuarios[i].id_parcela + '</th>' +
-                        '<th>' + data.usuarios[i].id_socio + '</th>' +
-                        '<td>' + data.usuarios[i].apellidos + '</td>' +
-                        '<td>' + data.usuarios[i].nombre_socio + '</td>' +
-                        '<td>' + data.usuarios[i].provincia + '</td>' +
-                        '<td>' + data.usuarios[i].municipio + '</td>'+
-                        '<td>' + data.usuarios[i].ref_catastral + '</td>'+
-                        '<td>' + data.usuarios[i].poligono + '</td>' +
-                        '<td>' + data.usuarios[i].parcela + '</td>' +
-                        '<td>' + data.usuarios[i].superficie + ' m<sup>2</sup></td>' +
-                        '<td>' + data.usuarios[i].nombre_sistema + '</td>' +
-                        '<td>' + data.usuarios[i].nombre_variedad + '</td>' +
-                        '<td>' + data.usuarios[i].num_plantas + '</td>' +
-                        '<td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>' +
-                        '<td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>' +
-                        '</tr>');
-
-                }
+                creacionCuerpoTablaDinamico(data)
 
                 navPaginacionParcelas.empty();
 
                 for (let i = 1; i <= paginas; i++) {
 
-                    navPaginacionParcelas.append('<li data-pagina="' + i + '" class="page-item"><a class="page-link" ' +
+                    navPaginacionParcelas.append('<li data-eleccion="' + selSocioParcelaMuestra.value + '" ' +
+                        'data-accion="mostrarParcelaXsocio" data-pagina="' + i + '" class="page-item parcelas"><a class="page-link" ' +
                         'href="">' + i + '</a></li>');
 
                 }
 
-                muestraPaginaSocios.text(this.dataset.pagina);
+                muestraPaginaParcelas.text(this.dataset.pagina);
 
                 //Reinicia los campos de busqueda
                 busSocioParcelaMuestra.value = "";
@@ -379,6 +361,233 @@ selSocioParcelaMuestra.addEventListener("change",function () {
 
 
 
+})
+
+//Evento sobre los botones de la paginación de la tabla de los parcelas según la búsqueda
+seccionParcelas.on("click",".page-item.parcelas",function (e) {
+
+    e.preventDefault();
+    this.classList.add('active')
+
+    let datos = new FormData();
+    datos.append("pagina",this.dataset.pagina);
+    datos.append("controlador","admin");
+    datos.append("accion",this.dataset.accion);
+    datos.append("eleccion",this.dataset.eleccion);
+
+    fetch("index.php", {
+
+        method: "POST",
+        body: datos
+
+    })
+
+        .then(response => {
+
+            if (response.ok){
+
+                return response.json();//tipo de respuesta que esperamos recibir
+
+            }else{
+
+                throw 'alert("¡¡ERROR EN LA RESPUESTA DEL SERVIDOR!!")'
+
+            }
+
+        })
+
+        .then(data => {
+
+            if (data.length !== 0) {
+
+                let paginas = data.paginas;
+                creacionCuerpoTablaDinamico(data)
+
+                navPaginacionParcelas.empty();
+
+                for (let i = 1; i <= paginas; i++) {
+
+                    navPaginacionParcelas.append('<li data-eleccion="' + this.dataset.eleccion + '" ' +
+                        'data-accion="' + this.dataset.accion + '" data-pagina="' + i + '" class="page-item parcelas"><a class="page-link" ' +
+                        'href="">' + i + '</a></li>');
+
+                }
+
+                muestraPaginaParcelas.text(this.dataset.pagina);
+
+            }else{
+
+                tablaParcelasBody.empty();
+                navPaginacionParcelas.empty();
+                mostrarMsgError('NO EXISTEN PARCELAS CON ESOS PARÁMETROS');
+                ocultarMsgRetardo();
+
+            }
+
+        })
+        .catch(err => {
+
+            alert(err);
+
+        })
+
+})
+
+//Evento sobre el icono de la papelera de la tabla para eliminar a las parcelas tanto de la tabla como de la BBDD
+seccionParcelas.on("click", ".fa.fa-trash-o.fa-2x",function () {
+
+    //Seleccionamos el primer hermano td que contiene el id de socio
+    let idParcelaBorrar = $(this).parent().siblings(':first').html();
+
+    if (confirm('¿Está seguro de eliminar la parcela con Ref. Catastral ' + $(this).parent().siblings(':nth-child(7)').html() + " de "
+        + $(this).parent().siblings(':nth-child(3)').html() + ", " + $(this).parent().siblings(':nth-child(4)').html() + '?')) {
+
+        let datos = new FormData();
+        datos.append("controlador", "admin");
+        datos.append("accion", "eliminarParcela");
+        datos.append("idBorrar", idParcelaBorrar);
+        fetch("index.php", {
+
+            method: "POST",
+            body: datos
+
+        })
+
+            .then(response => {
+
+                if (response.ok) {
+
+                    return response.json();//tipo de respuesta que esperamos recibir
+
+                } else {
+
+                    throw 'alert("¡¡ERROR EN LA RESPUESTA DEL SERVIDOR!!")'
+
+                }
+
+            })
+
+            .then(data => {
+
+                if (data !== null) {
+
+                    if (data.codigo === 1) {
+
+                        mostrarMsgCorrecto(data.msg);
+                        ocultarMsgRetardo();
+
+                    } else if (data.codigo === 0 || data.codigo === -1) {
+
+                        mostrarMsgError(data.msg);
+                        ocultarMsgRetardo();
+
+                    }
+
+                } else {
+
+                    alert("¡¡OBJETO RECIBIDO INCORRECTO!!")
+
+                }
+
+            })
+            .catch(err => {
+
+                alert(err);
+
+            })
+
+        //Eliminamos la parcela de la lista
+        $(this).closest('tr').remove();
+
+    }
+
+})
+
+//Evento sobre el icono de modificar Parcela, donde se podrían cambiar el sistema de cultivo, la variedad de aceituna y las plantas
+seccionParcelas.on("click",".fa.fa-pencil-square-o.fa-2x",function () {
+
+    let datosTabla = [];
+    //Se recogen los datos de los elementos hermanos td el icono de modificar
+    $(this).parents("tr").find("td").each(function(indice,valor){
+
+        //Guardo los datos en un array
+        datosTabla.push(valor.textContent);
+
+    });
+
+    //recojo el id de la parcela a modificar
+    let idParcela = $(this).parents("tr").find("th:first-child").text();
+
+    //Me quedo con los datos necesarios haciendo splice en el array.
+    datosTabla.splice(0,8);
+    datosTabla.splice(3,datosTabla.length);
+
+    //Creo un objeto con los datos que me hacen falta para acceder mejor a los datos.
+    let cambioDatos = {
+
+        sistema:   datosTabla[0],
+        variedad:  datosTabla[1],
+        plantas:  datosTabla[2]
+
+    }
+
+    if (confirm('Va a proceder a modificar la parcela con Ref. Catastral ' + $(this).parent().siblings(':nth-child(7)').html() + " de "
+        + $(this).parent().siblings(':nth-child(3)').html() + ", " + $(this).parent().siblings(':nth-child(4)').html() + '\n¿Está seguro?')) {
+        let datos = new FormData();
+        datos.append("controlador", "admin");
+        datos.append("accion", "actualizarParcela");
+        datos.append("datosParcela", JSON.stringify(cambioDatos));
+        datos.append("idParcela", idParcela);
+        fetch("index.php", {
+
+            method: "POST",
+            body: datos
+
+        })
+
+            .then(response => {
+
+                if (response.ok) {
+
+                    return response.json();//tipo de respuesta que esperamos recibir
+
+                } else {
+
+                    throw 'alert("¡¡ERROR EN LA RESPUESTA DEL SERVIDOR!!")'
+
+                }
+
+            })
+
+            .then(data => {
+
+                if (data !== null) {
+
+                    if (data.codigo === 1) {
+
+                        mostrarMsgCorrecto(data.msg);
+                        ocultarMsgRetardo();
+
+                    } else if (data.codigo === 0 || data.codigo === -1) {
+
+                        mostrarMsgError(data.msg);
+                        ocultarMsgRetardo();
+
+                    }
+
+                } else {
+
+                    alert("¡¡OBJETO RECIBIDO INCORRECTO!!")
+
+                }
+
+            })
+            .catch(err => {
+
+                alert(err);
+
+            })
+    }
 })
 
 //////////////////////////////////////////////////// FUNCIONES ////////////////////////////////////////////////////////
@@ -606,7 +815,6 @@ function muestraDatosParcelas(campoSelect, accion, mensajeSelect) {
         datos.append("controlador","admin");
         datos.append("accion",accion);
         datos.append("eleccion",campoSelect.value);
-        console.log(datos.get('eleccion'));
 
         fetch("index.php", {
 
@@ -631,44 +839,22 @@ function muestraDatosParcelas(campoSelect, accion, mensajeSelect) {
 
             .then(data => {
 
-                console.log(data)
                 if (data.length !== 0) {
 
                     let paginas = data.paginas;
-                    tablaParcelasBody.empty();
-
-                    for (let i = 0; i < data.usuarios.length; i++) {
-
-                        tablaParcelasBody.append('<tr>' +
-                            '<th>' + data.usuarios[i].id_parcela + '</th>' +
-                            '<th>' + data.usuarios[i].id_socio + '</th>' +
-                            '<td>' + data.usuarios[i].apellidos + '</td>' +
-                            '<td>' + data.usuarios[i].nombre_socio + '</td>' +
-                            '<td>' + data.usuarios[i].provincia + '</td>' +
-                            '<td>' + data.usuarios[i].municipio + '</td>'+
-                            '<td>' + data.usuarios[i].ref_catastral + '</td>'+
-                            '<td>' + data.usuarios[i].poligono + '</td>' +
-                            '<td>' + data.usuarios[i].parcela + '</td>' +
-                            '<td>' + data.usuarios[i].superficie + ' m<sup>2</sup></td>' +
-                            '<td>' + data.usuarios[i].nombre_sistema + '</td>' +
-                            '<td>' + data.usuarios[i].nombre_variedad + '</td>' +
-                            '<td>' + data.usuarios[i].num_plantas + '</td>' +
-                            '<td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>' +
-                            '<td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>' +
-                            '</tr>');
-
-                    }
+                    creacionCuerpoTablaDinamico(data)
 
                     navPaginacionParcelas.empty();
 
                     for (let i = 1; i <= paginas; i++) {
 
-                        navPaginacionParcelas.append('<li data-pagina="' + i + '" class="page-item"><a class="page-link" ' +
+                        navPaginacionParcelas.append('<li data-eleccion="' + campoSelect.value + '" ' +
+                            'data-accion="' + accion + '" data-pagina="' + i + '" class="page-item parcelas"><a class="page-link" ' +
                             'href="">' + i + '</a></li>');
 
                     }
 
-                    muestraPaginaSocios.text(this.dataset.pagina);
+                    muestraPaginaParcelas.text(this.dataset.pagina);
 
                     //Reinicia los campos de busqueda
                     campoSelect.value = mensajeSelect;
@@ -691,5 +877,35 @@ function muestraDatosParcelas(campoSelect, accion, mensajeSelect) {
             })
 
     })
+
+}
+
+//Función que crea el cuerpo dinámico de la tabla de mostrar las parcelas. Se le pasaría por parámetro los datos devueltos
+//de la consulta AJAX
+function creacionCuerpoTablaDinamico(data) {
+
+    tablaParcelasBody.empty();
+
+    for (let i = 0; i < data.usuarios.length; i++) {
+
+        tablaParcelasBody.append('<tr>' +
+            '<th>' + data.usuarios[i].id_parcela + '</th>' +
+            '<th>' + data.usuarios[i].id_socio + '</th>' +
+            '<td>' + data.usuarios[i].apellidos + '</td>' +
+            '<td>' + data.usuarios[i].nombre_socio + '</td>' +
+            '<td>' + data.usuarios[i].provincia + '</td>' +
+            '<td>' + data.usuarios[i].municipio + '</td>'+
+            '<td>' + data.usuarios[i].ref_catastral + '</td>'+
+            '<td>' + data.usuarios[i].poligono + '</td>' +
+            '<td>' + data.usuarios[i].parcela + '</td>' +
+            '<td>' + data.usuarios[i].superficie + ' m<sup>2</sup></td>' +
+            '<td contenteditable="true">' + data.usuarios[i].nombre_sistema + '</td>' +
+            '<td contenteditable="true">' + data.usuarios[i].nombre_variedad + '</td>' +
+            '<td contenteditable="true">' + data.usuarios[i].num_plantas + '</td>' +
+            '<td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>' +
+            '<td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>' +
+            '</tr>');
+
+    }
 
 }

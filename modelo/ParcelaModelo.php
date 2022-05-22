@@ -276,4 +276,85 @@
 
         }
 
+        function eliminarParcela($idParcela){
+
+            $correcto = true;
+            $conexion = $this->conexion;
+            $conexion->beginTransaction();//deshabilito el modo autocommit
+
+            try {
+
+                $sql = $conexion->prepare("DELETE FROM parcela WHERE id_parcela = ?");
+                $sql->bindParam(1, $idParcela);
+                $resultado = $sql->execute();
+                if ($resultado) {
+
+                    $conexion->commit();// Se confirma la transacción actual
+
+                } else {
+
+                    $conexion->rollBack();//si no se puede realizar la inserción la transacción vuelve atrás y no se realiza
+                    $correcto = false;
+
+                }
+            }catch (PDOException $e){
+
+                $errorLine = $e->getLine();
+                echo "<script>alert('¡¡ERROR DE CONEXIÓN CON LA BASE DE DATOS!!\\n Error en la línea: " . $errorLine . "')</script>";
+                $correcto = false;
+            }
+
+            unset($conexion);
+            return $correcto;
+
+        }
+
+        function actualizarParcela($sistema, $variedad, $plantas, $idParcela){
+
+            $conexion = $this->conexion;
+
+            $correcto = true;
+            $conexion->beginTransaction();//deshabilito el modo autocommit
+
+            try {
+
+                $sql = $conexion->prepare("UPDATE parcela p 
+                        INNER JOIN sistema_cultivo sis ON sis.nombre = ? 
+                        INNER JOIN variedad_aceituna v ON v.nombre = ?
+                        SET p.sistema_cultivo = sis.id_sistema , p.variedad_aceituna = v.id_aceituna , p.num_plantas = ?
+                        WHERE id_parcela = ?");
+                $sql->bindParam(1, $sistema);
+                $sql->bindParam(2, $variedad);
+                $sql->bindParam(3, $plantas);
+                $sql->bindParam(4, $idParcela);
+                $resultado = $sql->execute();
+
+                if ($resultado) {
+
+                    $conexion->commit();// Se confirma la transacción actual
+
+                } else {
+
+                    $conexion->rollBack();//si no se puede realizar la inserción la transacción vuelve atrás y no se realiza
+                    $correcto = false;
+
+                }
+
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                $usuarios = [
+
+                    "codigo" => -2,
+                    "msg" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+
+                ];
+                $correcto = false;
+
+            }
+            unset($conexion);
+            return $correcto;
+
+        }
+
     }

@@ -224,10 +224,10 @@
     //Función que lanza como resultado todas las parcelas de un socio determinado por su id
     function mostrarParcelaXsocio(){
 
-        if (isset($_POST['idSocio']) && !empty($_POST['idSocio'])) {
+        if (isset($_POST['eleccion']) && !empty($_POST['eleccion'])) {
 
-            $idSocio = $_POST['idSocio'];
-            $pagina = 1;
+            $idSocio = $_POST['eleccion'];
+            $pagina = $_POST['pagina'] ?? 1;
             $busqueda = 'p.id_socio = ' . $idSocio;
 
             global $parcelas;
@@ -252,7 +252,7 @@
         if (isset($_POST['eleccion']) && !empty($_POST['eleccion'])) {
 
             $provincia = $_POST['eleccion'];
-            $pagina = 1;
+            $pagina = $_POST['pagina'] ?? 1;
 
             global $parcelas;
             $parcelaXprov = $parcelas->busquedaParcelaXprov($provincia,$pagina);
@@ -278,7 +278,7 @@
         if (isset($_POST['eleccion']) && !empty($_POST['eleccion'])) {
 
             $idSistema = $_POST['eleccion'];
-            $pagina = 1;
+            $pagina = $_POST['pagina'] ?? 1;
             $busqueda = 'sis.id_sistema = ' . $idSistema;
 
             global $parcelas;
@@ -305,8 +305,7 @@
         if (isset($_POST['eleccion']) && !empty($_POST['eleccion'])) {
 
             $idVariedad = $_POST['eleccion'];
-            $campo = "v.id_aceituna";
-            $pagina = 1;
+            $pagina = $_POST['pagina'] ?? 1;
             $busqueda = 'v.id_aceituna = ' . $idVariedad;
 
             global $parcelas;
@@ -336,7 +335,7 @@
             $valoresSuperficie = explode('-',$superficie);
             $menor = $valoresSuperficie[0];
             $mayor = $valoresSuperficie[1];
-            $pagina = 1;
+            $pagina = $_POST['pagina'] ?? 1;
             $busqueda = "p.superficie BETWEEN $menor AND $mayor ";
 
             global $parcelas;
@@ -366,7 +365,7 @@
             $valoresPlantas = explode('-',$plantas);
             $menor = $valoresPlantas[0];
             $mayor = $valoresPlantas[1];
-            $pagina = 1;
+            $pagina = $_POST['pagina'] ?? 1;
             $busqueda = "p.num_plantas BETWEEN $menor AND $mayor ";
 
             global $parcelas;
@@ -385,6 +384,99 @@
             echo json_encode($respuesta);
 
         }
+
+    }
+
+    function eliminarParcela(){
+
+        if (isset($_POST['idBorrar']) && !empty($_POST['idBorrar'])){
+
+            global $parcelas;
+
+            $socioEliminado = $parcelas->eliminarParcela($_POST['idBorrar']);
+
+            if ($socioEliminado){
+
+                $resultado = [
+
+                    "codigo"    => 1,
+                    "msg"       => "PARCELA ELIMINADA CORRECTAMENTE"
+
+                ];
+
+            }else{
+
+                $resultado = [
+
+                    "codigo"    => 0,
+                    "msg"       => "LA PARCELA NO PUDO ELIMINARSE"
+
+                ];
+
+            }
+
+        }else{
+
+            $resultado = [
+
+                "codigo"    => -1,
+                "msg"       => "ERROR!! NO SE HA RECIBIDO EL ID DE LA PARCELA A BORRAR"
+
+            ];
+
+        }
+
+        echo json_encode($resultado);
+        //var_dump($resultado);
+
+    }
+
+    function actualizarParcela(){
+
+        if (isset($_POST['datosParcela'],$_POST['idParcela']) && !empty($_POST['datosParcela']) && !empty($_POST['idParcela'])){
+
+            $idParcela = $_POST['idParcela'];
+            $datos = json_decode($_POST['datosParcela']);
+            global $parcelas;
+
+            $parcelaActualizado = $parcelas->actualizarParcela($datos->sistema, $datos->variedad, $datos->plantas, $idParcela);
+
+            if ($parcelaActualizado){
+
+                $respuesta = [
+
+                    "codigo"    => 1,
+                    "msg"       => "PARCELA ACTUALIZADA CORRECTAMENTE"
+
+                ];
+
+            }else{
+
+                $respuesta = [
+
+                    "codigo"    => 0,
+                    "msg"       => "SE PRODUJO UN ERROR. LA PARCELA NO PUDO ACTUALIZARSE"
+
+                ];
+
+            }
+
+
+
+
+        }else{
+
+            $respuesta = [
+
+                "codigo"    => -1,
+                "msg"       => "NO SE RECIBIÓ EL ID NECESARIO PARA ACTUALIZAR"
+
+            ];
+
+        }
+
+        echo json_encode($respuesta);
+        //var_dump($respuesta);
 
     }
 

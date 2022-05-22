@@ -67,6 +67,9 @@ for (let i = 0; i < enlaces.length; i++){
 
 ////////////////////////////// REFERENCIA A LOS ELEMENTOS DE LA PÁGINA /////////////////////////////////////////////
 
+//Referencia al apartado solo de socios
+const seccionSocios = $("#seccionSocios");
+
 //Referencia a los campos de provincia, municipio, dirección y código postal y sus respectivos campos alternativos.
 const provSocio = document.getElementById("provSocio");
 const provSocioAlterna = document.getElementById("provSocioAlterna");
@@ -493,8 +496,8 @@ activoSocio.addEventListener("click",function (){
 
 })
 
-//Evento sobre el icono de la papelera de la tabla para eliminar a los socios y por lo tanto al usuario de la BBDD
-$(document).on("click", ".fa.fa-trash-o.fa-2x",function () {
+//Evento sobre el icono de la papelera de la tabla para eliminar a los socios y, por lo tanto, al usuario de la BBDD
+seccionSocios.on("click", ".fa.fa-trash-o.fa-2x",function () {
 
     //Seleccionamos el primer hermano td que contiene el id de socio
     let idUsuarioBorrar = $(this).parent().siblings(':first').html();
@@ -562,7 +565,7 @@ $(document).on("click", ".fa.fa-trash-o.fa-2x",function () {
 })
 
 //Evento sobre el icono de modificar socio
-$(document).on("click",".fa.fa-pencil-square-o.fa-2x",function () {
+seccionSocios.on("click",".fa.fa-pencil-square-o.fa-2x",function () {
 
     let datosTabla = [];
     //Se recogen los datos de los elementos hermanos td el icono de modificar
@@ -661,7 +664,7 @@ $(document).on("click",".fa.fa-pencil-square-o.fa-2x",function () {
 })
 
 //Evento sobre los botones de la paginación de la tabla de los socios
-$(document).on("click",".page-item",function (e) {
+seccionSocios.on("click",".page-item",function (e) {
 
     e.preventDefault();
     this.classList.add('active')
@@ -767,7 +770,6 @@ $(document).on("click",".page-item",function (e) {
         })
 
 })
-
 
 //////////////////////////////////////////////////// FUNCIONES ////////////////////////////////////////////////////////
 

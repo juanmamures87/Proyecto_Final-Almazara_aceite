@@ -568,6 +568,9 @@
           </table>
           <nav aria-label="Page navigation example" id="navPaginacionParcelas">
             <ul class="pagination justify-content-center"></ul>
+            <div class="text-center w-25 m-auto text-decoration-underline">
+              <span id="muestraPaginaParcelas"></span>
+            </div>
           </nav>
 
       </div>
