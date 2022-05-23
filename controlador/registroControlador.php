@@ -333,3 +333,85 @@
 
 
     }
+
+    function insertarProduccion(){
+
+        if (isset($_POST['selSocioProd'],$_POST['selParcelaProd']) && !empty($_POST['selSocioProd']) &&
+            !empty($_POST['selParcelaProd'])){
+
+            $idSocio = $_POST['selSocioProd'];
+            $idParcela = $_POST['selParcelaProd'];
+            $tipo = $_POST['selTipoProd'];
+            $kg = $_POST['kgProd'];
+            $rendimiento = $_POST['renProd'];
+            $acidez = $_POST['acidezProd'];
+
+            $litros = ($kg * $rendimiento)/100;
+
+            require_once "modelo/ProduccionModelo.php";
+            $producciones = new ProduccionModelo();
+
+            $insertaProd = $producciones->insertarProduccion($idSocio,$idParcela,$tipo,$kg,$rendimiento,$litros,$acidez);
+
+            if ($insertaProd) {
+
+                require_once "modelo/AceiteModelo.php";
+                $aceites = new AceiteModelo();
+
+                if ($acidez <= 0.8) {
+
+                    $actualizaLitros = $aceites->actualizaAove($litros);
+
+                } else {
+
+                    $actualizaLitros = $aceites->actualizaVirgen($litros);
+
+                }
+
+                if ($actualizaLitros){
+
+                    $resultado = [
+
+                        "codigo"    =>  1,
+                        "msg"       =>  "REMESA DE PRODUCCIÓN INSERTADA CORRECTAMENTE",
+                        'msgAceite' =>  "LA CANTIDAD DE LITROS FUE ACTUALIZADA"
+
+                    ];
+
+                }else{
+
+                    $resultado = [
+
+                        "codigo"    =>  0,
+                        "msg"       =>  "REMESA DE PRODUCCIÓN INSERTADA CORRECTAMENTE",
+                        'msgAceite' =>  "SE PRODUJO UN ERROR AL ACTUALIZAR LOS LITROS DE LA BODEGA"
+
+                    ];
+
+                }
+
+            }else{
+
+                $resultado = [
+
+                    "codigo"    => -1,
+                    "msg"       =>  "LA REMESA DE PRODUCCIÓN NO PUDO INSERTARSE"
+
+                ];
+
+            }
+
+        }else{
+
+            $resultado = [
+
+                "codigo"    => -2,
+                "msg"       =>  "DEBE SELECCIONAR UN USUARIO Y UNA PARCELA CORRECTA"
+
+            ];
+
+        }
+
+        echo json_encode($resultado);
+
+    }

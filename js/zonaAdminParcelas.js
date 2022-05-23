@@ -322,30 +322,36 @@ selSocioParcelaMuestra.addEventListener("change",function () {
 
             if (data !== null) {
 
-                let paginas = data.paginas;
-                creacionCuerpoTablaDinamico(data)
+                if (data.length !== 0) {
+                    let paginas = data.paginas;
+                    creacionCuerpoTablaDinamico(data)
 
-                navPaginacionParcelas.empty();
+                    navPaginacionParcelas.empty();
 
-                for (let i = 1; i <= paginas; i++) {
+                    for (let i = 1; i <= paginas; i++) {
 
-                    navPaginacionParcelas.append('<li data-eleccion="' + selSocioParcelaMuestra.value + '" ' +
-                        'data-accion="mostrarParcelaXsocio" data-pagina="' + i + '" class="page-item parcelas"><a class="page-link" ' +
-                        'href="">' + i + '</a></li>');
+                        navPaginacionParcelas.append('<li data-eleccion="' + selSocioParcelaMuestra.value + '" ' +
+                            'data-accion="mostrarParcelaXsocio" data-pagina="' + i + '" class="page-item parcelas"><a class="page-link" ' +
+                            'href="">' + i + '</a></li>');
+
+                    }
+
+                    muestraPaginaParcelas.text(this.dataset.pagina);
+
+                    //Reinicia los campos de busqueda
+                    busSocioParcelaMuestra.value = "";
+                    selSocioParcelaMuestra.length = 0;
+                    let opcion = document.createElement("option");
+                    opcion.value = 'SELECCIONE SOCIO';
+                    opcion.textContent = 'SELECCIONE SOCIO';
+                    opcion.style.textAlign = "center";
+                    selSocioParcelaMuestra.append(opcion);
+                }else{
+
+                    mostrarMsgError('ESTE USUARIO NO TIENE NINGUNA PARCELA A SU NOMBRE');
+                    ocultarMsgRetardo();
 
                 }
-
-                muestraPaginaParcelas.text(this.dataset.pagina);
-
-                //Reinicia los campos de busqueda
-                busSocioParcelaMuestra.value = "";
-                selSocioParcelaMuestra.length = 0;
-                let opcion = document.createElement("option");
-                opcion.value = 'SELECCIONE SOCIO';
-                opcion.textContent = 'SELECCIONE SOCIO';
-                opcion.style.textAlign = "center";
-                selSocioParcelaMuestra.append(opcion);
-
             }else{
 
                 alert('ERROR EN EL OBJETO RECIBIDO')

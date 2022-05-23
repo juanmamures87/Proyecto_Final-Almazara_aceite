@@ -6,6 +6,9 @@
     require_once "modelo/ParcelaModelo.php";
     $parcelas = new ParcelaModelo();
 
+    require_once "modelo/ProduccionModelo.php";
+    $producciones = new ProduccionModelo();
+
     function eliminarSocio(){
 
         if (isset($_POST['idBorrar']) && !empty($_POST['idBorrar'])){
@@ -121,7 +124,7 @@
     //No hay manera de que funcione, no recoge la RC de ninguna manera. Dejarla y probar si responde catastro
     function mostrarPoliParceSuperf(){
 
-        require_once "librerias/nusoap/lib/nusoap.php";
+        require_once "../librerias/nusoap/lib/nusoap.php";
 
         if (isset($_POST['provincia'], $_POST['municipio'], $_POST['refcat']) && !empty($_POST['provincia']) &&
             !empty($_POST['municipio']) && !empty($_POST['refcat'])) {
@@ -129,11 +132,6 @@
             $provincia = $_POST['provincia'];
             $municipio = $_POST['municipio'];
             $refcat = $_POST['refcat'];
-            $datosParcela = [
-                'Provincia' => $provincia,
-                'Municipio' => $municipio,
-                'RC'        => strval($refcat)
-            ];
 
             /*A continuación obtenemos el servicio web del catastro que nos proporciona todo lo referente a una parcela, pasándole
             una provincia, un municipio y su referencia catastral.
@@ -153,7 +151,11 @@
             }
             // 2. Llamar a la función getCliente del servidor
 
-            $resultado = $cliente->call('Consulta_DNPRC', $datosParcela);
+            $resultado = $cliente->call('Consulta_DNPRC',
+                array(
+                    'Provincia' => $provincia,
+                    'Municipio' => $municipio,
+                    'RC'        => $refcat));
 
             // Verificación que los parámetros están ok, y si lo están. mostrar rta.
             if ($cliente->fault) {
@@ -171,25 +173,26 @@
 
                 } else {
 
-                    //echo json_encode($resultado);
-                    var_dump($resultado);
+                    echo json_encode($resultado);
+                    /*var_dump($resultado);
                     var_dump($refcat);
                     var_dump($provincia);
-                    var_dump($municipio);
+                    var_dump($municipio);*/
 
                 }
             }
 
         }else{
 
-            $respuesta = [
+            $resultado = [
 
                 "codigo"    => -2,
                 "msg"       => "DEBE INTRODUCIR UNA PROVINCIA, MUNICIPIO Y REF. CATASTRAL PARA CONSULTAR LOS DATOS"
 
             ];
 
-            echo json_encode($respuesta);
+
+            echo json_encode($resultado);
             //var_dump($respuesta);
 
         }
@@ -477,6 +480,33 @@
 
         echo json_encode($respuesta);
         //var_dump($respuesta);
+
+    }
+
+    //////////////////////////////////////////// ZONA DE LAS PARCELAS /////////////////////////////////////////////////
+
+    function mostrarParcelaXsocioProd(){
+
+        if (isset($_POST['idSocio']) && !empty($_POST['idSocio'])) {
+
+            $idSocio = $_POST['idSocio'];
+
+            global $parcelas;
+            $parcelaXsocio = $parcelas->mostrarParcelaXsocio($idSocio);
+            echo json_encode($parcelaXsocio);
+
+        }else{
+
+            $respuesta = [
+
+                "codigo"    => -2,
+                "msg"       => "DEBE INTRODUCIR UNA PROVINCIA VÁLIDA"
+
+            ];
+
+            echo json_encode($respuesta);
+
+        }
 
     }
 

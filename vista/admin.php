@@ -577,11 +577,60 @@
 
     </article>
 
+    <!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////// SECCIÓN DE LAS PARCELAS //////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+
     <article id="seccionProduccion" hidden>
 
-      <h1 class="tituloSeccion">Producción</h1>
-      <div class="registroSeccion">Registro</div>
-      <div class="muestraSeccion">Mostrar</div>
+      <h1 class="tituloSeccion" id="tituloProduccion">Producción</h1>
+      <div class="registroSeccion" id="registroProduccion">
+
+        <form class="row gx-3 gy-2 align-items-center" id="formularioRegistroProduccion">
+          <div class="col-sm-2">
+            <label class="visually-hidden" for="busSocioProd">Socio</label>
+            <input type="search" class="form-control" id="busSocioProd" placeholder="Búsqueda parcial">
+          </div>
+          <div class="col-4">
+            <label class="visually-hidden" for="selSocioProd">Socio</label>
+            <select class="form-select" name="selSocioProd" id="selSocioProd">
+              <option class="text-center" value="SOCIOS">SOCIOS</option>
+            </select>
+          </div>
+          <div class="col-4">
+            <label class="visually-hidden" for="selParcelaProd">Parcela</label>
+            <select class="form-select" id="selParcelaProd" name="selParcelaProd">
+              <option class="text-center" value="PARCELA">PARCELA</option>
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <label class="visually-hidden" for="selTipoProd">Tipo producto</label>
+            <select class="form-select" id="selTipoProd" name="selTipoProd">
+              <option class="text-center" value="TIPO PRODUCTO">TIPO PRODUCTO</option>
+              <option value="suelo">Suelo</option>
+              <option value="vuelo">Vuelo</option>
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <label class="visually-hidden" for="kgProd">Kilogramos</label>
+            <input type="number" class="form-control" min="50" id="kgProd" name="kgProd" placeholder="Kilogramos">
+          </div>
+          <div class="col-sm-2">
+            <label class="visually-hidden" for="renProd">Rendimiento</label>
+            <input type="number" class="form-control" min="18" max="25" id="renProd" name="renProd" placeholder="Rendimiento">
+          </div>
+          <div class="col-sm-2">
+            <label class="visually-hidden" for="acidezProd">Acidez</label>
+            <input type="number" step="0.1" min="0" max="2" class="form-control" id="acidezProd" name="acidezProd" placeholder="Acidez">
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary mx-3" id="registroProd">Registrar</button>
+            <button type="reset" class="btn btn-warning mx-2" id="resetFormProd">Resetear</button>
+          </div>
+        </form>
+
+      </div>
+      <div class="muestraSeccion" id="mostrarProduccion">Mostrar</div>
 
     </article>
 
@@ -618,6 +667,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
   <script src="../js/principal.js"></script>
   <script src="../js/zonaAdmin.js"></script>
+  <script src="../js/zonaAdminProd.js"></script>
   <script src="../js/zonaAdminParcelas.js"></script>
   </body>
 </html>

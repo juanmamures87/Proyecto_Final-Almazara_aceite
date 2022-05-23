@@ -138,6 +138,42 @@
 
         }
 
+        function mostrarParcelaXsocio($idSocio){
+
+            $conexion = $this->conexion;
+            $parcelas = [];
+
+            try{
+
+                $sql = "SELECT * FROM parcela WHERE id_socio = $idSocio";
+                $resultado = $conexion->query($sql);
+                if ($resultado->rowCount() !== 0) {
+
+                    while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
+
+                        $parcelas[] = $fila;
+
+                    }
+
+                }
+
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                $parcelas = [
+
+                    "codigo" => -2,
+                    "msg" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+
+                ];
+
+            }
+
+            unset($conexion);
+            return $parcelas;
+
+        }
+
         function busquedas($busqueda, $pagina){
 
             $conexion = $this->conexion;

@@ -201,3 +201,27 @@ body {
 /************************************* TABLA DE MUESTRA DE LAS PARCELAS ***********************************************/
 
 #tablaParcelas{font-size: 14px}
+
+/********************************************************************************************************************/
+/************************** CONTENEDOR DEL APARTADO PRODUCCIÓN ******************************************/
+/********************************************************************************************************************/
+
+#seccionProduccion{display: grid;
+    gap: 10px;
+    grid-template: "tituloProduccion"     50px
+                   "registroProduccion"   100px
+                   "muestraProduccion"    100vh/
+                    100vw;}
+
+#tituloProduccion{grid-area: tituloProduccion;
+    background-color: white;
+}
+
+#registroProduccion{grid-area: registroProduccion;
+    padding: 5px;
+    background-color: #d6efab;
+}
+
+#mostrarProduccion{grid-area: muestraProduccion;
+    background-color: #fffcc2;
+}
