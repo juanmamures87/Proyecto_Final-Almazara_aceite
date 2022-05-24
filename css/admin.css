@@ -225,3 +225,30 @@ body {
 #mostrarProduccion{grid-area: muestraProduccion;
     background-color: #fffcc2;
 }
+
+/* Ticket de impresión con los datos de la remesa de producción  */
+
+#ticketRemesaProd{display: grid;
+    gap: 10px;
+    background-color: white;
+    width: 50%;
+    padding: 5px;
+    margin: -180px auto auto;
+    grid-template: "datosAlmazara"     100px
+                   "datosAgricultor"   100px
+                   "remesaProducto"    180px
+                   "firmasFecha"       100px/
+                   100%;
+    }
+
+#datosAlmazara {grid-area: datosAlmazara;
+    border: 1px solid green;}
+
+#datosAgricultor {grid-area: datosAgricultor;
+    border: 1px solid green;}
+
+#remesaProducto {grid-area: remesaProducto;
+    border: 1px solid green;}
+
+#firmasFecha {grid-area: firmasFecha;
+    border: 1px solid green;}

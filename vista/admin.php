@@ -630,7 +630,24 @@
         </form>
 
       </div>
-      <div class="muestraSeccion" id="mostrarProduccion">Mostrar</div>
+      <div class="muestraSeccion" id="mostrarProduccion">
+
+        <div id="apartadoTicket" hidden>
+          <div id="botonesImprimirCancelar" class="d-flex flex-column w-25">
+            <button class="btn btn-success mx-5 mt-5">Imprimir</button>
+            <button class="btn btn-secondary mr-5 mx-5 mt-5">Cancelar</button>
+          </div>
+
+          <div id="ticketRemesaProd">
+
+            <div id="datosAlmazara"></div>
+            <div id="datosAgricultor"></div>
+            <div id="remesaProducto"></div>
+            <div id="firmasFecha"></div>
+
+          </div>
+        </div>
+      </div>
 
     </article>
 

@@ -195,7 +195,7 @@
                         INNER JOIN usuarios u ON s.id_usuario = u.id_usuario
                         INNER JOIN variedad_aceituna v ON v.id_aceituna = p.variedad_aceituna
                         INNER JOIN sistema_cultivo sis ON sis.id_sistema = p.sistema_cultivo                                                        
-                        WHERE $busqueda";
+                        WHERE $busqueda ORDER BY u.apellidos ASC";
                 $resultado = $conexion->query($sql);
                 $numRegistros = $resultado->rowCount();
                 $totalPaginas = ceil($numRegistros/$tamagnoPaginas);
@@ -208,7 +208,7 @@
                         INNER JOIN usuarios u ON s.id_usuario = u.id_usuario
                         INNER JOIN variedad_aceituna v ON v.id_aceituna = p.variedad_aceituna
                         INNER JOIN sistema_cultivo sis ON sis.id_sistema = p.sistema_cultivo                                                        
-                        WHERE $busqueda LIMIT $empezarDesde,$tamagnoPaginas";
+                        WHERE $busqueda ORDER BY u.apellidos ASC LIMIT $empezarDesde,$tamagnoPaginas";
                 $resultado = $conexion->query($sql_limit);
                 if ($resultado->rowCount() !== 0) {
 
@@ -264,7 +264,7 @@
                         INNER JOIN usuarios u ON s.id_usuario = u.id_usuario
                         INNER JOIN variedad_aceituna v ON v.id_aceituna = p.variedad_aceituna
                         INNER JOIN sistema_cultivo sis ON sis.id_sistema = p.sistema_cultivo                                                        
-                        WHERE p.provincia = '$provincia'";
+                        WHERE p.provincia = '$provincia' ORDER BY u.apellidos ASC";
                 $resultado = $conexion->query($sql);
                 $numRegistros = $resultado->rowCount();
                 $totalPaginas = ceil($numRegistros/$tamagnoPaginas);
@@ -277,7 +277,7 @@
                         INNER JOIN usuarios u ON s.id_usuario = u.id_usuario
                         INNER JOIN variedad_aceituna v ON v.id_aceituna = p.variedad_aceituna
                         INNER JOIN sistema_cultivo sis ON sis.id_sistema = p.sistema_cultivo                                                        
-                        WHERE p.provincia = '$provincia' LIMIT $empezarDesde,$tamagnoPaginas";
+                        WHERE p.provincia = '$provincia' ORDER BY u.apellidos ASC LIMIT $empezarDesde,$tamagnoPaginas";
                 $resultado = $conexion->query($sql_limit);
                 if ($resultado->rowCount() !== 0) {
 
