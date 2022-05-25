@@ -8,6 +8,11 @@ const busSocioProd = document.getElementById("busSocioProd");
 const selSocioProd = document.getElementById("selSocioProd");
 const selParcelaProd = document.getElementById("selParcelaProd");
 const registroProd = document.getElementById("registroProd");
+const apartadoTicket = document.getElementById("apartadoTicket");
+
+//Referencia al los botones de impresión o cancelación de esta
+const imprimir = document.getElementById("imprimir");
+const cancelarImpresion = document.getElementById("cancelarImpresion");
 
 ////////////////////////////////////////////// UTILIZACIÓN DE FUNCIONES //////////////////////////////////////////////
 
@@ -200,6 +205,11 @@ registroProd.addEventListener("click",function (e) {
 
                     mostrarMsgCorrecto(data.msg + " - " + data.msgAceite);
                     formularioRegistroProduccion.reset();
+                    if (apartadoTicket.hidden === false){
+
+                        apartadoTicket.hidden = true;
+
+                    }
 
                 }else if(data.codigo === -1 || data.codigo === -2){
 
@@ -216,6 +226,11 @@ registroProd.addEventListener("click",function (e) {
 
                     },1000);
                     formularioRegistroProduccion.reset();
+                    if (apartadoTicket.hidden === false){
+
+                        apartadoTicket.hidden = true;
+
+                    }
 
                 }
 
@@ -233,6 +248,18 @@ registroProd.addEventListener("click",function (e) {
         })
 
 
+
+})
+
+//Evento sobre el botón de cancelar impresión para ocultar el ticket
+cancelarImpresion.addEventListener("click",function (e) {
+
+    e.preventDefault();
+    if (apartadoTicket.hidden === true){
+
+        apartadoTicket.hidden = false;
+
+    }
 
 })
 

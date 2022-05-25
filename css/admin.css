@@ -233,22 +233,43 @@ body {
     background-color: white;
     width: 50%;
     padding: 5px;
-    margin: -180px auto auto;
+    margin: 0 auto auto;
     grid-template: "datosAlmazara"     100px
-                   "datosAgricultor"   100px
-                   "remesaProducto"    180px
-                   "firmasFecha"       100px/
+                   "datosAgricultor"   120px
+                   "remesaProducto"    140px
+                   "firmasFecha"       120px/
                    100%;
     }
 
 #datosAlmazara {grid-area: datosAlmazara;
-    border: 1px solid green;}
+    border: 1px solid green;
+    font-size: 14px;}
+
+#datosAlmazara hr, #datosAgricultor hr{margin-top: -30px;}
 
 #datosAgricultor {grid-area: datosAgricultor;
-    border: 1px solid green;}
+    border: 1px solid green;
+    font-size: 14px;}
 
 #remesaProducto {grid-area: remesaProducto;
     border: 1px solid green;}
 
+#remesaProducto table{width: 90%;
+    margin: auto;}
+
+#remesaProducto table td{border: 1px solid black}
+
 #firmasFecha {grid-area: firmasFecha;
-    border: 1px solid green;}
+    border: 1px solid green;
+    font-size: 14px;}
+
+#botonesImprimirCancelar{margin-top: -300px;
+    width: 200px;
+    margin-left: 50px;}
+
+#botonesImprimirCancelar button{width: 100%;}
+
+#imagenTicket{margin-top: -100px;
+    margin-left: 450px;
+    width: 120px;
+    height: 120px;}
