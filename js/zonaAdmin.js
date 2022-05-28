@@ -14,7 +14,7 @@ if (mes < 10){
     mes = "0" + mes;
 
 }
-const year = fecha.getFullYear();
+let year = fecha.getFullYear();
 const fechaHoraAdmin = document.getElementById("fechaHoraAdmin");
 fechaHoraAdmin.append(dia + "/" + mes + "/" + year);
 

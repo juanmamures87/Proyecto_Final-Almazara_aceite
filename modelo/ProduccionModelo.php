@@ -20,6 +20,8 @@
             $idAlbaran = $this->produccion->getIdAlbaran();
             $fechaEntrada = $this->produccion->getFechaEntrada();
             $horaEntrada = $this->produccion->getHoraEntrada();
+
+            $parcelaInsertada = [];
             $correcto = true;
             $conexion->beginTransaction();//deshabilito el modo autocommit
 
@@ -42,28 +44,87 @@
 
                 if ($resultado) {
 
+                    $ultimaParcela = $conexion->lastInsertId();
                     $conexion->commit();// Se confirma la transacción actual
+                    $parcelaInsertada = [
+
+                        "resultado" => $correcto,
+                        "idParcela" => $ultimaParcela,
+                        "msg"       => "PARCELA INSERTADA CORRECTAMENTE"
+
+                    ];
 
                 } else {
 
                     $conexion->rollBack();//si no se puede realizar la inserción la transacción vuelve atrás y no se realiza
                     $correcto = false;
+                    $parcelaInsertada = [
+
+                        "resultado" => $correcto,
+                        "idParcela" => null,
+                        'msg'       => "ERROR EN LA INSERCIÓN DE LA PARCELA"
+
+                    ];
 
                 }
 
             }catch (PDOException $e){
 
                 $errorName = $e->getMessage();
-                $codPost = [
+                $correcto = false;
 
-                    "msg" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+                $parcelaInsertada = [
+
+                    "resultado" => $correcto,
+                    //"idUsuario" => $lastId,
+                    'msg'       => 'ERROR AL REGISTRAR LA PARCELA. ALGUNO DE LOS DATOS YA SE ENCUENTRA EN EL REGISTRO'
+                    //"msg"       => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
 
                 ];
-                $correcto = false;
 
             }
             unset($conexion);
-            return $correcto;
+            return $parcelaInsertada;
+
+        }
+
+        function mostrarProduccionXid($idProd){
+
+            $conexion = $this->conexion;
+            $remesa = [];
+
+            try{
+
+                $sql = "SELECT u.nombre, u.apellidos, u.direccion, u.cp, u.num_casa, u.piso, u.puerta, u.provincia, u.municipio, u.dni,
+                        p.ref_catastral, p.poligono, p.parcela, pro.kg_aceituna, pro.litros_aceite, pro.rendimiento, pro.tipo_producto
+                        FROM usuarios u 
+                        INNER JOIN socios s ON u.id_usuario = s.id_usuario
+                        INNER JOIN parcela p ON p.id_socio = s.id_socio
+                        INNER JOIN produccion pro ON pro.id_socio = s.id_socio 
+                         WHERE pro.id_albaran = $idProd";
+                $resultado = $conexion->query($sql);
+                if ($resultado->rowCount() !== 0) {
+
+                    $fila = $resultado->fetch(PDO::FETCH_OBJ);
+
+                    $remesa[] = $fila;
+
+                }
+
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                $remesa = [
+
+                    "codigo" => -2,
+                    "msg" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+
+                ];
+
+            }
+
+            unset($conexion);
+            return $remesa;
 
         }
 

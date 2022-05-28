@@ -353,7 +353,9 @@
 
             $insertaProd = $producciones->insertarProduccion($idSocio,$idParcela,$tipo,$kg,$rendimiento,$litros,$acidez);
 
-            if ($insertaProd) {
+            if ($insertaProd['resultado'] === true) {
+
+                $remesa = $producciones->mostrarProduccionXid($insertaProd['idParcela']);
 
                 require_once "modelo/AceiteModelo.php";
                 $aceites = new AceiteModelo();
@@ -373,6 +375,7 @@
                     $resultado = [
 
                         "codigo"    =>  1,
+                        'remesa'    =>  $remesa,
                         "msg"       =>  "REMESA DE PRODUCCIÓN INSERTADA CORRECTAMENTE",
                         'msgAceite' =>  "LA CANTIDAD DE LITROS FUE ACTUALIZADA"
 
@@ -383,6 +386,7 @@
                     $resultado = [
 
                         "codigo"    =>  0,
+                        'remesa'    =>  $remesa,
                         "msg"       =>  "REMESA DE PRODUCCIÓN INSERTADA CORRECTAMENTE",
                         'msgAceite' =>  "SE PRODUJO UN ERROR AL ACTUALIZAR LOS LITROS DE LA BODEGA"
 
