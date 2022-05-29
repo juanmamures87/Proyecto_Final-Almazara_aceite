@@ -483,7 +483,7 @@
 
     }
 
-    //////////////////////////////////////////// ZONA DE LAS PARCELAS /////////////////////////////////////////////////
+    //////////////////////////////////////////// ZONA DE PRODUCCIÓN ////////////////////////////////////////////////////
 
     function mostrarParcelaXsocioProd(){
 
@@ -494,6 +494,35 @@
             global $parcelas;
             $parcelaXsocio = $parcelas->mostrarParcelaXsocio($idSocio);
             echo json_encode($parcelaXsocio);
+
+        }else{
+
+            $respuesta = [
+
+                "codigo"    => -2,
+                "msg"       => "DEBE INTRODUCIR UNA PROVINCIA VÁLIDA"
+
+            ];
+
+            echo json_encode($respuesta);
+
+        }
+
+    }
+
+    function mostrarProdXsocioTemporada(){
+
+        if (isset($_POST['idSocio'],$_POST['temporada']) && !empty($_POST['idSocio']) && !empty($_POST['temporada'])) {
+
+            $idSocio = $_POST['idSocio'];
+            $pagina = $_POST['pagina'] ?? 1;
+
+            $temporadas = explode('/',$_POST['temporada']);
+            $yearActual = $temporadas[0];
+            $yearSiguiente = $temporadas[1];
+            global $producciones;
+            $produccionSocioTemporada = $producciones->busquedasProduccion($idSocio,$yearActual,$yearSiguiente,$pagina);
+            echo json_encode($produccionSocioTemporada);
 
         }else{
 

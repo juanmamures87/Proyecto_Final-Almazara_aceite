@@ -355,7 +355,7 @@
 
             if ($insertaProd['resultado'] === true) {
 
-                $remesa = $producciones->mostrarProduccionXid($insertaProd['idParcela']);
+                $remesa = $producciones->mostrarProduccionXidTicket($insertaProd['idParcela']);
 
                 require_once "modelo/AceiteModelo.php";
                 $aceites = new AceiteModelo();

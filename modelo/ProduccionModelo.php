@@ -18,7 +18,7 @@
 
             $conexion = $this->conexion;
             $idAlbaran = $this->produccion->getIdAlbaran();
-            $fechaEntrada = $this->produccion->getFechaEntrada();
+            $fechaEntrada = $this->produccion->getFechaEntrada();//date('2018-11-30') ;//
             $horaEntrada = $this->produccion->getHoraEntrada();
 
             $parcelaInsertada = [];
@@ -88,7 +88,7 @@
 
         }
 
-        function mostrarProduccionXid($idProd){
+        function mostrarProduccionXidTicket($idProd){
 
             $conexion = $this->conexion;
             $remesa = [];
@@ -125,6 +125,78 @@
 
             unset($conexion);
             return $remesa;
+
+        }
+
+        function busquedasProduccion($idSocio,$yearActual, $yearSiguiente, $pagina){
+
+            $conexion = $this->conexion;
+
+            /*Para realizar la paginación hay que poner la cláusula LIMIT, pero antes hay que apagar las preparaciones
+            de consulta emuladas cambiando este atributo a false porque si no la cláusula LIMIT no será aceptada*/
+            $conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES,false);
+            $parcelas = [];
+            $datosFinales = [];
+
+            try{
+
+                $tamagnoPaginas = 5;
+                $empezarDesde = ($pagina - 1)*$tamagnoPaginas;
+                $sql = "SELECT pro.id_socio, pro.id_albaran, u.nombre, u.apellidos, p.provincia, p.municipio, p.ref_catastral, p.poligono, p.parcela, 
+                        pro.kg_aceituna, pro.litros_aceite, pro.rendimiento, pro.acidez, pro.tipo_producto, pro.fecha_entrada, pro.hora_entrada
+                        FROM usuarios u
+                        INNER JOIN socios s ON u.id_usuario = s.id_usuario
+                        INNER JOIN parcela p ON p.id_socio = s.id_socio
+                        INNER JOIN produccion pro ON pro.id_parcela = p.id_parcela
+                        WHERE pro.id_socio = $idSocio
+                        AND (YEAR(fecha_entrada) = $yearActual
+                        OR YEAR(fecha_entrada) = $yearSiguiente)
+                        ORDER BY fecha_entrada ASC";
+                $resultado = $conexion->query($sql);
+                $numRegistros = $resultado->rowCount();
+                $totalPaginas = ceil($numRegistros/$tamagnoPaginas);
+                $resultado->closeCursor();
+
+                $sql_limit = "SELECT pro.id_socio, pro.id_albaran, u.nombre, u.apellidos, p.provincia, p.municipio, p.ref_catastral, p.poligono, p.parcela, 
+                        pro.kg_aceituna, pro.litros_aceite, pro.rendimiento, pro.acidez, pro.tipo_producto, pro.fecha_entrada, pro.hora_entrada
+                        FROM usuarios u
+                        INNER JOIN socios s ON u.id_usuario = s.id_usuario
+                        INNER JOIN parcela p ON p.id_socio = s.id_socio
+                        INNER JOIN produccion pro ON pro.id_parcela = p.id_parcela
+                        WHERE pro.id_socio = $idSocio
+                        AND (YEAR(fecha_entrada) = $yearActual
+                        OR YEAR(fecha_entrada) = $yearSiguiente) ORDER BY fecha_entrada ASC LIMIT $empezarDesde,$tamagnoPaginas";
+                $resultado = $conexion->query($sql_limit);
+                if ($resultado->rowCount() !== 0) {
+
+                    while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
+
+                        $parcelas[] = $fila;
+
+                    }
+
+                    $datosFinales = [
+
+                        "remesas" => $parcelas,
+                        "paginas" => $totalPaginas
+
+                    ];
+
+                }
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                $datosFinales = [
+
+                    "codigo" => -2,
+                    "errorConex" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+
+                ];
+
+            }
+
+            unset($conexion);
+            return $datosFinales;
 
         }
 

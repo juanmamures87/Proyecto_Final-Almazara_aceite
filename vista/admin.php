@@ -613,21 +613,131 @@
           </div>
           <div class="col-sm-2">
             <label class="visually-hidden" for="kgProd">Kilogramos</label>
-            <input type="number" class="form-control" min="50" id="kgProd" name="kgProd" placeholder="Kilogramos">
+            <input type="number" class="form-control" min="50" id="kgProd" name="kgProd" placeholder="Kilogramos" required>
           </div>
           <div class="col-sm-2">
             <label class="visually-hidden" for="renProd">Rendimiento</label>
-            <input type="number" class="form-control" min="18" max="25" id="renProd" name="renProd" placeholder="Rendimiento">
+            <input type="number" class="form-control" min="18" max="25" id="renProd" name="renProd" placeholder="Rendimiento" required>
           </div>
           <div class="col-sm-2">
             <label class="visually-hidden" for="acidezProd">Acidez</label>
-            <input type="number" step="0.1" min="0" max="2" class="form-control" id="acidezProd" name="acidezProd" placeholder="Acidez">
+            <input type="number" step="0.1" min="0" max="2" class="form-control" id="acidezProd" name="acidezProd" placeholder="Acidez" required>
           </div>
           <div class="col-auto">
             <button type="submit" class="btn btn-primary mx-3" id="registroProd">Registrar</button>
             <button type="reset" class="btn btn-warning mx-2" id="resetFormProd">Resetear</button>
+            <button class="btn btn-success botonSeleccionDatos mx-4" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#seleccionDatosProd" aria-controls="seleccionDatosProd">
+              Visualizar Datos
+            </button>
           </div>
         </form>
+
+        <!----------------------------------------------------------------------------------------------------------->
+        <!-- Menú lateral desplegable para seleccionar como ver los datos referentes a las remesas de producciones -->
+        <!----------------------------------------------------------------------------------------------------------->
+        <div class="offcanvas offcanvas-start mt-5" tabindex="-1" id="seleccionDatosProd" aria-labelledby="seleccionDatosProdEtiqueta">
+          <div class="offcanvas-header">
+            <h4 class="offcanvas-title" id="seleccionDatosProdEtiqueta">DATOS PRODUCCIONES</h4>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <hr>
+            <label class="mt-3" for="busParcialProd"><b>Búsqueda por socio: </b></label>
+            <div class="d-flex flex-row">
+              <div class="col-sm-4">
+                <label class="visually-hidden" for="busSocioProdMuestra">Socio</label>
+                <input type="search" class="form-control" id="busSocioProdMuestra" placeholder="B. Parcial">
+              </div>
+              <div class="col-sm-8">
+                <select class="form-select" id="selSocioProdMuestra">
+                  <option class="text-center" value="SOCIOS">SOCIOS</option>
+                </select>
+              </div>
+            </div>
+            <label class="mt-3" for="busProdTemporada"><b>Búsqueda por temporada: </b></label>
+            <select class="form-select visualizar" aria-label="Default select example" id="busProdTemporada">
+              <option class="text-center" value="TEMPORADA">TEMPORADA</option>
+
+                <?php
+                    $lustroAtras = date('Y') - 5;
+                    $yearActual = date('Y');
+                    while ($lustroAtras <= $yearActual){
+
+                            ?>
+
+                          <option value="<?php echo $lustroAtras . "/" . $lustroAtras + 1;?>"><?php echo $lustroAtras . "/" . $lustroAtras + 1;?></option>
+
+                            <?php
+
+                        $lustroAtras++;
+
+                    }
+
+                ?>
+            </select>
+            <label class="mt-3" for="busSuper"><b>Búsqueda por superficie en m<sup>2</sup>: </b></label>
+            <select class="form-select visualizar" aria-label="Default select example" id="busSuper">
+              <option class="text-center" value="SUPERFICIE">SUPERFICIE</option>
+              <option value="0-5000"> < 5000</option>
+              <option value="5000-20000"> > 5000 y < 20000</option>
+              <option value="20000-50000"> > 20000 y < 50000</option>
+              <option value="50000-100000"> > 50000 y < 100000</option>
+              <option value="100000-1000000"> > 100000</option>
+            </select>
+            <label class="mt-3" for="busSisCul"><b>Sistema de cultivo: </b></label>
+            <select class="form-select visualizar" aria-label="Default select example" id="busSisCul">
+              <option class="text-center" value="SISTEMA CULTIVO">SISTEMA CULTIVO</option>
+
+                <?php
+                    if (isset($sistema) && !empty($sistema)){
+
+                        foreach ($sistema as $sisCultivo){
+
+                            ?>
+
+                          <option value="<?php echo $sisCultivo->id_sistema?>"><?php echo $sisCultivo->nombre?></option>
+
+                            <?php
+
+                        }
+                    }
+
+                ?>
+            </select>
+            <label class="mt-3" for="busVar"><b>Variedad aceituna: </b></label>
+            <select class="form-select visualizar" aria-label="Default select example" id="busVar">
+              <option class="text-center" value="VARIEDAD ACEITUNA">VARIEDAD ACEITUNA</option>
+
+                <?php
+                    if (isset($variedad) && !empty($variedad)){
+
+                        foreach ($variedad as $varAceituna){
+
+                            ?>
+
+                          <option value="<?php echo $varAceituna->id_aceituna?>"><?php echo $varAceituna->nombre?></option>
+
+                            <?php
+
+                        }
+                    }
+
+                ?>
+            </select>
+            <label class="mt-3" for="busPlan"><b>Número de plantas: </b></label>
+            <select class="form-select visualizar" aria-label="Default select example" id="busPlan">
+              <option class="text-center" value="PLANTAS">PLANTAS</option>
+              <option value="0-100"> < 100</option>
+              <option value="100-500"> > 100 y < 500 </option>
+              <option value="500-2000"> > 500 < 2000 </option>
+              <option value="2000-10000"> > 2000 </option>
+            </select>
+          </div>
+        </div>
+        <!----------------------------------------------------------------------------------------------------------->
+        <!-------- Acaba el menú lateral correspondiente a las búsquedas de las remesas de producción --------------->
+        <!----------------------------------------------------------------------------------------------------------->
 
       </div>
 
@@ -645,6 +755,38 @@
             <button id="cancelarImpresion" class="btn btn-secondary  mx-5">Cancelar</button>
           </div>
         </div>
+
+        <!-- Tabla de muestra de datos de las remesas de producción -->
+        <table class="table table-striped h6 text-sm-center" id="tablaProduccion">
+
+          <thead>
+          <tr>
+            <th scope="col">Id Albarán</th>
+            <th scope="col">Id Socio</th>
+            <th scope="col">Apellidos</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Provincia</th>
+            <th scope="col">Municipio</th>
+            <th scope="col">Ref. Catastral</th>
+            <th scope="col">Polígono</th>
+            <th scope="col">Parcela</th>
+            <th scope="col">Kg. Aceituna</th>
+            <th scope="col">Rendimiento</th>
+            <th scope="col">Litros Aceite</th>
+            <th scope="col">Acidez</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Fecha entrada</th>
+            <th scope="col">Hora entrada</th>
+          </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <nav aria-label="Page navigation example" id="navPaginacionProduccion">
+          <ul class="pagination justify-content-center"></ul>
+          <div class="text-center w-25 m-auto text-decoration-underline">
+            <span id="muestraPaginaProduccion"></span>
+          </div>
+        </nav>
       </div>
 
     </article>
@@ -684,7 +826,7 @@
   <!-- Archivos javascript -->
   <script src="../js/principal.js"></script>
   <script src="../js/zonaAdmin.js"></script>
-  <script src="../js/zonaAdminProd.js"></script>
   <script src="../js/zonaAdminParcelas.js"></script>
+  <script src="../js/zonaAdminProd.js"></script>
   </body>
 </html>

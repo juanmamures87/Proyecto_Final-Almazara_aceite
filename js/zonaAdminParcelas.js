@@ -369,7 +369,7 @@ selSocioParcelaMuestra.addEventListener("change",function () {
 
 })
 
-//Evento sobre los botones de la paginación de la tabla de los parcelas según la búsqueda
+//Evento sobre los botones de la paginación de la tabla de las parcelas según la búsqueda
 seccionParcelas.on("click",".page-item.parcelas",function (e) {
 
     e.preventDefault();
@@ -716,7 +716,7 @@ function validarCamposParcelas() {
 }
 
 //Función sobre los campos de búsqueda parcial de socio para escribir por el apellido y recoger las coincidencias
-//Se la pasa el campo de escritura, la acción que va a realizar del controlador y el campo de muestra de las coincidencias
+//Se la pasa el campo de escritura y el campo de muestra de las coincidencias
 function busquedaParcialSocios(campoEscritura,campoMuestra) {
 
     campoEscritura.addEventListener("keyup", function () {

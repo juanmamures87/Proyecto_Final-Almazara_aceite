@@ -193,14 +193,14 @@ body {
     background-color: #fffcc2;
 }
 
-/********************** MENÚ LATERAL DESPLEGABLE PARA MOSTRAR LOS DATOS REFERENTES A LAS PARCELAS ********************/
+/********* MENÚ LATERAL DESPLEGABLE PARA MOSTRAR LOS DATOS REFERENTES A LAS PARCELAS Y A LA PRODUCCIÓN ****************/
 
-#seleccionDatosParcelas{background-color: #d6efab;}
+#seleccionDatosParcelas, #seleccionDatosProd{background-color: #d6efab;}
 
 
-/************************************* TABLA DE MUESTRA DE LAS PARCELAS ***********************************************/
+/************************ TABLA DE MUESTRA DE LAS PARCELAS Y DE LAS PRODUCCIONES **************************************/
 
-#tablaParcelas{font-size: 14px}
+#tablaParcelas, #tablaProduccion{font-size: 14px}
 
 /********************************************************************************************************************/
 /************************** CONTENEDOR DEL APARTADO PRODUCCIÓN ******************************************/
@@ -263,12 +263,14 @@ body {
     border: 1px solid green;
     font-size: 14px;}
 
+/* Botones para imprimir o cancelar la impresión del ticket */
 #botonesImprimirCancelar{margin-top: -300px;
     width: 200px;
     margin-left: 50px;}
 
 #botonesImprimirCancelar button{width: 100%;}
 
+/* Posicionamiento de la imagen y tabla del ticket */
 #imagenTicket{margin-top: -100px;
     margin-left: 450px;
     width: 120px;
