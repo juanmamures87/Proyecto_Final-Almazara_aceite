@@ -518,8 +518,8 @@
             $pagina = $_POST['pagina'] ?? 1;
 
             $temporadas = explode('/',$_POST['temporada']);
-            $yearActual = $temporadas[0];
-            $yearSiguiente = $temporadas[1];
+            $yearActual = date($temporadas[0] . '-10-01');
+            $yearSiguiente = date($temporadas[1] . '-03-31');
             global $producciones;
             $produccionSocioTemporada = $producciones->busquedasProduccion($idSocio,$yearActual,$yearSiguiente,$pagina);
             echo json_encode($produccionSocioTemporada);

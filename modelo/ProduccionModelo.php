@@ -18,7 +18,8 @@
 
             $conexion = $this->conexion;
             $idAlbaran = $this->produccion->getIdAlbaran();
-            $fechaEntrada = $this->produccion->getFechaEntrada();//date('2018-11-30') ;//
+            $fechaEntrada = $this->produccion->fecha_aleatoria();//Utilizo una fecha aleatoria para que sea más certera la temporada de aceituna
+            //Esta es la fecha actual recogida de la clase$this->produccion->getFechaEntrada();
             $horaEntrada = $this->produccion->getHoraEntrada();
 
             $parcelaInsertada = [];
@@ -149,8 +150,8 @@
                         INNER JOIN parcela p ON p.id_socio = s.id_socio
                         INNER JOIN produccion pro ON pro.id_parcela = p.id_parcela
                         WHERE pro.id_socio = $idSocio
-                        AND (YEAR(fecha_entrada) = $yearActual
-                        OR YEAR(fecha_entrada) = $yearSiguiente)
+                        AND (fecha_entrada >= '$yearActual'
+                        AND fecha_entrada <= '$yearSiguiente')
                         ORDER BY fecha_entrada ASC";
                 $resultado = $conexion->query($sql);
                 $numRegistros = $resultado->rowCount();
@@ -164,8 +165,9 @@
                         INNER JOIN parcela p ON p.id_socio = s.id_socio
                         INNER JOIN produccion pro ON pro.id_parcela = p.id_parcela
                         WHERE pro.id_socio = $idSocio
-                        AND (YEAR(fecha_entrada) = $yearActual
-                        OR YEAR(fecha_entrada) = $yearSiguiente) ORDER BY fecha_entrada ASC LIMIT $empezarDesde,$tamagnoPaginas";
+                        AND (fecha_entrada >= '$yearActual'
+                        AND fecha_entrada <= '$yearSiguiente')
+                        ORDER BY fecha_entrada ASC LIMIT $empezarDesde,$tamagnoPaginas";
                 $resultado = $conexion->query($sql_limit);
                 if ($resultado->rowCount() !== 0) {
 
@@ -199,5 +201,28 @@
             return $datosFinales;
 
         }
+
+    /*Las 10 mayores entradas de Kg de aceituna en una temporada concreta
+     * SELECT pro.id_socio, pro.id_albaran, u.nombre, u.apellidos, p.provincia, p.municipio, p.ref_catastral, p.poligono, p.parcela,
+    pro.kg_aceituna, pro.litros_aceite, pro.rendimiento, pro.acidez, pro.tipo_producto, pro.fecha_entrada, pro.hora_entrada
+    FROM usuarios u
+    INNER JOIN socios s ON u.id_usuario = s.id_usuario
+    INNER JOIN parcela p ON p.id_socio = s.id_socio
+    INNER JOIN produccion pro ON pro.id_parcela = p.id_parcela
+    WHERE (fecha_entrada >= '2018-10-01'
+    AND fecha_entrada <= '2019-03-31')
+    ORDER BY pro.kg_aceituna DESC
+    LIMIT 10*/
+
+        /* Las 10 mayores estradas de Kg de aceituna de todos los tiempos de la almazara
+         * SELECT pro.id_socio, pro.id_albaran, u.nombre, u.apellidos, p.provincia, p.municipio, p.ref_catastral, p.poligono, p.parcela,
+                        pro.kg_aceituna, pro.litros_aceite, pro.rendimiento, pro.acidez, pro.tipo_producto, pro.fecha_entrada, pro.hora_entrada
+                        FROM usuarios u
+                        INNER JOIN socios s ON u.id_usuario = s.id_usuario
+                        INNER JOIN parcela p ON p.id_socio = s.id_socio
+                        INNER JOIN produccion pro ON pro.id_parcela = p.id_parcela
+                        ORDER BY pro.kg_aceituna DESC
+                        LIMIT 10
+         */
 
     }

@@ -280,3 +280,5 @@ body {
 #tablaTicket tbody td{font-size: 14px;
     text-align: center;
     vertical-align:middle;}
+/* Botón de limpiar tabla de muestra de datos de producción */
+#limpiarTablaBusquedas{margin-left: 82px;}

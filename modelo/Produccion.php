@@ -181,6 +181,17 @@
             $this->hora_entrada = $hora_entrada;
         }
 
+        //Función que genera una fecha aleatoria entre dos fechas dadas. Lo utilizo solo para inserción de datos
+        function fecha_aleatoria($formato = "Y-m-d", $limiteInferior = "2021-10-01", $limiteSuperior = "2022-03-31"){
+            // Convertimos la fecha como cadena a milisegundos
+            $milisegundosLimiteInferior = strtotime($limiteInferior);
+            $milisegundosLimiteSuperior = strtotime($limiteSuperior);
 
+            // Buscamos un número aleatorio entre esas dos fechas
+            $milisegundosAleatorios = mt_rand($milisegundosLimiteInferior, $milisegundosLimiteSuperior);
+
+            // Regresamos la fecha con el formato especificado y los milisegundos aleatorios
+            return date($formato, $milisegundosAleatorios);
+        }
 
     }

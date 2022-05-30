@@ -630,6 +630,7 @@
                     data-bs-target="#seleccionDatosProd" aria-controls="seleccionDatosProd">
               Visualizar Datos
             </button>
+            <button type="button" class="btn btn-danger" id="limpiarTablaBusquedas">Limpiar tabla</button>
           </div>
         </form>
 
@@ -643,7 +644,7 @@
           </div>
           <div class="offcanvas-body">
             <hr>
-            <label class="mt-3" for="busParcialProd"><b>Búsqueda por socio: </b></label>
+            <label class="mt-3" for="busParcialProd"><b>Búsqueda por socio y temporada: </b></label>
             <div class="d-flex flex-row">
               <div class="col-sm-4">
                 <label class="visually-hidden" for="busSocioProdMuestra">Socio</label>
@@ -655,7 +656,6 @@
                 </select>
               </div>
             </div>
-            <label class="mt-3" for="busProdTemporada"><b>Búsqueda por temporada: </b></label>
             <select class="form-select visualizar" aria-label="Default select example" id="busProdTemporada">
               <option class="text-center" value="TEMPORADA">TEMPORADA</option>
 
@@ -676,6 +676,7 @@
 
                 ?>
             </select>
+            <hr>
             <label class="mt-3" for="busSuper"><b>Búsqueda por superficie en m<sup>2</sup>: </b></label>
             <select class="form-select visualizar" aria-label="Default select example" id="busSuper">
               <option class="text-center" value="SUPERFICIE">SUPERFICIE</option>

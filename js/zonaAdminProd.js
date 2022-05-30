@@ -45,6 +45,7 @@ const busProdTemporada = document.getElementById("busProdTemporada");
 //Referencia a la tabla que muestra los datos de la producción
 const tablaProduccion = document.getElementById('tablaProduccion');
 const tablaProdCuerpo = $("#tablaProduccion tbody")
+const limpiarTablaBusquedas = document.getElementById("limpiarTablaBusquedas");
 const navPaginacionProduccion = $("#navPaginacionProduccion ul");
 const muestraPaginaProduccion = $("#muestraPaginaProduccion")
 
@@ -345,6 +346,16 @@ cancelarImpresion.addEventListener("click",function (e) {
 
 })
 
+//Evento sobre el botón de limpiar tabla para vaciar la tabla de las búsquedas
+limpiarTablaBusquedas.addEventListener('click',function (e) {
+
+    e.preventDefault();
+    tablaProdCuerpo.empty();
+    navPaginacionProduccion.empty();
+    muestraPaginaProduccion.text('');
+
+})
+
 //Evento sobre el botón de imprimir la remesa de producción introducida, pasándole la función definida con la
 //librería html2pdf. Con la que obtenemos un pdf a partir de un fragmento html.
 btnImprimirRemesa.addEventListener("click",ticketRemesaprod);
@@ -416,6 +427,9 @@ busProdTemporada.addEventListener("change",function () {
 
                     mostrarMsgError('ESTE SOCIO NO TIENE REMESAS DE PRODUCCIONES EN ESTA TEMPORADA');
                     ocultarMsgRetardo();
+                    tablaProdCuerpo.empty();
+                    navPaginacionProduccion.empty();
+                    muestraPaginaProduccion.text('');
 
                 }
 
