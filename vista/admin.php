@@ -49,6 +49,10 @@
 
   <section id="contenedorAccionesAdmin">
 
+    <!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////// SECCIÓN DE LOS SOCIOS ////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+
     <article id="seccionSocios">
 
       <h1 class="tituloSeccion">Socios</h1>
@@ -660,9 +664,11 @@
               <option class="text-center" value="TEMPORADA">TEMPORADA</option>
 
                 <?php
+                    //Variables y bucle que comprende el año actual y 5 años antes para ver las anteriores producciones
+                    //Y mostrarlas por un select para su elección
                     $lustroAtras = date('Y') - 5;
                     $yearActual = date('Y');
-                    while ($lustroAtras <= $yearActual){
+                    while ($lustroAtras < $yearActual){
 
                             ?>
 
@@ -677,63 +683,31 @@
                 ?>
             </select>
             <hr>
-            <label class="mt-3" for="busSuper"><b>Búsqueda por superficie en m<sup>2</sup>: </b></label>
-            <select class="form-select visualizar" aria-label="Default select example" id="busSuper">
-              <option class="text-center" value="SUPERFICIE">SUPERFICIE</option>
-              <option value="0-5000"> < 5000</option>
-              <option value="5000-20000"> > 5000 y < 20000</option>
-              <option value="20000-50000"> > 20000 y < 50000</option>
-              <option value="50000-100000"> > 50000 y < 100000</option>
-              <option value="100000-1000000"> > 100000</option>
-            </select>
-            <label class="mt-3" for="busSisCul"><b>Sistema de cultivo: </b></label>
-            <select class="form-select visualizar" aria-label="Default select example" id="busSisCul">
-              <option class="text-center" value="SISTEMA CULTIVO">SISTEMA CULTIVO</option>
+            <label class="mt-5" for="busKgXtemp"><b>10 Mayores entradas de aceituna por temporada: </b></label>
+            <select class="form-select visualizar" aria-label="Default select example" id="busKgXtemp">
+              <option class="text-center" value="KGTEMPORADA">KG. TEMPORADA</option>
 
                 <?php
-                    if (isset($sistema) && !empty($sistema)){
+                    //Variables y bucle que comprende el año actual y 5 años antes para ver las anteriores producciones
+                    //Y mostrarlas por un select para su elección
+                    $lustroAtras = date('Y') - 5;
+                    $yearActual = date('Y');
+                    while ($lustroAtras < $yearActual){
 
-                        foreach ($sistema as $sisCultivo){
+                        ?>
 
-                            ?>
+                      <option value="<?php echo $lustroAtras . "/" . $lustroAtras + 1;?>"><?php echo $lustroAtras . "/" . $lustroAtras + 1;?></option>
 
-                          <option value="<?php echo $sisCultivo->id_sistema?>"><?php echo $sisCultivo->nombre?></option>
+                        <?php
 
-                            <?php
+                        $lustroAtras++;
 
-                        }
                     }
 
                 ?>
             </select>
-            <label class="mt-3" for="busVar"><b>Variedad aceituna: </b></label>
-            <select class="form-select visualizar" aria-label="Default select example" id="busVar">
-              <option class="text-center" value="VARIEDAD ACEITUNA">VARIEDAD ACEITUNA</option>
-
-                <?php
-                    if (isset($variedad) && !empty($variedad)){
-
-                        foreach ($variedad as $varAceituna){
-
-                            ?>
-
-                          <option value="<?php echo $varAceituna->id_aceituna?>"><?php echo $varAceituna->nombre?></option>
-
-                            <?php
-
-                        }
-                    }
-
-                ?>
-            </select>
-            <label class="mt-3" for="busPlan"><b>Número de plantas: </b></label>
-            <select class="form-select visualizar" aria-label="Default select example" id="busPlan">
-              <option class="text-center" value="PLANTAS">PLANTAS</option>
-              <option value="0-100"> < 100</option>
-              <option value="100-500"> > 100 y < 500 </option>
-              <option value="500-2000"> > 500 < 2000 </option>
-              <option value="2000-10000"> > 2000 </option>
-            </select>
+            <label class="mt-5" for="bus10EntradasTiempos"><b>10 Mayores entradas de aceituna en todos los tiempos de la almazara</b></label>
+            <button type="button" class="btn btn-light w-100" id="bus10EntradasTiempos">MAYORES ENTRADAS</button>
           </div>
         </div>
         <!----------------------------------------------------------------------------------------------------------->
@@ -792,11 +766,62 @@
 
     </article>
 
+    <!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////// SECCIÓN DE LA TIENDA //////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+
     <article id="seccionTienda" hidden>
 
-      <h1 class="tituloSeccion">Tienda</h1>
-      <div class="registroSeccion">Registro</div>
-      <div class="muestraSeccion">Mostrar</div>
+      <h1 class="tituloSeccion" id="tituloTienda">Tienda</h1>
+      <div class="registroSeccion" id="registroTienda">
+
+        <form class="row align-items-center" id="formularioRegistroTienda">
+          <div class="input-group gap-2">
+            <div class="col-sm-3">
+              <label class="visually-hidden" for="nomProducto">Socio</label>
+              <input type="text" class="form-control" id="nomProducto" name="nomProducto" placeholder="Nombre del producto">
+            </div>
+            <div class="col-sm-3">
+              <label class="visually-hidden" for="selCatProducto">Socio</label>
+              <select class="form-select" name="selCatProducto" id="selCatProducto">
+                <option class="text-center" value="CATEGORIA">CATEGORÍA</option>
+                <?php
+                    if (isset($mostrarCategorias)){
+
+                      foreach ($mostrarCategorias as $categoria){
+
+                ?>
+
+                        <option value="<?php echo $categoria->id_cat_aceite?>"><?php echo $categoria->nombre ?></option>
+
+                <?php
+                      }
+                ?>
+
+              </select>
+            </div>
+            <label class="form-label" for="imgProducto"></label>
+            <input type="file" class="form-control" id="imgProducto" name="imgProducto" placeholder="Imagen del producto" required>
+          </div>
+          <div class="input-group mt-2 gap-3">
+            <button type="submit" class="btn btn-primary" id="registroProd">Registrar</button>
+            <button type="reset" class="btn btn-warning" id="resetFormProd">Resetear</button>
+            <div class="w-50 input-group mx-5">
+              <!-- En estos input mostramos los precios del AOVE y el AOV. Se podrán modificar en cualquier momento -->
+              <span class="input-group-text" id="spanAove">Precio AOVE</span>
+              <input type="text" class="form-control" value="<?php echo $mostrarCategorias[0]->precio . ' €/l' ?>" id="precioAove" name="precioAove" aria-describedby="spanAove">
+
+              <span class="input-group-text" id="spanAov">Precio AOV</span>
+              <input type="text" class="form-control" value="<?php echo $mostrarCategorias[1]->precio . ' €/l' ?>" id="precioAov" name="precioAov" aria-describedby="spanAov">
+            </div>
+            <button class="btn btn-success" type="button" id="cambioPrecio">Modificar precios</button>
+          </div>
+        </form>
+          <?php
+              }
+          ?>
+      </div>
+      <div class="muestraSeccion" id="mostrarTienda">Mostrar</div>
 
     </article>
 

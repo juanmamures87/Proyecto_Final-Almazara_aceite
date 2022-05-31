@@ -282,3 +282,27 @@ body {
     vertical-align:middle;}
 /* Botón de limpiar tabla de muestra de datos de producción */
 #limpiarTablaBusquedas{margin-left: 82px;}
+
+/********************************************************************************************************************/
+/************************** CONTENEDOR DEL APARTADO DE LA TIENDA ******************************************/
+/********************************************************************************************************************/
+
+#seccionTienda{display: grid;
+    gap: 10px;
+    grid-template: "tituloTienda"     50px
+                   "registroTienda"   100px
+                   "mostrarTienda"    100vh/
+                    100vw;}
+
+#tituloTienda{grid-area: tituloTienda;
+    background-color: white;
+}
+
+#registroTienda{grid-area: registroTienda;
+    padding: 5px;
+    background-color: #def2ff;
+}
+
+#mostrarTienda{grid-area: mostrarTienda;
+    background-color: #dedcdc;
+}

@@ -539,4 +539,42 @@
 
     }
 
+    function _10MayoresEntradaXtemp(){
+
+        if (isset($_POST['temporada']) && !empty($_POST['temporada'])){
+
+            $temporadas = explode('/',$_POST['temporada']);
+            $inicioTemporada = date($temporadas[0] . '-10-01');
+            $finTemporada = date($temporadas[1] . '-03-31');
+            global $producciones;
+            $_10MayoresEntradasXtemp = $producciones->mostrarMayorEntradaXtemporada($inicioTemporada, $finTemporada);
+            echo json_encode($_10MayoresEntradasXtemp);
+            //var_dump($_10MayoresEntradasXtemp);
+
+        }else{
+
+            $respuesta = [
+
+                "codigo"    => -1,
+                "msg"       => "NO SE RECIBIÓ UNA TEMPORADA CONCRETA PARA REALIZAR LA BÚSQUEDA"
+
+            ];
+
+            echo json_encode($respuesta);
+            //var_dump($respuesta);
+
+        }
+
+    }
+
+    function mayoresEntradasHistoria(){
+
+        global $producciones;
+        $mayoresEntradasHistoria = $producciones->mayoresEntradasHistoria();
+        echo json_encode($mayoresEntradasHistoria);
+        //var_dump($_10MayoresEntradasXtemp);
+
+
+    }
+
 

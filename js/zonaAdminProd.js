@@ -41,6 +41,8 @@ const ticketYearFirma = document.getElementById("ticketYearFirma");
 const busSocioProdMuestra = document.getElementById('busSocioProdMuestra');
 const selSocioProdMuestra = document.getElementById('selSocioProdMuestra');
 const busProdTemporada = document.getElementById("busProdTemporada");
+const busKgXtemp = document.getElementById('busKgXtemp');
+const bus10EntradasTiempos = document.getElementById('bus10EntradasTiempos');
 
 //Referencia a la tabla que muestra los datos de la producción
 const tablaProduccion = document.getElementById('tablaProduccion');
@@ -493,7 +495,7 @@ seccionProduccion.on("click",".page-item.prodTemp",function (e) {
                 for (let i = 1; i <= paginas; i++) {
 
                     navPaginacionProduccion.append('<li data-socio="' + this.dataset.socio + '" ' +
-                        'data-accion="' + this.dataset.accion + '" data-temporada="' + this.dataset.temporada + '"' +
+                        'data-accion="' + this.dataset.accion + '" data-temporada="' + this.dataset.temporada + '" ' +
                         'data-pagina="' + i + '" class="page-item prodTemp"><a class="page-link" ' +
                         'href="">' + i + '</a></li>');
 
@@ -516,6 +518,121 @@ seccionProduccion.on("click",".page-item.prodTemp",function (e) {
             alert(err);
 
         })
+
+})
+
+//Evento sobre el select de búsqueda del menú lateral de las 10 mayores entradas de aceituna por temporada
+busKgXtemp.addEventListener('change',function (){
+
+    let datos  = new FormData();
+    datos.append("controlador","admin");
+    datos.append("accion","_10MayoresEntradaXtemp");
+    datos.append("temporada",busKgXtemp.value);
+
+    fetch("index.php", {
+
+        method: "POST",
+        body: datos
+
+    })
+
+        .then(response => {
+
+            if (response.ok){
+
+                return response.json();//tipo de respuesta que esperamos recibir
+
+            }else{
+
+                throw 'ERROR EN LA LLAMADA AJAX';
+
+            }
+
+        })
+
+        .then(data => {
+
+            console.log(data)
+            if (data.length !== 0) {
+
+                ocultarMsgError();
+                cuerpoTablaProduccion(data)
+
+                //Reinicia el select de búsqueda de temporada
+                busKgXtemp.value = 'KGTEMPORADA';
+                navPaginacionProduccion.empty();
+
+            } else {
+
+                mostrarMsgError('NO EXISTEN REMESAS EN ESTA TEMPORADA');
+                ocultarMsgRetardo();
+                tablaProdCuerpo.empty();
+                navPaginacionProduccion.empty();
+
+            }
+
+        })
+        .catch(err => {
+
+            alert(err);
+
+        })
+
+})
+
+//Evento sobre el botón del menú lateral de la búsqueda de las 10 mayores entradas de aceituna de todos los tiempos
+bus10EntradasTiempos.addEventListener('click',function () {
+
+    let datos  = new FormData();
+    datos.append("controlador","admin");
+    datos.append("accion","mayoresEntradasHistoria");
+
+    fetch("index.php", {
+
+        method: "POST",
+        body: datos
+
+    })
+
+        .then(response => {
+
+            if (response.ok){
+
+                return response.json();//tipo de respuesta que esperamos recibir
+
+            }else{
+
+                throw 'ERROR EN LA LLAMADA AJAX';
+
+            }
+
+        })
+
+        .then(data => {
+
+            console.log(data)
+            if (data.length !== 0) {
+
+                ocultarMsgError();
+                cuerpoTablaProduccion(data)
+                navPaginacionProduccion.empty();
+
+            } else {
+
+                mostrarMsgError('HUBO UN PROBLEMA AL RECIBIR LOS DATOS');
+                ocultarMsgRetardo();
+                tablaProdCuerpo.empty();
+                navPaginacionProduccion.empty();
+
+            }
+
+        })
+        .catch(err => {
+
+            alert(err);
+
+        })
+
 
 })
 

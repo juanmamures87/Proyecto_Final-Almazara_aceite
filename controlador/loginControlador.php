@@ -4,6 +4,15 @@
     require_once "modelo/LoginModelo.php";
     $logeos = new LoginModelo();
 
+    require_once "modelo/ParcelaModelo.php";
+    $parcelas = new ParcelaModelo();
+
+    require_once "modelo/SocioModelo.php";
+    $socios = new SocioModelo();
+
+    require_once "modelo/ProductoModelo.php";
+    $productos = new ProductoModelo();
+
     function inicioSocios(){
 
         //Si la el dni y la contraseña que se le proporciona al socio concuerdan, puede acceder.
@@ -28,16 +37,18 @@
 
                 /*Llamamos a las funciones correspondientes que nos mostrarán en la vista del admin la variedad
                 de aceituna y el sistema de cultivo para registrar las parcelas*/
-                require_once "modelo/ParcelaModelo.php";
-                $parcelas = new ParcelaModelo();
+                global $parcelas;
                 $variedad = $parcelas->mostrarVariedadAceituna();
                 $sistema = $parcelas->mostrarSistemaCultivo();
 
                 //Llamamos a la función para mostrar todos los socios en la página del administrador
-                require_once "modelo/SocioModelo.php";
-                $socios = new SocioModelo();
+                global $socios;
                 $pagina = 1;
                 $mostrarSocios = $socios->mostrarSocios($pagina);
+
+                //Llamamos a la función que mostrará las categorías de aceite registradas, para poder insertar un producto
+                global $productos;
+                $mostrarCategorias = $productos->mostrarCategoriaAceite();
 
                 //A continuación obtenemos el servicio web del catastro que nos proporciona las provincias de España.
                 //Obtenemos una variable que almacena todos los datos y la pasamos a la vista.

@@ -14,6 +14,42 @@
 
         }
 
+        function mostrarCategoriaAceite(){
+
+            $conexion = $this->conexion;
+            $categoriaAceite = [];
+
+            try{
+
+                $sql = "SELECT * FROM aceite";
+                $resultado = $conexion->query($sql);
+                if ($resultado->rowCount() !== 0) {
+
+                    while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
+
+                        $categoriaAceite[] = $fila;
+
+                    }
+
+                }
+
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                $categoriaAceite = [
+
+                    "codigo" => -2,
+                    "errorConex" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+
+                ];
+
+            }
+
+            unset($conexion);
+            return $categoriaAceite;
+
+        }
+
         function insertarProducto($nombre, $categoria, $imagen){
 
             $conexion = $this->conexion;

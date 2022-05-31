@@ -202,27 +202,107 @@
 
         }
 
-    /*Las 10 mayores entradas de Kg de aceituna en una temporada concreta
-     * SELECT pro.id_socio, pro.id_albaran, u.nombre, u.apellidos, p.provincia, p.municipio, p.ref_catastral, p.poligono, p.parcela,
-    pro.kg_aceituna, pro.litros_aceite, pro.rendimiento, pro.acidez, pro.tipo_producto, pro.fecha_entrada, pro.hora_entrada
-    FROM usuarios u
-    INNER JOIN socios s ON u.id_usuario = s.id_usuario
-    INNER JOIN parcela p ON p.id_socio = s.id_socio
-    INNER JOIN produccion pro ON pro.id_parcela = p.id_parcela
-    WHERE (fecha_entrada >= '2018-10-01'
-    AND fecha_entrada <= '2019-03-31')
-    ORDER BY pro.kg_aceituna DESC
-    LIMIT 10*/
+        function mostrarMayorEntradaXtemporada($inicioTemporada, $finTemporada){
 
-        /* Las 10 mayores estradas de Kg de aceituna de todos los tiempos de la almazara
-         * SELECT pro.id_socio, pro.id_albaran, u.nombre, u.apellidos, p.provincia, p.municipio, p.ref_catastral, p.poligono, p.parcela,
+            $conexion = $this->conexion;
+            $remesa = [];
+            $datosFinales = [];
+
+            try{
+
+                $sql = "SELECT pro.id_socio, pro.id_albaran, u.nombre, u.apellidos, p.provincia, p.municipio, 
+                        p.ref_catastral, p.poligono, p.parcela, pro.kg_aceituna, pro.litros_aceite, pro.rendimiento, pro.acidez, 
+                        pro.tipo_producto, pro.fecha_entrada, pro.hora_entrada
+                        FROM usuarios u
+                        INNER JOIN socios s ON u.id_usuario = s.id_usuario
+                        INNER JOIN parcela p ON p.id_socio = s.id_socio
+                        INNER JOIN produccion pro ON pro.id_parcela = p.id_parcela
+                        WHERE (fecha_entrada >= '$inicioTemporada'
+                        AND fecha_entrada <= '$finTemporada')
+                        ORDER BY pro.kg_aceituna DESC
+                        LIMIT 10";
+                $resultado = $conexion->query($sql);
+                if ($resultado->rowCount() !== 0) {
+
+                    while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
+
+                        $remesa[] = $fila;
+
+                    }
+
+                }
+
+                $datosFinales = [
+
+                    "remesas" => $remesa
+
+                ];
+
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                $datosFinales = [
+
+                    "codigo" => -2,
+                    "msg" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+
+                ];
+
+            }
+
+            unset($conexion);
+            return $datosFinales;
+
+        }
+
+        function mayoresEntradasHistoria(){
+
+            $conexion = $this->conexion;
+            $remesa = [];
+            $datosFinales = [];
+
+            try{
+
+                $sql = "SELECT pro.id_socio, pro.id_albaran, u.nombre, u.apellidos, p.provincia, p.municipio, p.ref_catastral, p.poligono, p.parcela,
                         pro.kg_aceituna, pro.litros_aceite, pro.rendimiento, pro.acidez, pro.tipo_producto, pro.fecha_entrada, pro.hora_entrada
                         FROM usuarios u
                         INNER JOIN socios s ON u.id_usuario = s.id_usuario
                         INNER JOIN parcela p ON p.id_socio = s.id_socio
                         INNER JOIN produccion pro ON pro.id_parcela = p.id_parcela
                         ORDER BY pro.kg_aceituna DESC
-                        LIMIT 10
-         */
+                        LIMIT 10";
+                $resultado = $conexion->query($sql);
+                if ($resultado->rowCount() !== 0) {
+
+                    while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
+
+                        $remesa[] = $fila;
+
+                    }
+
+                }
+
+                $datosFinales = [
+
+                    "remesas" => $remesa
+
+                ];
+
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                $datosFinales = [
+
+                    "codigo" => -2,
+                    "msg" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+
+                ];
+
+            }
+
+            unset($conexion);
+            return $datosFinales;
+
+        }
 
     }
