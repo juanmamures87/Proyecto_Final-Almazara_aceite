@@ -9,6 +9,9 @@
     require_once "modelo/ProduccionModelo.php";
     $producciones = new ProduccionModelo();
 
+    require_once 'modelo/ProductoModelo.php';
+    $productos = new ProductoModelo();
+
     function eliminarSocio(){
 
         if (isset($_POST['idBorrar']) && !empty($_POST['idBorrar'])){
@@ -574,6 +577,56 @@
         echo json_encode($mayoresEntradasHistoria);
         //var_dump($_10MayoresEntradasXtemp);
 
+
+    }
+
+    //////////////////////////////////////////// ZONA DE LA TIENDA ////////////////////////////////////////////////////
+
+    function modificaPrecio(){
+
+        if ((isset($_POST['precioAove']) && !empty($_POST['precioAove'])) || (isset($_POST['precioAov']) && !empty($_POST['precioAov']))){
+
+            $precioAove = $_POST['precioAove'];
+            $precioAov = $_POST['precioAov'];
+            global $productos;
+            $actualizaPrecios = $productos->modificarPrecioAceite($precioAove, $precioAov);
+            if ($actualizaPrecios){
+
+                $respuesta = [
+
+                    "codigo"    => 1,
+                    "msg"       => 'LOS PRECIOS DEL ACEITE SE ACTUALIZARON CORRECTAMENTE'
+
+                ];
+
+
+            }else{
+
+                $respuesta = [
+
+                    "codigo"    => 0,
+                    "msg"       => 'LOS PRECIOS DEL ACEITE NO SE PUDIERON ACTUALIZAR'
+
+                ];
+
+            }
+
+            echo json_encode($respuesta);
+            //var_dump($respuesta);
+
+        }else{
+
+            $respuesta = [
+
+                "codigo"    => -1,
+                "msg"       => 'INTRODUZCA UNA CANTIDAD CORRECTA PARA MODIFICAR LOS PRECIOS'
+
+            ];
+
+            echo json_encode($respuesta);
+            //var_dump($respuesta);
+
+        }
 
     }
 

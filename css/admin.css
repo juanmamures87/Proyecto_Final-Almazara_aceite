@@ -306,3 +306,9 @@ body {
 #mostrarTienda{grid-area: mostrarTienda;
     background-color: #dedcdc;
 }
+
+/* Apartado de la zona donde se muestra el precio de aceite */
+.input-group.mx-5.preciosAceite{width: 550px;}
+#registroProducto{margin-left: 120px;}
+#spanAove{margin-left: 132px;}
+#spanAov{margin-left: 20px;}

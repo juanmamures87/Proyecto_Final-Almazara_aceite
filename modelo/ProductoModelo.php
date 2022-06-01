@@ -50,12 +50,22 @@
 
         }
 
-        function insertarProducto($nombre, $categoria, $imagen){
+        function insertarProducto($nombre, $dcto, $categoria, $imagen){
 
             $conexion = $this->conexion;
             $idProducto = $this->producto->getIdProducto();
             $fechaInsercion = $this->producto->getFechaInser();
-            $dcto = $this->producto->getDcto();
+            if (empty($dcto) || $dcto <=0){
+
+                $descuento = $this->producto->getDcto();
+
+            }else{
+
+                $this->producto->setDcto($dcto);
+                $descuento = $this->producto->getDcto();
+
+            }
+
             $correcto = true;
             $conexion->beginTransaction();//deshabilito el modo autocommit
 
@@ -66,7 +76,7 @@
                 $sql->bindParam(1, $idProducto);
                 $sql->bindParam(2, $nombre);
                 $sql->bindParam(3, $fechaInsercion);
-                $sql->bindParam(4, $dcto);
+                $sql->bindParam(4, $descuento);
                 $sql->bindParam(5, $categoria);
                 $sql->bindParam(6, $imagen);
                 $resultado = $sql->execute();
@@ -162,6 +172,52 @@
                 $correcto = false;
             }
 
+            unset($conexion);
+            return $correcto;
+
+        }
+
+        function modificarPrecioAceite($precioAove, $precioAov){
+
+            $conexion = $this->conexion;
+
+            $correcto = true;
+            $conexion->beginTransaction();//deshabilito el modo autocommit
+
+            try {
+
+                $sql = $conexion->prepare("UPDATE aceite SET precio = CASE id_cat_aceite
+                                                WHEN 1 THEN ?
+                                                WHEN 2 THEN ?
+                                                END 
+                                                WHERE id_cat_aceite IN (1,2)");
+                $sql->bindParam(1, $precioAove);
+                $sql->bindParam(2, $precioAov);
+                $resultado = $sql->execute();
+
+                if ($resultado) {
+
+                    $conexion->commit();// Se confirma la transacción actual
+
+                } else {
+
+                    $conexion->rollBack();//si no se puede realizar la inserción la transacción vuelve atrás y no se realiza
+                    $correcto = false;
+
+                }
+
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                $usuarios = [
+
+                    "codigo" => -2,
+                    "msg" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+
+                ];
+                $correcto = false;
+
+            }
             unset($conexion);
             return $correcto;
 

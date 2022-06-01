@@ -778,11 +778,11 @@
         <form class="row align-items-center" id="formularioRegistroTienda">
           <div class="input-group gap-2">
             <div class="col-sm-3">
-              <label class="visually-hidden" for="nomProducto">Socio</label>
-              <input type="text" class="form-control" id="nomProducto" name="nomProducto" placeholder="Nombre del producto">
+              <label class="visually-hidden" for="nomProducto"></label>
+              <input type="text" class="form-control" minlength="5" maxlength="50" id="nomProducto" name="nomProducto" placeholder="Nombre del producto" required>
             </div>
             <div class="col-sm-3">
-              <label class="visually-hidden" for="selCatProducto">Socio</label>
+              <label class="visually-hidden" for="selCatProducto">CATEGORÍA</label>
               <select class="form-select" name="selCatProducto" id="selCatProducto">
                 <option class="text-center" value="CATEGORIA">CATEGORÍA</option>
                 <?php
@@ -801,20 +801,26 @@
               </select>
             </div>
             <label class="form-label" for="imgProducto"></label>
-            <input type="file" class="form-control" id="imgProducto" name="imgProducto" placeholder="Imagen del producto" required>
+            <input type="file" class="form-control" id="imgProducto" name="imgProducto" placeholder="Imagen del producto">
           </div>
           <div class="input-group mt-2 gap-3">
-            <button type="submit" class="btn btn-primary" id="registroProd">Registrar</button>
-            <button type="reset" class="btn btn-warning" id="resetFormProd">Resetear</button>
-            <div class="w-50 input-group mx-5">
-              <!-- En estos input mostramos los precios del AOVE y el AOV. Se podrán modificar en cualquier momento -->
-              <span class="input-group-text" id="spanAove">Precio AOVE</span>
-              <input type="text" class="form-control" value="<?php echo $mostrarCategorias[0]->precio . ' €/l' ?>" id="precioAove" name="precioAove" aria-describedby="spanAove">
+          <div class="col-sm-2">
+            <label class="visually-hidden" for="descProducto"></label>
+            <input type="number" class="form-control" id="descProducto" name="descProducto" placeholder="Descuento. Por defecto 0">
+          </div>
 
-              <span class="input-group-text" id="spanAov">Precio AOV</span>
-              <input type="text" class="form-control" value="<?php echo $mostrarCategorias[1]->precio . ' €/l' ?>" id="precioAov" name="precioAov" aria-describedby="spanAov">
+            <button type="submit" class="btn btn-primary rounded" id="registroProducto">Registrar</button>
+            <button type="reset" class="btn btn-warning rounded" id="resetFormProducto">Resetear</button>
+            <div class="input-group mx-5 preciosAceite">
+              <!-- En estos input mostramos los precios del AOVE y el AOV. Se podrán modificar en cualquier momento -->
+              <span class="input-group-text" id="spanAove">Precio €/l AOVE:</span>
+              <input type="text" class="form-control text-center" data-precio="<?php echo $mostrarCategorias[0]->precio ?>"
+                     value="<?php echo $mostrarCategorias[0]->precio ?>" id="precioAove" name="precioAove" aria-describedby="spanAove">
+              <span class="input-group-text" id="spanAov">Precio €/l AOV:</span>
+              <input type="text" class="form-control text-center" data-precio="<?php echo $mostrarCategorias[1]->precio ?>"
+                     value="<?php echo $mostrarCategorias[1]->precio ?>" id="precioAov" name="precioAov" aria-describedby="spanAov">
             </div>
-            <button class="btn btn-success" type="button" id="cambioPrecio">Modificar precios</button>
+            <button class="btn btn-success rounded" type="button" id="cambioPrecio">Modificar precios</button>
           </div>
         </form>
           <?php
@@ -854,5 +860,6 @@
   <script src="../js/zonaAdmin.js"></script>
   <script src="../js/zonaAdminParcelas.js"></script>
   <script src="../js/zonaAdminProd.js"></script>
+  <script src="../js/zonaAdminTienda.js"></script>
   </body>
 </html>

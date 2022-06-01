@@ -419,3 +419,98 @@
         echo json_encode($resultado);
 
     }
+
+    function insertaProducto(){
+
+        if (isset($_POST['nomProducto'],$_POST['selCatProducto'])){
+
+            $nombreProducto = $_POST['nomProducto'];
+            $cat = $_POST['selCatProducto'];
+            $dcto = $_POST['descProducto'];
+
+            // Recibo los datos de la imagen
+            $nombre_img = $_FILES['imgProducto']['name'];
+            $tipo = $_FILES['imgProducto']['type'];
+            $tamano = $_FILES['imgProducto']['size'];
+
+            //Si existe imagen y tiene un tamaño correcto
+            if (($nombre_img == !NULL) && ($tamano <= 200000)){
+                //indicamos los formatos que permitimos subir a nuestro servidor
+                if (($tipo == "image/gif") || ($tipo == "image/jpeg") || ($tipo == "image/jpg") || ($tipo == "image/png")
+                    || ($tipo == "image/jfif")){
+
+                    // Ruta donde se guardarán las imágenes que subamos
+                    $directorio = "images/productos/";
+                    // Muevo la imagen desde el directorio temporal a nuestra ruta indicada anteriormente
+                    move_uploaded_file($_FILES['imgProducto']['tmp_name'],$directorio . $nombre_img);
+                    $rutaImagen = $directorio . $nombre_img;
+                }else{
+
+                    //si no cumple con el formato
+                    $resultado = [
+
+                        "codigo"    => -4,
+                        "msg"       =>  "ESE FORMATO DE IMAGEN NO ES COMPATIBLE"
+
+                    ];
+
+                    echo json_encode($resultado);
+
+                }
+                //si existe la variable pero se pasa del tamaño permitido
+            }else if ($nombre_img == !NULL && $tamano > 200000){
+
+
+                $resultado = [
+
+                    "codigo"    => -5,
+                    "msg"       =>  "LA IMAGEN ES DEMASIADO GRANDE"
+
+                ];
+
+                echo json_encode($resultado);
+
+            }
+
+            if (isset($rutaImagen)) {
+                require_once 'modelo/ProductoModelo.php';
+                $productos = new ProductoModelo();
+                $productoInsertado = $productos->insertarProducto($nombreProducto, $dcto, $cat, $rutaImagen);
+
+                if ($productoInsertado) {
+
+                    $resultado = [
+
+                        "codigo" => 1,
+                        "msg" => "PRODUCTO INSERTADO CORRECTAMENTE"
+
+                    ];
+
+
+                } else {
+
+                    $resultado = [
+
+                        "codigo" => 0,
+                        "msg" => "SE PRODUJO UN ERROR AL INSERTAR EL PRODUCTO"
+
+                    ];
+
+                }
+
+                echo json_encode($resultado);
+            }
+        }else{
+
+            $resultado = [
+
+                "codigo"    => -2,
+                "msg"       =>  "DEBE INTRODUCIR UN NOMBRE Y UNA CATEGORÍA CORRECTA"
+
+            ];
+
+            echo json_encode($resultado);
+
+        }
+
+    }
