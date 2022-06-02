@@ -9,6 +9,8 @@ const formularioRegistroTienda = document.getElementById('formularioRegistroTien
 //Referencia a los campos del formulario
 const nomProducto = document.getElementById('nomProducto');
 const selCatProducto = document.getElementById('selCatProducto');
+const recipienteProducto = document.getElementById('recipienteProducto');
+const l_recipiente = document.getElementById('l/recipiente');
 const imgProducto = document.getElementById('imgProducto');
 const precioAove = document.getElementById('precioAove');
 const precioAov = document.getElementById('precioAov');

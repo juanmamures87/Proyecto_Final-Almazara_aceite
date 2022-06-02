@@ -3,10 +3,12 @@
     class Producto{
 
         private $id_producto;
-        private $nombre;
+        private $descripcion;
         private $fecha_inser;
         private $dcto;
         private $categoria;
+        private $recipiente;
+        private $litros_recipiente;
         private $imagen;
 
         public function __construct(){
@@ -36,17 +38,17 @@
         /**
          * @return mixed
          */
-        public function getNombre()
+        public function getDescripcion()
         {
-            return $this->nombre;
+            return $this->Descripcion;
         }
 
         /**
-         * @param mixed $nombre
+         * @param mixed $descripcion
          */
-        public function setNombre($nombre): void
+        public function setDescripcion($descripcion): void
         {
-            $this->nombre = $nombre;
+            $this->Descripcion = $descripcion;
         }
 
         /**
@@ -95,6 +97,38 @@
         public function setCategoria($categoria): void
         {
             $this->categoria = $categoria;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function getRecipiente()
+        {
+            return $this->recipiente;
+        }
+
+        /**
+         * @param mixed $recipiente
+         */
+        public function setRecipiente($recipiente): void
+        {
+            $this->recipiente = $recipiente;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function getLitrosRecipiente()
+        {
+            return $this->litros_recipiente;
+        }
+
+        /**
+         * @param mixed $litros_recipiente
+         */
+        public function setLitrosRecipiente($litros_recipiente): void
+        {
+            $this->litros_recipiente = $litros_recipiente;
         }
 
         /**

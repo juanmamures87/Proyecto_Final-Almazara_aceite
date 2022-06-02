@@ -50,7 +50,7 @@
 
         }
 
-        function insertarProducto($nombre, $dcto, $categoria, $imagen){
+        function insertarProducto($descrip, $dcto, $categoria, $recipientes, $litros_recip, $imagen){
 
             $conexion = $this->conexion;
             $idProducto = $this->producto->getIdProducto();
@@ -71,14 +71,16 @@
 
             try {
 
-                $sql = $conexion->prepare("INSERT INTO productos (id_producto, nombre, fecha_inser, dcto, 
-                       categoria, imagen) VALUES (?,?,?,?,?,?)");
+                $sql = $conexion->prepare("INSERT INTO productos (id_producto, descripcion, fecha_inser, dcto, 
+                       categoria, recipiente, litros_recipiente, imagen) VALUES (?,?,?,?,?,?,?,?)");
                 $sql->bindParam(1, $idProducto);
-                $sql->bindParam(2, $nombre);
+                $sql->bindParam(2, $descrip);
                 $sql->bindParam(3, $fechaInsercion);
                 $sql->bindParam(4, $descuento);
                 $sql->bindParam(5, $categoria);
-                $sql->bindParam(6, $imagen);
+                $sql->bindParam(6, $recipientes);
+                $sql->bindParam(7, $litros_recip);
+                $sql->bindParam(8, $imagen);
                 $resultado = $sql->execute();
 
                 if ($resultado) {
@@ -95,11 +97,9 @@
             }catch (PDOException $e){
 
                 $errorName = $e->getMessage();
-                $codPost = [
 
-                    "msg" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+                //echo "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
 
-                ];
                 $correcto = false;
 
             }
@@ -141,6 +141,69 @@
 
             unset($conexion);
             return $productos;
+
+        }
+
+        function mostrarProductosPaginacion($pagina){
+
+            $conexion = $this->conexion;
+
+            /*Para realizar la paginación hay que poner la cláusula LIMIT, pero antes hay que apagar las preparaciones
+            de consulta emuladas cambiando este atributo a false porque si no la cláusula LIMIT no será aceptada*/
+            $conexion->setAttribute(PDO::ATTR_EMULATE_PREPARES,false);
+            $productos = [];
+            $datosFinales = [];
+
+            try{
+
+                $tamagnoPaginas = 5;
+                $empezarDesde = ($pagina - 1)*$tamagnoPaginas;
+                $sql = "SELECT p.id_producto, p.descripcion, p.fecha_inser, p.dcto, a.nombre, p.recipiente, 
+                        p.litros_recipiente, p.imagen, a.cantidad_litros  
+                        FROM productos p 
+                        INNER JOIN aceite a ON a.id_cat_aceite = p.categoria
+                        ORDER BY descripcion";
+                $resultado = $conexion->query($sql);
+                $numRegistros = $resultado->rowCount();
+                $totalPaginas = ceil($numRegistros/$tamagnoPaginas);
+                $resultado->closeCursor();
+
+                $sql_limit = "SELECT p.id_producto, p.descripcion, p.fecha_inser, p.dcto, a.nombre, p.recipiente, 
+                        p.litros_recipiente, p.imagen, a.cantidad_litros  
+                        FROM productos p 
+                        INNER JOIN aceite a ON a.id_cat_aceite = p.categoria
+                        ORDER BY descripcion LIMIT $empezarDesde,$tamagnoPaginas";
+                $resultado = $conexion->query($sql_limit);
+                if ($resultado->rowCount() !== 0) {
+
+                    while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
+
+                        $productos[] = $fila;
+
+                    }
+
+                    $datosFinales = [
+
+                        "usuarios" => $productos,
+                        "paginas" => $totalPaginas
+
+                    ];
+
+                }
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                $datosFinales = [
+
+                    "codigo" => -2,
+                    "errorConex" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+
+                ];
+
+            }
+
+            unset($conexion);
+            return $datosFinales;
 
         }
 

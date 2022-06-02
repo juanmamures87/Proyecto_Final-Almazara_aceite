@@ -427,6 +427,8 @@
             $nombreProducto = $_POST['nomProducto'];
             $cat = $_POST['selCatProducto'];
             $dcto = $_POST['descProducto'];
+            $recipiente = $_POST['recipienteProducto'];
+            $litrosRecip = $_POST['l/recipiente'];
 
             // Recibo los datos de la imagen
             $nombre_img = $_FILES['imgProducto']['name'];
@@ -455,6 +457,7 @@
                     ];
 
                     echo json_encode($resultado);
+                    //var_dump($resultado);
 
                 }
                 //si existe la variable pero se pasa del tamaño permitido
@@ -469,13 +472,13 @@
                 ];
 
                 echo json_encode($resultado);
-
+                //var_dump($resultado);
             }
 
             if (isset($rutaImagen)) {
                 require_once 'modelo/ProductoModelo.php';
                 $productos = new ProductoModelo();
-                $productoInsertado = $productos->insertarProducto($nombreProducto, $dcto, $cat, $rutaImagen);
+                $productoInsertado = $productos->insertarProducto($nombreProducto, $dcto, $cat, $recipiente, $litrosRecip, $rutaImagen);
 
                 if ($productoInsertado) {
 
@@ -499,6 +502,7 @@
                 }
 
                 echo json_encode($resultado);
+                //var_dump($resultado);
             }
         }else{
 
@@ -510,7 +514,7 @@
             ];
 
             echo json_encode($resultado);
-
+            //var_dump($resultado);
         }
 
     }

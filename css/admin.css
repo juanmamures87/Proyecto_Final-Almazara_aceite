@@ -308,7 +308,12 @@ body {
 }
 
 /* Apartado de la zona donde se muestra el precio de aceite */
-.input-group.mx-5.preciosAceite{width: 550px;}
-#registroProducto{margin-left: 120px;}
-#spanAove{margin-left: 132px;}
+.input-group.mx-5.preciosAceite{width: 580px;}
+#registroProducto{margin-left: 130px;}
+#spanAove{margin-left: 150px;}
 #spanAov{margin-left: 20px;}
+
+/********** Tabla que muestra los productos **********/
+
+#tablaProductos{vertical-align: middle;
+    text-align: center;}

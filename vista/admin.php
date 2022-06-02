@@ -779,9 +779,10 @@
           <div class="input-group gap-2">
             <div class="col-sm-3">
               <label class="visually-hidden" for="nomProducto"></label>
-              <input type="text" class="form-control" minlength="5" maxlength="50" id="nomProducto" name="nomProducto" placeholder="Nombre del producto" required>
+              <input type="text" class="form-control" minlength="5" maxlength="50" id="nomProducto" name="nomProducto"
+                     placeholder="Descripcion" required>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
               <label class="visually-hidden" for="selCatProducto">CATEGORÍA</label>
               <select class="form-select" name="selCatProducto" id="selCatProducto">
                 <option class="text-center" value="CATEGORIA">CATEGORÍA</option>
@@ -800,15 +801,22 @@
 
               </select>
             </div>
+            <div class="col-sm-1">
+              <label class="visually-hidden" for="recipienteProducto"></label>
+              <input type="number" class="form-control" min="1" id="recipienteProducto" name="recipienteProducto" placeholder="Recipientes">
+            </div>
+            <div class="col-sm-1">
+              <label class="visually-hidden" for="l/recipiente"></label>
+              <input type="number" step="0.1" min="0.250" class="form-control" id="l/recipiente" name="l/recipiente" placeholder="litos/recipiente">
+            </div>
             <label class="form-label" for="imgProducto"></label>
-            <input type="file" class="form-control" id="imgProducto" name="imgProducto" placeholder="Imagen del producto">
+            <input type="file" class="form-control rounded" id="imgProducto" name="imgProducto" placeholder="Imagen del producto">
           </div>
-          <div class="input-group mt-2 gap-3">
+          <div class="input-group mt-2 gap-2">
           <div class="col-sm-2">
             <label class="visually-hidden" for="descProducto"></label>
-            <input type="number" class="form-control" id="descProducto" name="descProducto" placeholder="Descuento. Por defecto 0">
+            <input type="number" class="form-control" id="descProducto" name="descProducto" placeholder="Dcto. Por defecto 0">
           </div>
-
             <button type="submit" class="btn btn-primary rounded" id="registroProducto">Registrar</button>
             <button type="reset" class="btn btn-warning rounded" id="resetFormProducto">Resetear</button>
             <div class="input-group mx-5 preciosAceite">
@@ -820,14 +828,91 @@
               <input type="text" class="form-control text-center" data-precio="<?php echo $mostrarCategorias[1]->precio ?>"
                      value="<?php echo $mostrarCategorias[1]->precio ?>" id="precioAov" name="precioAov" aria-describedby="spanAov">
             </div>
-            <button class="btn btn-success rounded" type="button" id="cambioPrecio">Modificar precios</button>
+            <button class="btn btn-success rounded mx-0" type="button" id="cambioPrecio">Modificar precios</button>
           </div>
         </form>
           <?php
               }
           ?>
       </div>
-      <div class="muestraSeccion" id="mostrarTienda">Mostrar</div>
+      <div class="muestraSeccion" id="mostrarTienda">
+
+        <table class="table table-striped" id="tablaProductos">
+          <thead>
+          <tr>
+            <th scope="col">Id.Producto</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Fecha inserción</th>
+            <th scope="col">Descuento</th>
+            <th scope="col">Categoría</th>
+            <th scope="col">Recipiente</th>
+            <th scope="col">Litros/Recipiente</th>
+            <th scope="col">Imagen</th>
+            <th scope="col">Modificar</th>
+            <th scope="col">Eliminar</th>
+          </tr>
+          </thead>
+          <tbody>
+          <?php
+
+              if (isset($mostrarProductos) && !empty($mostrarProductos)){
+
+                  //Aquí guardamos el número de páginas que tendremos en la paginación, recogido del modelo a través del controlador
+                  $paginasPaginacion = $mostrarProductos['paginas'];
+                  //Eliminamos el valor de la paginación del array de los usuarios para no tener problemas al sacar datos
+                  unset($mostrarProductos['paginas']);
+                  foreach ($mostrarProductos as $valor){
+
+                      foreach ($valor as $producto){
+
+                          $extraerFecha = explode('-',$producto->fecha_inser) ;
+                          $nuevaFechaAlta = $extraerFecha[2] . "/" . $extraerFecha[1] . "/" . $extraerFecha[0];
+
+                          ?>
+                        <tr>
+                          <th><?php echo $producto->id_producto; ?></th>
+                          <td><?php echo $producto->descripcion; ?></td>
+                          <td><?php echo $nuevaFechaAlta; ?></td>
+                          <td><?php echo $producto->dcto; ?></td>
+                          <td><?php echo $producto->nombre; ?></td>
+                          <td><?php echo $producto->recipiente; ?></td>
+                          <td><?php echo $producto->litros_recipiente; ?></td>
+                          <td><img src="<?php echo $producto->imagen; ?>" width="80" height="80" alt="<?php echo $producto->descripcion; ?>"></td>
+                          <td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>
+                          <td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>
+                        </tr>
+
+                          <?php
+                      }
+                  }
+
+              }
+
+          ?>
+          </tbody>
+        </table>
+
+        <nav aria-label="Page navigation example" id="navPaginacionProductos">
+          <ul class="pagination justify-content-center">
+              <?php
+
+                  if (isset($paginasPaginacion)) {
+                      for ($i = 1; $i <= $paginasPaginacion;$i++){
+                          ?>
+
+                        <li data-pagina="<?php echo $i ?>" class="page-item"><a class="page-link" href=""><?php echo $i ?></a></li>
+
+                          <?php
+                      }
+                  }
+              ?>
+          </ul>
+          <div class="text-center w-25 m-auto text-decoration-underline">
+            <span id="muestraPaginaProductos"></span>
+          </div>
+        </nav>
+
+      </div>
 
     </article>
 
