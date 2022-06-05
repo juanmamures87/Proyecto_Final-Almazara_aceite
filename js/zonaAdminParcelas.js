@@ -33,6 +33,7 @@ const busSuper = document.getElementById("busSuper");
 const busSisCul = document.getElementById("busSisCul");
 const busVar = document.getElementById("busVar");
 const busPlan = document.getElementById("busPlan");
+const limpiaTablaParcelas = document.getElementById('limpiaTablaParcelas');
 
 let ventanaParcela; //Variable para la apertura y cierrre de la ventana del catastro con la parcela
 let introducirRefCat; //Variable con el nombre del setTimeout y la función para la validación de la ref.Catastral introducida
@@ -366,6 +367,16 @@ selSocioParcelaMuestra.addEventListener("change",function () {
         })
 
 
+
+})
+
+//Evento sobre el botón de limpiar la tabla de las búsquedas de las parcelas
+limpiaTablaParcelas.addEventListener('click',function (e) {
+
+    e.preventDefault();
+    tablaParcelasBody.empty();
+    navPaginacionParcelas.empty();
+    muestraPaginaParcelas.text('');
 
 })
 
@@ -905,11 +916,11 @@ function creacionCuerpoTablaDinamico(data) {
             '<td>' + data.usuarios[i].poligono + '</td>' +
             '<td>' + data.usuarios[i].parcela + '</td>' +
             '<td>' + data.usuarios[i].superficie + ' m<sup>2</sup></td>' +
-            '<td contenteditable="true">' + data.usuarios[i].nombre_sistema + '</td>' +
-            '<td contenteditable="true">' + data.usuarios[i].nombre_variedad + '</td>' +
-            '<td contenteditable="true">' + data.usuarios[i].num_plantas + '</td>' +
-            '<td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>' +
-            '<td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>' +
+            '<td contenteditable="true" title="Campo editable">' + data.usuarios[i].nombre_sistema + '</td>' +
+            '<td contenteditable="true" title="Campo editable">' + data.usuarios[i].nombre_variedad + '</td>' +
+            '<td contenteditable="true" title="Campo editable">' + data.usuarios[i].num_plantas + '</td>' +
+            '<td><i title="Pulse para modificar con los datos introducidos" class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>' +
+            '<td><i title="Pulse para eliminar la parcela seleccionada" class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>' +
             '</tr>');
 
     }

@@ -14,6 +14,7 @@
   </head>
   <body>
 
+  <!-- Contenedores que albergarán los mensajes correctos y de error -->
   <div id="error"></div><div><i class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i></div>
   <div id="correcto"></div><div><i class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i></div>
 
@@ -250,22 +251,22 @@
                             <td><?php echo $socio->nombre; ?></td>
                             <td><?php echo $socio->apellidos; ?></td>
                             <td><?php echo $socio->dni; ?></td>
-                            <td contenteditable="true"><?php echo $socio->telefono; ?></td>
-                            <td contenteditable="true"><?php echo $socio->provincia; ?></td>
-                            <td contenteditable="true"><?php echo $socio->municipio; ?></td>
-                            <td contenteditable="true"><?php echo $socio->direccion; ?></td>
-                            <td contenteditable="true"><?php echo $socio->cp; ?></td>
-                            <td contenteditable="true"><?php echo $socio->num_casa; ?></td>
-                            <td contenteditable="true"><?php echo $socio->piso; ?></td>
-                            <td contenteditable="true"><?php echo $socio->puerta; ?></td>
-                            <td contenteditable="true"><?php echo $socio->email; ?></td>
-                            <td><?php $socio->activo == 1 ?
+                            <td contenteditable="true" title="Campo editable"><?php echo $socio->telefono; ?></td>
+                            <td contenteditable="true" title="Campo editable"><?php echo $socio->provincia; ?></td>
+                            <td contenteditable="true" title="Campo editable"><?php echo $socio->municipio; ?></td>
+                            <td contenteditable="true" title="Campo editable"><?php echo $socio->direccion; ?></td>
+                            <td contenteditable="true" title="Campo editable"><?php echo $socio->cp; ?></td>
+                            <td contenteditable="true" title="Campo editable"><?php echo $socio->num_casa; ?></td>
+                            <td contenteditable="true" title="Campo editable"><?php echo $socio->piso; ?></td>
+                            <td contenteditable="true" title="Campo editable"><?php echo $socio->puerta; ?></td>
+                            <td contenteditable="true" title="Campo editable"><?php echo $socio->email; ?></td>
+                            <td title="Campo editable"><?php $socio->activo == 1 ?
                                     $activado = "Activo <br> <input type='checkbox' class='accesoTabla' checked>" : $activado = "Desactivado <br> <input type='checkbox' class='accesoTabla'>"; echo $activado;?></td>
-                            <td contenteditable="true"><?php echo $socio->tipo_socio; ?></td>
+                            <td contenteditable="true" title="Campo editable"><?php echo $socio->tipo_socio; ?></td>
                             <td><?php echo $nuevaFechaAlta; ?></td>
-                            <td contenteditable="true"><?php echo $socio->fecha_baja; ?></td>
-                            <td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>
-                            <td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>
+                            <td contenteditable="true" title="Campo editable"><?php echo $socio->fecha_baja; ?></td>
+                            <td><i title="Pulse para modificar con los datos introducidos" class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>
+                            <td><i title="Pulse para eliminar el socio seleccionado" class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>
                           </tr>
 
             <?php
@@ -279,7 +280,7 @@
         </table>
 
         <nav aria-label="Page navigation example" id="navPaginacionSocios">
-          <ul class="pagination justify-content-center">
+          <ul title="Pulse para cambiar de página o actualizar" class="pagination justify-content-center">
             <?php
 
                 if (isset($paginasPaginacion)) {
@@ -301,6 +302,10 @@
       </div>
 
     </article>
+
+    <!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   /////////////////////////////////////////// SECCIÓN DE LOS SOCIOS ////////////////////////////////////////////////
+   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
 
     <article id="seccionClientes" hidden>
 
@@ -538,6 +543,7 @@
               <option value="500-2000"> > 500 < 2000 </option>
               <option value="2000-10000"> > 2000 </option>
             </select>
+            <button class="btn btn-danger" id="limpiaTablaParcelas">Limpiar tabla</button>
           </div>
         </div>
         <!-------------------------------------------------------------------------------------------->
@@ -571,7 +577,7 @@
             <tbody></tbody>
           </table>
           <nav aria-label="Page navigation example" id="navPaginacionParcelas">
-            <ul class="pagination justify-content-center"></ul>
+            <ul title="Pulse para cambiar de página o actualizar" class="pagination justify-content-center"></ul>
             <div class="text-center w-25 m-auto text-decoration-underline">
               <span id="muestraPaginaParcelas"></span>
             </div>
@@ -871,15 +877,15 @@
                           ?>
                         <tr>
                           <th><?php echo $producto->id_producto; ?></th>
-                          <td><?php echo $producto->descripcion; ?></td>
+                          <td contenteditable="true" title="Campo editable"><?php echo $producto->descripcion; ?></td>
                           <td><?php echo $nuevaFechaAlta; ?></td>
-                          <td><?php echo $producto->dcto; ?></td>
+                          <td contenteditable="true" title="Campo editable"><?php echo $producto->dcto; ?></td>
                           <td><?php echo $producto->nombre; ?></td>
-                          <td><?php echo $producto->recipiente; ?></td>
-                          <td><?php echo $producto->litros_recipiente; ?></td>
-                          <td><img src="<?php echo $producto->imagen; ?>" width="80" height="80" alt="<?php echo $producto->descripcion; ?>"></td>
-                          <td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>
-                          <td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>
+                          <td contenteditable="true" title="Campo editable"><?php echo $producto->recipiente; ?></td>
+                          <td contenteditable="true" title="Campo editable"><?php echo $producto->litros_recipiente; ?></td>
+                          <td><img class="imagenProductoTabla" src="<?php echo $producto->imagen; ?>" title="Pulse para modificar" width="80" height="80" alt="<?php echo $producto->descripcion; ?>"></td>
+                          <td><i title="Pulse para modificar los datos introducidos" class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>
+                          <td><i title="Pulse para eliminar el producto" class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>
                         </tr>
 
                           <?php
@@ -893,7 +899,7 @@
         </table>
 
         <nav aria-label="Page navigation example" id="navPaginacionProductos">
-          <ul class="pagination justify-content-center">
+          <ul title="Pulse para cambiar la página o actualizar" class="pagination justify-content-center">
               <?php
 
                   if (isset($paginasPaginacion)) {
@@ -912,9 +918,28 @@
           </div>
         </nav>
 
+        <button class="btn btn-info float-end me-3" id="renovarCantidadesAceite">Actualizar cantidades</button>
+        <!-- Input para la muestra de los litros de aceite disponibles de cada tipo -->
+        <div id="mostrarLitosDisponibles" class="form-group">
+          <label for="litrosDisponiblesAove">Litros AOVE</label>
+          <input type="text" class="form-control bg-white rounded" name="litrosDisponiblesAove" id="litrosDisponiblesAove"
+                 <?php if (isset($mostrarLitros)){ ?>
+                   value="<?php echo $mostrarLitros[0]->cantidad_litros ?>"
+                 <?php } ?> readonly>
+          <label class="mt-2" for="litrosDisponiblesAov">Litros AOV</label>
+          <input type="text" class="form-control bg-white rounded" name="litrosDisponiblesAov" id="litrosDisponiblesAov"
+              <?php if (isset($mostrarLitros)){?>
+                value="<?php echo $mostrarLitros[1]->cantidad_litros ?>"
+              <?php } ?> readonly>
+        </div>
+
       </div>
 
     </article>
+
+    <!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////// SECCIÓN SOBRE LAS VENTAS //////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
 
     <article id="seccionVentas" hidden>
 
@@ -923,6 +948,10 @@
       <div class="muestraSeccion">Mostrar</div>
 
     </article>
+
+    <!--//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////// SECCIÓN SOBRE LAS NOTICIAS //////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
 
     <article id="seccionNoticias" hidden>
 

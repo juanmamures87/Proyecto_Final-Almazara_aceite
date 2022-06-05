@@ -156,7 +156,7 @@
 
             try{
 
-                $tamagnoPaginas = 5;
+                $tamagnoPaginas = 3;
                 $empezarDesde = ($pagina - 1)*$tamagnoPaginas;
                 $sql = "SELECT p.id_producto, p.descripcion, p.fecha_inser, p.dcto, a.nombre, p.recipiente, 
                         p.litros_recipiente, p.imagen, a.cantidad_litros  
@@ -184,7 +184,7 @@
 
                     $datosFinales = [
 
-                        "usuarios" => $productos,
+                        "productos" => $productos,
                         "paginas" => $totalPaginas
 
                     ];
@@ -278,6 +278,128 @@
                     "msg" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
 
                 ];
+                $correcto = false;
+
+            }
+            unset($conexion);
+            return $correcto;
+
+        }
+
+        function mostrarLitrosAceite(){
+
+            $conexion = $this->conexion;
+            $litrosAceite = [];
+
+            try{
+
+                $sql = "SELECT id_cat_aceite, cantidad_litros FROM aceite";
+                $resultado = $conexion->query($sql);
+                if ($resultado->rowCount() !== 0) {
+
+                    while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
+
+                        $litrosAceite[] = $fila;
+
+                    }
+
+                }
+
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                $litrosAceite = [
+
+                    "codigo" => -2,
+                    "errorConex" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+
+                ];
+
+            }
+
+            unset($conexion);
+            return $litrosAceite;
+
+        }
+
+        function actualizarDatosProducto($descripcion, $dcto, $recipiente, $litros_recipiente, $idProducto){
+
+            $conexion = $this->conexion;
+
+            $correcto = true;
+            $conexion->beginTransaction();//deshabilito el modo autocommit
+
+            try {
+
+                $sql = $conexion->prepare("UPDATE productos SET descripcion = ? , dcto = ? , 
+                                                recipiente = ?, litros_recipiente = ?
+                                                WHERE id_producto = ?");
+                $sql->bindParam(1, $descripcion);
+                $sql->bindParam(2, $dcto);
+                $sql->bindParam(3, $recipiente);
+                $sql->bindParam(4, $litros_recipiente);
+                $sql->bindParam(5, $idProducto);
+                $resultado = $sql->execute();
+
+                if ($resultado) {
+
+                    $conexion->commit();// Se confirma la transacción actual
+
+                } else {
+
+                    $conexion->rollBack();//si no se puede realizar la inserción la transacción vuelve atrás y no se realiza
+                    $correcto = false;
+
+                }
+
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                $usuarios = [
+
+                    "codigo" => -2,
+                    "msg" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+
+                ];
+                $correcto = false;
+
+            }
+            unset($conexion);
+            return $correcto;
+
+        }
+
+        function actualizarFotoProducto($imagen, $idProducto){
+
+            $conexion = $this->conexion;
+
+            $correcto = true;
+            $conexion->beginTransaction();//deshabilito el modo autocommit
+
+            try {
+
+                $sql = $conexion->prepare("UPDATE productos SET imagen = ?
+                                                WHERE id_producto = ?");
+                $sql->bindParam(1, $imagen);
+                $sql->bindParam(2, $idProducto);
+                $resultado = $sql->execute();
+
+                if ($resultado) {
+
+                    $conexion->commit();// Se confirma la transacción actual
+
+                } else {
+
+                    $conexion->rollBack();//si no se puede realizar la inserción la transacción vuelve atrás y no se realiza
+                    $correcto = false;
+
+                }
+
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                echo "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName;
+
                 $correcto = false;
 
             }

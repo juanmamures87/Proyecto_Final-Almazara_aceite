@@ -53,6 +53,9 @@
                 //Llamamos a la función que mostrará todos los productos registrados en la base de datos
                 $mostrarProductos = $productos->mostrarProductosPaginacion($pagina);
 
+                //Llamamos a la función que mostrará las cantidades de litros de aceite de cada variedad para mostrarlo
+                $mostrarLitros = $productos->mostrarLitrosAceite();
+
                 //A continuación obtenemos el servicio web del catastro que nos proporciona las provincias de España.
                 //Obtenemos una variable que almacena todos los datos y la pasamos a la vista.
                 // Crear un cliente apuntando al script del servidor (Creado con WSDL)

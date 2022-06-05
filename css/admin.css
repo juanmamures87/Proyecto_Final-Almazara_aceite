@@ -202,6 +202,9 @@ body {
 
 #tablaParcelas, #tablaProduccion{font-size: 14px}
 
+/* Botón para limpiar la tabla de las parcelas */
+#limpiaTablaParcelas{margin: 20px 120px;}
+
 /********************************************************************************************************************/
 /************************** CONTENEDOR DEL APARTADO PRODUCCIÓN ******************************************/
 /********************************************************************************************************************/
@@ -317,3 +320,14 @@ body {
 
 #tablaProductos{vertical-align: middle;
     text-align: center;}
+
+.imagenProductoTabla:hover{cursor: pointer;}
+
+/* Inputs que muestran los litros de aceite disponibles */
+#mostrarLitosDisponibles{display: block;
+    margin-top: -60px;
+    margin-right: 50px;
+    float: right;
+    width: 15%;}
+
+#mostrarLitosDisponibles label{font-weight: bold;}

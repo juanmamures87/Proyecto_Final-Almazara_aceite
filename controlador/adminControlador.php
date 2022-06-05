@@ -630,4 +630,229 @@
 
     }
 
+    function paginarProductos(){
+
+        if (isset($_POST['pagina'])) {
+
+            global $productos;
+            $paginarProductos = $productos->mostrarProductosPaginacion($_POST['pagina']);
+            echo json_encode($paginarProductos);
+            //var_dump($paginarProductos);
+
+        }
+
+    }
+
+    function renovarAceite(){
+
+        global $productos;
+        $actualizaAceite = $productos->mostrarLitrosAceite();
+        echo json_encode($actualizaAceite);
+
+    }
+
+    function eliminarProducto(){
+
+        if (isset($_POST['idBorrar']) && !empty($_POST['idBorrar'])){
+
+            global $productos;
+
+            $productoBorrado = $productos->eliminarProducto($_POST['idBorrar']);
+
+            if ($productoBorrado){
+
+                $resultado = [
+
+                    "codigo"    => 1,
+                    "msg"       => "PRODUCTO ELIMINADO CORRECTAMENTE"
+
+                ];
+
+            }else{
+
+                $resultado = [
+
+                    "codigo"    => 0,
+                    "msg"       => "EL PRODUCTO SELECCIONADO NO PUDO ELIMINARSE"
+
+                ];
+
+            }
+
+        }else{
+
+            $resultado = [
+
+                "codigo"    => -1,
+                "msg"       => "ERROR!! NO SE HA RECIBIDO EL ID DEL PRODUCTO A BORRAR"
+
+            ];
+
+        }
+
+        echo json_encode($resultado);
+        //var_dump($resultado);
+
+    }
+
+    function actualizarDatosProducto(){
+
+        if (isset($_POST['datosProducto'],$_POST['idProducto']) && !empty($_POST['datosProducto']) && !empty($_POST['idProducto'])){
+
+            $idProducto = $_POST['idProducto'];
+            $datos = json_decode($_POST['datosProducto']);
+            global $productos;
+
+            $productoActualizado = $productos->actualizarDatosProducto($datos->descripcion, $datos->dcto,
+                $datos->recipiente, $datos->litros_recipiente, $idProducto);
+
+            if ($productoActualizado){
+
+                $respuesta = [
+
+                    "codigo"    => 1,
+                    "msg"       => "PRODUCTO ACTUALIZADO CORRECTAMENTE"
+
+                ];
+
+            }else{
+
+                $respuesta = [
+
+                    "codigo"    => 0,
+                    "msg"       => "SE PRODUJO UN ERROR. EL PRODUCTO NO PUDO ACTUALIZARSE"
+
+                ];
+
+            }
+
+
+
+
+        }else{
+
+            $respuesta = [
+
+                "codigo"    => -1,
+                "msg"       => "NO SE RECIBIÓ EL ID NECESARIO PARA ACTUALIZAR EL PRODUCTO"
+
+            ];
+
+        }
+
+        echo json_encode($respuesta);
+        //var_dump($respuesta);
+
+    }
+
+    function actualizarFoto(){
+
+        if (isset($_POST['idProducto'])){
+
+            if (!$_FILES['imgProducto']['size'] == 0 && !$_FILES['imgProducto']['name'] == '') {
+
+                $idProducto = $_POST['idProducto'];
+
+                // Recibo los datos de la imagen
+                $nombre_img = $_FILES['imgProducto']['name'];
+                $tipo = $_FILES['imgProducto']['type'];
+                $tamano = $_FILES['imgProducto']['size'];
+
+                //Si existe imagen y tiene un tamaño correcto
+                if (($nombre_img == !NULL) && ($tamano <= 200000)) {
+                    //indicamos los formatos que permitimos subir a nuestro servidor
+                    if (($tipo == "image/gif") || ($tipo == "image/jpeg") || ($tipo == "image/jpg") || ($tipo == "image/png")
+                        || ($tipo == "image/jfif")) {
+
+                        // Ruta donde se guardarán las imágenes que subamos
+                        $directorio = "images/productos/";
+                        // Muevo la imagen desde el directorio temporal a nuestra ruta indicada anteriormente
+                        move_uploaded_file($_FILES['imgProducto']['tmp_name'], $directorio . $nombre_img);
+                        $rutaImagen = $directorio . $nombre_img;
+                    } else {
+
+                        //si no cumple con el formato
+                        $resultado = [
+
+                            "codigo" => -4,
+                            "msg" => "ESE FORMATO DE IMAGEN NO ES COMPATIBLE"
+
+                        ];
+
+                        echo json_encode($resultado);
+                        //var_dump($resultado);
+
+                    }
+                    //si existe la variable pero se pasa del tamaño permitido
+                } else if ($nombre_img == !NULL && $tamano > 200000) {
+
+
+                    $resultado = [
+
+                        "codigo" => -5,
+                        "msg" => "LA IMAGEN ES DEMASIADO GRANDE"
+
+                    ];
+
+                    echo json_encode($resultado);
+                    //var_dump($resultado);
+                }
+
+                if (isset($rutaImagen)) {
+                    require_once 'modelo/ProductoModelo.php';
+                    $productos = new ProductoModelo();
+                    $actualizaFoto = $productos->actualizarFotoProducto($rutaImagen, $idProducto);
+
+                    if ($actualizaFoto) {
+
+                        $resultado = [
+
+                            "codigo" => 1,
+                            "msg" => "FOTOGRAFÍA INSERTADA CORRECTAMENTE"
+
+                        ];
+
+
+                    } else {
+
+                        $resultado = [
+
+                            "codigo" => 0,
+                            "msg" => "SE PRODUJO UN ERROR AL ACTUALIZAR LA FOTOGRAFÍA"
+
+                        ];
+
+                    }
+
+                    echo json_encode($resultado);
+                    //var_dump($resultado);
+                }
+
+            }else{
+
+                $resultado = [
+
+                    "codigo"    => -3,
+                    "msg"       =>  "NO HA SELECCIONADO NINGUNA FOTOGRAFÍA. VUELVA A PULSAR EN LA TABLA SOBRE LA IMAGEN"
+
+                ];
+
+                echo json_encode($resultado);
+
+            }
+        }else{
+
+            $resultado = [
+
+                "codigo"    => -2,
+                "msg"       =>  "DEBE INTRODUCIR UNA FOTOGRAFÍA CORRECTA PARA SU ACTUALIZACIÓN"
+
+            ];
+
+            echo json_encode($resultado);
+            //var_dump($resultado);
+        }
+
+    }
+
 

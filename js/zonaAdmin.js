@@ -726,21 +726,21 @@ seccionSocios.on("click",".page-item",function (e) {
                         '<td>' + data.usuarios[j].nombre + '</td>' +
                         '<td>' + data.usuarios[j].apellidos + '</td>' +
                         '<td>' + data.usuarios[j].dni + '</td>' +
-                        '<td contenteditable="true">' + data.usuarios[j].telefono + '</td>'+
-                        '<td contenteditable="true">' + data.usuarios[j].provincia + '</td>'+
-                        '<td contenteditable="true">' + data.usuarios[j].municipio + '</td>' +
-                        '<td contenteditable="true">' + data.usuarios[j].direccion + '</td>' +
-                        '<td contenteditable="true">' + data.usuarios[j].cp + '</td>' +
-                        '<td contenteditable="true">' + data.usuarios[j].num_casa + '</td>' +
-                        '<td contenteditable="true">' + data.usuarios[j].piso + '</td>' +
-                        '<td contenteditable="true">' + puerta + '</td>' +
-                        '<td contenteditable="true">' + data.usuarios[j].email + '</td>' +
+                        '<td contenteditable="true" title="Campo editable">' + data.usuarios[j].telefono + '</td>'+
+                        '<td contenteditable="true" title="Campo editable">' + data.usuarios[j].provincia + '</td>'+
+                        '<td contenteditable="true" title="Campo editable">' + data.usuarios[j].municipio + '</td>' +
+                        '<td contenteditable="true" title="Campo editable">' + data.usuarios[j].direccion + '</td>' +
+                        '<td contenteditable="true" title="Campo editable">' + data.usuarios[j].cp + '</td>' +
+                        '<td contenteditable="true" title="Campo editable">' + data.usuarios[j].num_casa + '</td>' +
+                        '<td contenteditable="true" title="Campo editable">' + data.usuarios[j].piso + '</td>' +
+                        '<td contenteditable="true" title="Campo editable">' + puerta + '</td>' +
+                        '<td contenteditable="true" title="Campo editable">' + data.usuarios[j].email + '</td>' +
                         '<td>' + activado + '</td>' +
-                        '<td contenteditable="true">' + data.usuarios[j].tipo_socio + '</td>' +
+                        '<td contenteditable="true" title="Campo editable">' + data.usuarios[j].tipo_socio + '</td>' +
                         '<td>' + nuevaFechaAlta + '</td>' +
-                        '<td contenteditable="true">' + fechaBaja + '</td>' +
-                        '<td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>' +
-                        '<td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>' +
+                        '<td contenteditable="true" title="Campo editable">' + fechaBaja + '</td>' +
+                        '<td><i title="Pulse para modificar con los datos introducidos" class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>' +
+                        '<td><i title="Pulse para eliminar el socio seleccionado" class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>' +
                         '</tr>');
 
                 }
