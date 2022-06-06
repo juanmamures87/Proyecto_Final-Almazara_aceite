@@ -38,7 +38,7 @@
         <h3>Producción</h3>
         <h3>Tienda</h3>
         <h3>Ventas</h3>
-        <h3>Noticias</h3>
+        <!--<h3>Noticias</h3>-->
 
         <form action="index.php" method="post">
           <input type="submit" class="btn btn-warning" id="cierreSesionAdmin" value="Cerrar Sesión">
@@ -953,13 +953,13 @@
     /////////////////////////////////////////// SECCIÓN SOBRE LAS NOTICIAS //////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
 
-    <article id="seccionNoticias" hidden>
+    <!--<article id="seccionNoticias" hidden>
 
       <h1 class="tituloSeccion">Noticias</h1>
       <div class="registroSeccion">Registro</div>
       <div class="muestraSeccion">Mostrar</div>
 
-    </article>
+    </article>-->
 
   </section>
 
