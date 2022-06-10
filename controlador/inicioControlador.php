@@ -26,13 +26,22 @@
 
     function tienda(){
 
-        require_once "vista/tienda.html";
+        require_once 'modelo/ProductoModelo.php';
+        $productos = new ProductoModelo();
+        $muestraTienda = $productos->mostrarProductosTienda();
+        require_once "vista/tienda.php";
 
     }
 
     function accesoSocios(){
 
         require_once "vista/accesoSocios.php";
+
+    }
+
+    function carrito(){
+
+        require_once 'vista/carritoCompra.php';
 
     }
 

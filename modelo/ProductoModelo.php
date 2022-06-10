@@ -108,42 +108,6 @@
 
         }
 
-        function mostrarProductos(){
-
-            $conexion = $this->conexion;
-            $productos = [];
-
-            try{
-
-                $sql = "SELECT * FROM productos";
-                $resultado = $conexion->query($sql);
-                if ($resultado->rowCount() !== 0) {
-
-                    while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
-
-                        $productos[] = $fila;
-
-                    }
-
-                }
-
-            }catch (PDOException $e){
-
-                $errorName = $e->getMessage();
-                $productos = [
-
-                    "codigo" => -2,
-                    "msg" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
-
-                ];
-
-            }
-
-            unset($conexion);
-            return $productos;
-
-        }
-
         function mostrarProductosPaginacion($pagina){
 
             $conexion = $this->conexion;
@@ -158,7 +122,7 @@
 
                 $tamagnoPaginas = 3;
                 $empezarDesde = ($pagina - 1)*$tamagnoPaginas;
-                $sql = "SELECT p.id_producto, p.descripcion, p.fecha_inser, p.dcto, a.nombre, p.recipiente, 
+                $sql = "SELECT p.id_producto, p.descripcion, p.fecha_inser, p.dcto, a.nombre AS categoria, p.recipiente, 
                         p.litros_recipiente, p.imagen, a.cantidad_litros  
                         FROM productos p 
                         INNER JOIN aceite a ON a.id_cat_aceite = p.categoria
@@ -168,7 +132,7 @@
                 $totalPaginas = ceil($numRegistros/$tamagnoPaginas);
                 $resultado->closeCursor();
 
-                $sql_limit = "SELECT p.id_producto, p.descripcion, p.fecha_inser, p.dcto, a.nombre, p.recipiente, 
+                $sql_limit = "SELECT p.id_producto, p.descripcion, p.fecha_inser, p.dcto, a.nombre AS categoria, p.recipiente, 
                         p.litros_recipiente, p.imagen, a.cantidad_litros  
                         FROM productos p 
                         INNER JOIN aceite a ON a.id_cat_aceite = p.categoria
@@ -204,6 +168,45 @@
 
             unset($conexion);
             return $datosFinales;
+
+        }
+
+        function mostrarProductosTienda(){
+
+            $conexion = $this->conexion;
+            $productos = [];
+
+            try{
+
+                $sql = "SELECT p.id_producto, p.descripcion, p.fecha_inser, p.dcto, a.id_cat_aceite, a.nombre AS categoria, 
+                        p.recipiente, p.litros_recipiente, p.imagen, a.cantidad_litros, a.precio  
+                        FROM productos p 
+                        INNER JOIN aceite a ON a.id_cat_aceite = p.categoria
+                        ORDER BY descripcion";
+                $resultado = $conexion->query($sql);
+                if ($resultado->rowCount() !== 0) {
+
+                    while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
+
+                        $productos[] = $fila;
+
+                    }
+
+                }
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                $datosFinales = [
+
+                    "codigo" => -2,
+                    "msgError" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+
+                ];
+
+            }
+
+            unset($conexion);
+            return $productos;
 
         }
 

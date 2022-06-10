@@ -570,12 +570,12 @@ function cuerpoTablaProductos(data) {
             '<td contenteditable="true" title="Campo editable">' + data.productos[i].descripcion + '</td>' +
             '<td>' + nuevaFechaAlta + '</td>' +
             '<td contenteditable="true" title="Campo editable">' + data.productos[i].dcto + '</td>' +
-            '<td>' + data.productos[i].nombre + '</td>'+
+            '<td>' + data.productos[i].categoria + '</td>'+
             '<td contenteditable="true" title="Campo editable">' + data.productos[i].recipiente + '</td>' +
             '<td contenteditable="true" title="Campo editable">' + data.productos[i].litros_recipiente + '</td>' +
             '<td><img class="imagenProductoTabla" title="Pulse para modificar" width="80" height="80" alt="' + data.productos[i].descripcion + '" src="' + data.productos[i].imagen + '"></td>' +
-            '<td><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>' +
-            '<td><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>' +
+            '<td title="Pulse para modificar con los datos introducidos"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>' +
+            '<td title="Pulse para eliminar el producto"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>' +
             '</tr>');
 
     }

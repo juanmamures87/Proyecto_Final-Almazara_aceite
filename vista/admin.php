@@ -880,12 +880,12 @@
                           <td contenteditable="true" title="Campo editable"><?php echo $producto->descripcion; ?></td>
                           <td><?php echo $nuevaFechaAlta; ?></td>
                           <td contenteditable="true" title="Campo editable"><?php echo $producto->dcto; ?></td>
-                          <td><?php echo $producto->nombre; ?></td>
+                          <td><?php echo $producto->categoria; ?></td>
                           <td contenteditable="true" title="Campo editable"><?php echo $producto->recipiente; ?></td>
                           <td contenteditable="true" title="Campo editable"><?php echo $producto->litros_recipiente; ?></td>
                           <td><img class="imagenProductoTabla" src="<?php echo $producto->imagen; ?>" title="Pulse para modificar" width="80" height="80" alt="<?php echo $producto->descripcion; ?>"></td>
-                          <td><i title="Pulse para modificar los datos introducidos" class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>
-                          <td><i title="Pulse para eliminar el producto" class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>
+                          <td title="Pulse para modificar con los datos introducidos"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></td>
+                          <td title="Pulse para eliminar el producto"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>
                         </tr>
 
                           <?php

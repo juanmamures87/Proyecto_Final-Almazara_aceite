@@ -1,0 +1,59 @@
+/*********************************************************************************************************************/
+/************************************************ PÁGINA DE LA TIENDA ************************************************/
+/*********************************************************************************************************************/
+
+#cuerpoPaginaTienda{display: flex;
+    gap: 1%;
+    margin-top: 3rem;
+    margin-bottom: 3rem;}
+
+/* Línea separadora entre los dos aceites */
+.v-line{border-left: 2px solid #88a220;
+    height:100%;
+    left: 50%;
+    top: 650px;
+    position: absolute;
+}
+
+/* Contenedores de los productos de cada categoría */
+.container.contenedorAOVE{
+    width: 49.5%;
+    float: left;}
+
+.container.contenedorAOV{
+    width: 49.5%;
+    float: right;}
+
+/* Tarjetas donde se renderizan las imágenes y datos del producto */
+.card.tarjetaAOVE, .card.tarjetaAOV{width: 45%;
+    margin-bottom: 10px;}
+
+/* Posición y color de los datos de la tarjeta */
+.card-img-top{height: 50%}
+
+.card-body .card-title.precio{color: #88a220;}
+
+/* Mensajes para las distintas acciones de la tienda */
+
+#mensajeTienda{position: fixed;
+    bottom: 30px;
+    right: 15px;
+    width: 30%;
+    height: 50px;
+    border-radius: 5px;
+    z-index: 2000;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 50px;
+    overflow: hidden;
+    display: none;
+    }
+
+.mensajeCorrecto{background-color: #CDFFAE;}
+
+.mensajeErroneo{background-color: #FCA8A8}
+
+/*********************************************************************************************************************/
+/******************************************* FIN DE PÁGINA DE LA TIENDA ************************************************/
+/*********************************************************************************************************************/
