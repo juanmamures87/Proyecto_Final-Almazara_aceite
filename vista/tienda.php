@@ -13,8 +13,12 @@
     <link rel="stylesheet" href="../css/fonts.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/principalTienda.css">
+    <link rel="stylesheet" href="../css/inicioSesionUsuario.css">
   </head>
   <body>
+  <!-- Contenedor que hará de pantalla para oscurecer la página y resaltar el inicio de sesión -->
+  <div id="contenedorOscuro"></div>
+  <!--------------------------------------------------------------------------------------------->
     <div class="preloader">
       <div class="preloader-body">
         <div class="cssload-container"><span></span><span></span><span></span><span></span>
@@ -54,7 +58,7 @@
                       <div class="cart-inline">
                         <div class="cart-inline-header">
                           <h5 class="cart-inline-title">En carrito:<span id="cantidadProductosCarrito"> 0</span> Productos</h5>
-                          <h6 class="cart-inline-title">Precio total:<span id="precioTotalProductosCarrito"> 0</span><span>€</span></h6>
+                          <h6 class="cart-inline-title">Precio total:<span id="precioTotalProductosCarrito"> 0.00</span><span>€</span></h6>
                         </div>
                         <div class="cart-inline-body">
                         <!-- Zona donde se añadirán los productos para que el cliente pueda verlos con un simple click -->
@@ -73,7 +77,11 @@
                       <li class="rd-nav-item"><a class="rd-nav-link" href="contacto">Contacto</a></li>
                     </ul>
                   </div>
-                  <div class="rd-navbar-project-hamburger" data-multitoggle=".rd-navbar-main" data-multitoggle-blur=".rd-navbar-wrap" data-multitoggle-isolate>
+                  <!-- Zona donde irá el nombre de usuario si inicia sesión -->
+                  <p id="nombreUsuarioSession"></p>
+                  <!---------------------------------------------------------->
+
+                  <div class="rd-navbar-project-hamburger datosAdicionales" data-multitoggle=".rd-navbar-main" data-multitoggle-blur=".rd-navbar-wrap" data-multitoggle-isolate>
                     <div class="project-hamburger"><span class="project-hamburger-arrow-top"></span><span class="project-hamburger-arrow-center"></span><span class="project-hamburger-arrow-bottom"></span></div>
                     <div class="project-hamburger-2"><span class="project-hamburger-arrow"></span><span class="project-hamburger-arrow"></span><span class="project-hamburger-arrow"></span>
                     </div>
@@ -123,6 +131,12 @@
           </nav>
         </div>
       </header>
+
+      <!-- Fragmento de código con el inicio de sesión del usuario -->
+      <div id="inicioSesionUsuario">
+          <?php require_once 'vista/inicioSesionUsuario.html'; ?>
+      </div>
+      <!------------------------------------------------------------->
       <!-- Breadcrumbs -->
       <section class="breadcrumbs-custom-inset">
         <div class="breadcrumbs-custom context-dark bg-overlay-33">
@@ -136,6 +150,7 @@
           <div class="box-position" style="background-image: url(../images/bg-breadcrumbsTienda_1920x560.jpg);"></div>
         </div>
       </section>
+
       <!--------------------------------------------------------------------->
       <!-- Cuerpo de la tienda con las tarjetas que contienen los productos-->
       <!--------------------------------------------------------------------->

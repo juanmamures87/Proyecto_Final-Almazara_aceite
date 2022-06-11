@@ -121,11 +121,38 @@
           <div class="box-position" style="background-image: url(../images/carritoCompra1920x560.png);"></div>
         </div>
       </section>
-      <!--------------------------------------------------------------------->
-      <!-- Cuerpo de la tienda con las tarjetas que contienen los productos-->
-      <!--------------------------------------------------------------------->
-      <section id="cuerpoCarritoCompra">
+      <!--------------------------------------------------------------------------------->
+      <!-- Cuerpo del carrito de la compra con las tarjetas que contienen los productos-->
+      <!--------------------------------------------------------------------------------->
+      <section id="cuerpoPaginaCarrito" class="container-fluid mt-5 mb-5">
 
+        <div class="row col-lg-12">
+          <div id="cuerpoCarritoCompra" class="container border col-lg-8">
+            <div class="row align-items-center" id="cabeceraTablaPaginaCarrito">
+
+              <div class="col-lg-6"><h6>PRODUCTO</h6></div>
+              <div class="col-lg-2"><h6>PRECIO</h6></div>
+              <div class="col-lg-2"><h6>CANTIDAD</h6></div>
+              <div class="col-lg-2"><h6>SUBTOTAL</h6></div>
+
+            </div>
+            <div id="filasProductos">
+
+            </div>
+          </div>
+
+          <div class="container col-lg-4 float-right" id="resultadoFinal">
+
+            <div class="w-100 text-left mt-3"><b>Subtotal</b><div class="text-right mr-2" id="subtotalCompra"></div></div>
+            <hr>
+            <div class="w-100 text-left mt-3"><b>Envío</b> (Envío gratuito por compra superior a 100€)<div class="text-right mr-2" id="envioCompra">5<span>€</span></div></div>
+            <hr>
+            <div class="w-100 text-left mt-3"><b>Total</b><div class="text-right mr-2" id="totalCompra"></div></div>
+            <hr>
+            <button id="finalizarCompra">Finalizar compra</button>
+
+          </div>
+        </div>
       </section>
       <!-- Footer de la página-->
       <footer class="section footer-variant-2 footer-modern context-dark section-top-image section-top-image-dark">

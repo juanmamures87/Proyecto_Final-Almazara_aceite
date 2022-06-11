@@ -16,6 +16,37 @@ const mensajeTienda = $('#mensajeTienda');
 
 /*///////////////////////////////////////////// UTILIZACIÓN DE FUNCIONES /////////////////////////////////////////////*/
 
+//Función anónima que carga el carrito si existe, en el carrito superior de la página de la tienda para mantener informado al usuario
+$(function () {
+
+    let tarjetaCarritoSuperior = $('div.cart-inline-item');
+    let sumaTotal = 0;
+    let productosTotales = 0;
+    if (sessionStorage.getItem('carrito') !== null) {
+        let carrito = JSON.parse(sessionStorage.getItem('carrito'));
+        if (tarjetaCarritoSuperior.length === 0 && carrito.length > 0) {
+
+            for (const i in carrito) {
+
+                creaTarjetaCarritoSuperior(carrito[i].idProducto, carrito[i].idCat, carrito[i].imagen, carrito[i].nombre,
+                    carrito[i].cantidad, carrito[i].precioUni, carrito[i].dcto, carrito[i].nombreCat, carrito[i].recipiente, carrito[i].ltrRecipi);
+
+                let precioXproducto = carrito[i].cantidad * carrito[i].precioUni;
+                let cantidadProducto = carrito[i].cantidad;
+
+                sumaTotal = sumaTotal + precioXproducto;
+                productosTotales = productosTotales + cantidadProducto;
+
+            }
+
+            sumaTotal = sumaTotal.toFixed(2)
+            productosCarritoSup.innerHTML = ' ' + String(productosTotales);
+            cantidadProductosCarrito.innerHTML = ' ' + String(productosTotales);
+            precioTotalProductosCarrito.innerHTML = ' ' + String(sumaTotal);
+
+        }
+    }
+})
 
 /*////////////////////////////////////////////////// EVENTOS ////////////////////////////////////////////////////////*/
 
@@ -37,7 +68,7 @@ cuerpoPaginaTienda.on('click','.btn.btn-primary.addCarrito',function (e) {
     let precioProducto = $(this).data('preciofinal');
 
     /*Si la colección de tarjetas del carrito superior es mayor a cero recorremos las tarjetas para ver si el producto
-    que vamos a seleccionar ya está y actualizamos el que hay si no metemos el nuevo producto.*/
+    que vamos a seleccionar ya está dentro y actualizamos el que hay, si no metemos el nuevo producto.*/
     if (tarjetaCarritoSuperior.length > 0) {
         tarjetaCarritoSuperior.each(function () {
 
@@ -48,6 +79,7 @@ cuerpoPaginaTienda.on('click','.btn.btn-primary.addCarrito',function (e) {
                 $('input.form-input',this).val(parseInt($('input.form-input',this).val()) + 1);
                 mensajesInfoCorrecto('producto añadido al carrito', 'mensajeCorrecto');
                 encontrado = true;
+                guardarCarrito();
 
             }
 
@@ -56,38 +88,19 @@ cuerpoPaginaTienda.on('click','.btn.btn-primary.addCarrito',function (e) {
         //Si el producto no se ha encontrado metemos un producto nuevo en el carrito
         if (encontrado === false){
 
-            creaTarjetaCarritoSuperior(idProducto, idCategoria, imagen, nombre, precioProducto,dcto, nombreCategoria,recipiente,ltrRecipiente);
+            creaTarjetaCarritoSuperior(idProducto, idCategoria, imagen, nombre, 1, precioProducto,dcto, nombreCategoria,recipiente,ltrRecipiente);
             actualizaCarritoSuperior(1, 1, precioProducto);
             mensajesInfoCorrecto('producto añadido al carrito', 'mensajeCorrecto');
+            guardarCarrito();
 
         }
 
     }else{
 
-        creaTarjetaCarritoSuperior(idProducto, idCategoria, imagen, nombre, precioProducto,dcto, nombreCategoria,recipiente,ltrRecipiente);
+        creaTarjetaCarritoSuperior(idProducto, idCategoria, imagen, nombre, 1, precioProducto,dcto, nombreCategoria,recipiente,ltrRecipiente);
         actualizaCarritoSuperior(1, 1, precioProducto);
         mensajesInfoCorrecto('producto añadido al carrito', 'mensajeCorrecto');
-
-    }
-
-})
-
-$(function () {
-
-    let tarjetaCarritoSuperior = $('div.cart-inline-item');
-    let carrito = JSON.parse(sessionStorage.getItem('carritoCompra'));
-    if (tarjetaCarritoSuperior.length === 0 && carrito.length > 0){
-
-        for (const i in carrito) {
-
-            creaTarjetaCarritoSuperior(carrito[i].idProducto, carrito[i].idCat, carrito[i].imagen, carrito[i].nombre,
-                carrito[i].precioUni,carrito[i].dcto,carrito[i].nombreCat, carrito[i].recipiente, carrito[i].ltrRecipi);
-
-        }
-
-    }else{
-
-        console.log('el carrito no se puede cargar, porque no existe');
+        guardarCarrito();
 
     }
 
@@ -97,33 +110,127 @@ $(function () {
 las cantidades de producto y con lo cual el precio a pagar*/
 cuerpoZonaCarritoSuperior.on('input','input.form-input.cantidad',function () {
 
-    let tarjetaCarritoSuperior = $('div.cart-inline-item');
-    //let inputDatos = $(this).parent('div').siblings('input').data();
-    let sumaTotal = 0;
-    let productosTotales = 0;
-
-    //Al cambiar las cantidades de producto mediante el input vamos variando la cantidad total y el precio total del carrito
-    tarjetaCarritoSuperior.each(function () {
-
-        let precioXproducto = parseInt($('input.form-input',this).val()) * parseFloat($('h6:nth-child(2)',this).text());
-        let cantidadProducto = parseInt($('input.form-input',this).val());
-
-        sumaTotal = sumaTotal + precioXproducto;
-        productosTotales = productosTotales + cantidadProducto;
-
-    })
-    sumaTotal = sumaTotal.toFixed(2)
-    productosCarritoSup.textContent = ' ' + String(productosTotales);
-    cantidadProductosCarrito.textContent = ' ' + String(productosTotales);
-    precioTotalProductosCarrito.textContent = ' ' + String(sumaTotal);
+    calculoCarrito();
+    guardarCarrito();
 
 })
 
-/*Evento sobre el botón de ir al carrito de la compra. Se crea un objeto por cada producto que hay en el carrito de la
-zona superior de tienda con todos los datos referentes a él. Cada objeto se mete en un array y seguidamente
-se mete en sessionStorage, en la memoria del navegador durante la sesión iniciada, cuando se cierren las pestañas este
-elemento se eliminará*/
+/*Evento sobre el botón de ir al carrito de la compra. Al pulsar sobre él se guardará automáticamente el carrito del
+usuario en la memoria del navegador, mientras tengas la pestaña abierta*/
 irCarrito.addEventListener('click',function (event) {
+
+    let tarjetaCarritoSuperior = $('div.cart-inline-item');
+    if (tarjetaCarritoSuperior.length > 0) {
+        guardarCarrito();
+        irCarrito.setAttribute('href', 'carrito');
+    }else{
+
+        mensajesInfoCorrecto('el carrito está vacío', 'mensajeErroneo')
+
+    }
+})
+
+//Evento sobre el icono de la papelera que eliminará los productos del carrito
+cuerpoZonaCarritoSuperior.on('click','.fa.fa-trash-o.fa-1x.basuraProducto',function () {
+
+    let tarjetaCarritoSuperior = $('div.cart-inline-item');
+    if (tarjetaCarritoSuperior.length === 1) {
+
+        $(this).closest('div.cart-inline-item').remove();
+        carritoCompra.length = 0;
+        sessionStorage.removeItem('carrito');
+        mensajesInfoCorrecto('no hay productos en el carrito', 'mensajeErroneo');
+        productosCarritoSup.innerHTML = ' ' + String(0);
+        cantidadProductosCarrito.innerHTML = ' ' + String(0);
+        precioTotalProductosCarrito.innerHTML = ' ' + String(0.00);
+
+    }else{
+
+        $(this).closest('div.cart-inline-item').remove();
+
+        calculoCarrito();
+        guardarCarrito();
+
+    }
+
+})
+
+/*/////////////////////////////////////////////////// FUNCIONES ////////////////////////////////////////////////////////*/
+
+/*Función que asigna un número superior al carrito de la página principal, para que el usuario pueda verlo en cada momento,
+el número de productos en el interior del carrito y el precio total a pagar del carrito*/
+function actualizaCarritoSuperior(numeroSup, numeroInterior, precioTotal) {
+
+    productosCarritoSup.textContent = ' ' + String(parseInt(productosCarritoSup.textContent) + numeroSup);
+    cantidadProductosCarrito.textContent = ' ' + String(parseInt(cantidadProductosCarrito.textContent) + numeroInterior);
+    let precio = parseFloat(precioTotalProductosCarrito.textContent) + precioTotal;
+    precio = precio.toFixed(2);
+    precioTotalProductosCarrito.textContent = ' ' + String(precio);
+
+}
+
+/*Función que muestra un mensaje por pantalla según la acción. Se pasa por parámetro el mensaje y la clase que se
+quiere mostrar, como correcto o como erróneo. A su vez también se oculta con un periodo de tiempo para que el usuario
+pueda leer su contenido sin problema*/
+function mensajesInfoCorrecto(mensaje, claseMensaje) {
+
+    //mensajeCorrecto o mensajeErrorneo son las clases para definir el tipo de mensaje
+    mensajeTienda.text(mensaje.toUpperCase())
+    mensajeTienda.removeClass().addClass(claseMensaje);
+    mensajeTienda.fadeIn(200);
+    setTimeout(ocultarMensajes,2000);
+
+}
+
+//Función que oculta los mensajes de información con una pequeña transición
+function ocultarMensajes() {
+
+    if (mensajeTienda.is(':visible')){
+
+        mensajeTienda.fadeOut(2000);
+    }
+
+}
+
+//Función que crea una tarjeta nueva de un producto en la parte del carrito de la parte superior de la página
+function creaTarjetaCarritoSuperior(idProducto, idCategoria, imagen, nombre, cantidad, precioProducto, dcto, nombreCat, recipiente,ltrRecipiente) {
+
+    cuerpoZonaCarritoSuperior.append('<div class="cart-inline-item" data-idproducto="' + idProducto + '" >' +
+        '                            <div class="unit align-items-center">' +
+        '                              <div class="unit-left imagen"><img src="' + imagen + '" alt="" width="108" height="100"/></div>' +
+        '                              <div class="unit-body">' +
+        '                                <h6 class="cart-inline-name">' + nombre + '</h6>' +
+        '                                <div>' +
+        '                                  <div class="group-xs group-inline-middle">' +
+        '                                    <div class="table-cart-stepper">' +
+        '                                      <input class="form-input cantidad" type="number" data-zeros="true" value="' + cantidad + '" min="1" max="1000">' +
+        '                                    </div>' +
+        '                                    <h6 class="cart-inline-title mt-2 precio">' + precioProducto + '€</h6>' +
+        '                                    <input type="hidden" class="datosProducto" ' +
+        '                                           data-idproducto="' + idProducto + '"' +
+        '                                           data-precio="' + precioProducto + '" ' +
+        '                                           data-nombre="' + nombre + '" ' +
+        '                                           data-idcategoria="' + idCategoria + '" ' +
+        '                                           data-dcto="' + dcto + '" ' +
+        '                                           data-nombrecat="' + nombreCat + '" ' +
+        '                                           data-recipiente="' + recipiente + '" ' +
+        '                                           data-ltrecipiente="' + ltrRecipiente + '" ' +
+        '                                           data-imagen="' + imagen + '">' +
+        '                                   <div class="eliminaProductoCarrito"><i class="fa fa-trash-o fa-1x basuraProducto" aria-hidden="true"></i></div>' +
+        '                                  </div>' +
+        '                                </div>' +
+        '                              </div>' +
+        '                            </div>' +
+        '                          </div>');
+
+}
+
+/*Función para guardar el carrito de la compra en la memoria del navegador con sessionStorage.
+Se crea un objeto por cada producto que hay en el carrito de la zona superior de tienda con todos los datos
+referentes a él. Cada objeto se mete en el array y seguidamente se mete en sessionStorage, en la memoria del navegador
+durante la sesión iniciada. A su vez, también hace que el carrito se elimine de la memoria del navegador pasadas 4 horas.
+Si el usuario cierra la pestaña en la que está realizando los trámites se eliminará directamente.*/
+function guardarCarrito() {
 
     carritoCompra.length = 0;
     let tarjetaCarritoSuperior = $('div.cart-inline-item');
@@ -148,75 +255,40 @@ irCarrito.addEventListener('click',function (event) {
 
     })
 
-    sessionStorage.setItem('carritoCompra',JSON.stringify(carritoCompra));
-    irCarrito.setAttribute('href','carrito');
-
-})
-
-/*/////////////////////////////////////////////////// FUNCIONES ////////////////////////////////////////////////////////*/
-
-/*Función que asigna un número superior al carrito de la página principal, para que el usuario pueda verlo en cada momento,
-el número de productos en el interior del carrito y el precio total a pagar del carrito*/
-function actualizaCarritoSuperior(numeroSup, numeroInterior, precioTotal) {
-
-    productosCarritoSup.textContent = ' ' + String(parseInt(productosCarritoSup.textContent) + numeroSup);
-    cantidadProductosCarrito.textContent = ' ' + String(parseInt(cantidadProductosCarrito.textContent) + numeroInterior);
-    let precio = parseFloat(precioTotalProductosCarrito.textContent) + precioTotal;
-    precio = precio.toFixed(2);
-    precioTotalProductosCarrito.textContent = ' ' + String(precio);
+    sessionStorage.setItem('carrito',JSON.stringify(carritoCompra));
+    setTimeout(eliminaCarritoMemoria,14400000)
 
 }
 
-/*Función que muestra un mensaje por pantalla según la acción. Se pasa por parámetro el mensaje y la clase que se
-quiere mostrar, como correcto o como erróneo. A su vez también se oculta con un periodo de tiempo para que el usuario
-pueda leer su contenido sin problema*/
-function mensajesInfoCorrecto(mensaje, claseMensaje) {
+//Función que actualizar el número de productos totales del carrito y el precio total del carrito
+function calculoCarrito() {
 
-    mensajeTienda.text(mensaje.toUpperCase())
-    mensajeTienda.removeClass().addClass(claseMensaje);
-    mensajeTienda.fadeIn(200);
-    setTimeout(ocultarMensajes,2000);
+    let tarjetaCarritoSuperior = $('div.cart-inline-item');
+    //let inputDatos = $(this).parent('div').siblings('input').data();
+    let sumaTotal = 0;
+    let productosTotales = 0;
+
+    //Al cambiar las cantidades de producto mediante el input vamos variando la cantidad total y el precio total del carrito
+    tarjetaCarritoSuperior.each(function () {
+
+        let precioXproducto = parseInt($('input.form-input',this).val()) * parseFloat($('h6:nth-child(2)',this).text());
+        let cantidadProducto = parseInt($('input.form-input',this).val());
+
+        sumaTotal = sumaTotal + precioXproducto;
+        productosTotales = productosTotales + cantidadProducto;
+
+    })
+
+    sumaTotal = sumaTotal.toFixed(2)
+    productosCarritoSup.innerHTML = ' ' + String(productosTotales);
+    cantidadProductosCarrito.innerHTML = ' ' + String(productosTotales);
+    precioTotalProductosCarrito.innerHTML = ' ' + String(sumaTotal);
 
 }
 
-//Función que oculta los mensajes de información con una pequeña transición
-function ocultarMensajes() {
+//Función que elimina la clave del carrito de la memoria del navegador
+function eliminaCarritoMemoria() {
 
-    if (mensajeTienda.is(':visible')){
-
-        mensajeTienda.fadeOut(2000);
-    }
-
-}
-
-//Función que crea una tarjeta nueva de un producto en la parte del carrito de la parte superior de la página
-function creaTarjetaCarritoSuperior(idProducto, idCategoria, imagen, nombre, precioProducto, dcto, nombreCat, recipiente,ltrRecipiente) {
-
-    cuerpoZonaCarritoSuperior.append('<div class="cart-inline-item" data-idproducto="' + idProducto + '" >' +
-        '                            <div class="unit align-items-center">' +
-        '                              <div class="unit-left imagen"><img src="' + imagen + '" alt="" width="108" height="100"/></div>' +
-        '                              <div class="unit-body">' +
-        '                                <h6 class="cart-inline-name">' + nombre + '</h6>' +
-        '                                <div>' +
-        '                                  <div class="group-xs group-inline-middle">' +
-        '                                    <div class="table-cart-stepper">' +
-        '                                      <input class="form-input cantidad" type="number" data-zeros="true" value="1" min="1" max="1000">' +
-        '                                    </div>' +
-        '                                    <h6 class="cart-inline-title mt-2 precio">' + precioProducto + '€</h6>' +
-        '                                    <input type="hidden" class="datosProducto" ' +
-        '                                           data-idproducto="' + idProducto + '"' +
-        '                                           data-precio="' + precioProducto + '" ' +
-        '                                           data-nombre="' + nombre + '" ' +
-        '                                           data-idcategoria="' + idCategoria + '" ' +
-        '                                           data-dcto="' + dcto + '" ' +
-        '                                           data-nombrecat="' + nombreCat + '" ' +
-        '                                           data-recipiente="' + recipiente + '" ' +
-        '                                           data-ltrecipiente="' + ltrRecipiente + '" ' +
-        '                                           data-imagen="' + imagen + '">' +
-        '                                  </div>' +
-        '                                </div>' +
-        '                              </div>' +
-        '                            </div>' +
-        '                          </div>');
+    sessionStorage.removeItem('carrito');
 
 }

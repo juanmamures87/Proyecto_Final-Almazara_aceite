@@ -2,6 +2,21 @@
 /************************************************ PÁGINA DE LA TIENDA ************************************************/
 /*********************************************************************************************************************/
 
+/* Elemento de menú plegado junto al usuario */
+.rd-navbar-project-hamburger.datosAdicionales{margin-left: 200px;}
+
+#inicioSesionUsuario{position: absolute;
+    z-index: 20;
+    width: 100%;}
+
+/* Contenedor que oscurecerá la página cuando salga el elemento de iniciar sesión */
+#contenedorOscuro{position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 15;
+    background-color: black;
+    opacity: 0.7;}
+
 #cuerpoPaginaTienda{display: flex;
     gap: 1%;
     margin-top: 3rem;
@@ -57,3 +72,25 @@
 /*********************************************************************************************************************/
 /******************************************* FIN DE PÁGINA DE LA TIENDA ************************************************/
 /*********************************************************************************************************************/
+
+/* ZONA DEL CARRITO DE LA COMPRA */
+
+.eliminaProductoCarrito{float: right;
+    color: red;}
+
+.fa.fa-trash-o.fa-1x.basuraProducto{margin-top: 22px;}
+
+.fa.fa-trash-o.fa-1x.basuraProducto:hover{
+    cursor: pointer;}
+
+#cabeceraTablaPaginaCarrito{border-bottom: 1px solid #dee2e6;
+    min-height: 50px;}
+
+#finalizarCompra{background-color: #88a220;
+    width: 50%;
+    height: 10%;
+    margin-top: 20px;}
+
+#finalizarCompra:hover{cursor:pointer;}
+
+#resultadoFinal{min-height: 300px;}
