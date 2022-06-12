@@ -1,0 +1,82 @@
+
+#advanced-search-form{
+    background-color: #fff;
+    max-width: 1000px;
+    margin: 160px auto 0;
+    padding: 40px;
+    color: #858b8e;
+    box-shadow: 6px 6px 6px rgba(0,0,0,0.2);
+}
+
+#advanced-search-form h2{
+    padding-bottom: 20px;
+    margin: 10px 20px;
+    font-size: 24px;
+}
+
+#advanced-search-form hr{
+    margin-top: 38px;
+    margin-bottom: 54px;
+    margin-left:3px;
+    border: 1px solid #cccccc;
+
+}
+
+#advanced-search-form .form-group{
+    margin-bottom: 20px;
+    margin-left:20px;
+    width: 30%;
+    float:left;
+    text-align: left;
+}
+
+#advanced-search-form .form-control{
+    padding: 12px 20px;
+    height: auto;
+    border-radius: 2px;
+}
+
+#advanced-search-form .radio-inline{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+
+#advanced-search-form .btn{
+    width: 46%;
+    margin: 20px auto 0;
+    background-color: #88a220 !important;
+    display: block;
+    outline: none;
+}
+
+@media screen and (max-width: 800px){
+    #advanced-search-form .form-group{
+        width: 45%;
+    }
+
+    #advanced-search-form{
+        margin-top: 0;
+    }
+}
+
+@media screen and (max-width: 560px){
+    #advanced-search-form .form-group{
+        width: 100%;
+        margin-left: 0;
+    }
+
+    #advanced-search-form h2{
+        text-align: center;
+    }
+}
+
+/* Introducido por Juanma para el registro */
+#passReg2{margin-top: -19px;}
+
+#btnRegistroUsuario:hover, #btnResetUsuario:hover, .fa.fa-times.fa-2x.float-right.cierraRegistroUsuario:hover,
+#inicioDesdeRegistro:hover{cursor: pointer;}
+
+#advanced-search-form #btnResetUsuario{background-color: #eda407 !important;}
+
+.fa.fa-times.fa-2x.float-right.cierraRegistroUsuario{}

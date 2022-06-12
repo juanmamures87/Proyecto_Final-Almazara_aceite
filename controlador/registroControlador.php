@@ -518,3 +518,99 @@
         }
 
     }
+
+    function registroUsuarios(){
+
+        if (!empty($_POST['passReg']) && !empty($_POST['emailReg'])) {
+
+            $nombre = $_POST['nombreReg'];
+            $apellidos = $_POST['apeReg'];
+            $dni = $_POST['dniReg'];
+            $tel = $_POST['telReg'];
+            $prov = $_POST['provReg'];
+            $mun = $_POST['munReg'];
+            $dir = $_POST['dirReg'];
+            $cp = $_POST['cpReg'];
+            $num = $_POST['numCasaReg'];
+            $piso = $_POST['pisoReg'];
+            $puerta = $_POST['puertaReg'];
+            $email = $_POST['emailReg'];
+            $clave = $_POST['passReg'];
+            $empresa = $_POST['emReg'];
+            $activado = 0;
+
+            if ($dni === ''){
+
+                $dni = '-';
+
+            }
+            if ($piso === "") {
+
+                $piso = "-";
+
+            }
+            if ($puerta === "") {
+
+                $puerta = "-";
+
+            }
+            if ($empresa === ''){
+
+                $empresa = '-';
+
+            }
+
+
+            require_once "modelo/RegistroModelo.php";
+            $usuarios = new RegistroModelo();
+            $cliente = $usuarios->insertarUsuario($nombre, $apellidos, $dni, $tel, $prov, $mun, $dir, $cp, $num, $piso, $puerta, $email, $clave, $activado);
+
+            if ($cliente['resultado'] === true) {
+
+                $registroCliente = $usuarios->insertarCliente($cliente['idUsuario'],$empresa);
+
+                if ($registroCliente) {
+
+                    $token = $usuarios->tokenClientes($email, $clave);
+
+                    $nombreCompleto = $nombre . " " . $apellidos;
+                    $mailConfirm = $usuarios->correoConfirmacionClientes($nombreCompleto, $clave, $email, $token);
+
+                    $mailConfirm ? $envio = "Consulte su correo para verificar la cuenta" : $envio = "El correo de verificación no pudo ser enviado";
+
+                    $resultado = [
+
+                        "codigo" => 1,
+                        "msgCorreo" => $envio,
+                        "msg" => "CLIENTE REGISTRADO CORRECTAMENTE"
+
+                    ];
+
+                    //var_dump($resultado);
+
+                } else {
+
+                    $resultado = [
+
+                        "codigo" => 0,
+                        "msg" => "DATOS ERRONEOS. NO PUDO REGISTRARSE EL USUARIO"
+
+                    ];
+
+                }
+
+            } else {
+
+                $resultado = [
+
+                    "codigo" => -1,
+                    "msg" => $cliente['msg']
+
+                ];
+
+            }
+
+            echo json_encode($resultado);
+            //var_dump($resultado);
+        }
+    }

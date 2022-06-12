@@ -3,11 +3,8 @@
 /*********************************************************************************************************************/
 
 /* Elemento de menú plegado junto al usuario */
-.rd-navbar-project-hamburger.datosAdicionales{margin-left: 200px;}
-
-#inicioSesionUsuario{position: absolute;
-    z-index: 20;
-    width: 100%;}
+.rd-navbar-project-hamburger.datosAdicionales{margin-left: 60px;
+    width: 120px;}
 
 /* Contenedor que oscurecerá la página cuando salga el elemento de iniciar sesión */
 #contenedorOscuro{position: fixed;
@@ -16,6 +13,16 @@
     z-index: 15;
     background-color: black;
     opacity: 0.7;}
+
+/* Formulario de inicio de sesión del usuario */
+#inicioSesionUsuario{position: absolute;
+    z-index: 20;
+    width: 100%;}
+
+/* Formulario de registro de usuario nuevo */
+#registroUsuario{position: absolute;
+    z-index: 20;
+    width: 100%;}
 
 #cuerpoPaginaTienda{display: flex;
     gap: 1%;
@@ -65,9 +72,11 @@
     display: none;
     }
 
-.mensajeCorrecto{background-color: #CDFFAE;}
+.mensajeCorrecto{background-color: #CDFFAE;
+    max-width: 100%;}
 
-.mensajeErroneo{background-color: #FCA8A8}
+.mensajeErroneo{background-color: #FCA8A8;
+    max-width: 100%;}
 
 /*********************************************************************************************************************/
 /******************************************* FIN DE PÁGINA DE LA TIENDA ************************************************/

@@ -13,8 +13,15 @@
     <link rel="stylesheet" href="../css/fonts.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/principalTienda.css">
+    <link rel="stylesheet" href="../css/inicioSesionUsuario.css">
+    <link rel="stylesheet" href="../css/registroUsuario.css">
   </head>
   <body>
+
+  <!-- Contenedor que hará de pantalla para oscurecer la página y resaltar el inicio de sesión -->
+  <div id="contenedorOscuro"></div>
+  <!--------------------------------------------------------------------------------------------->
+
     <div class="preloader">
       <div class="preloader-body">
         <div class="cssload-container"><span></span><span></span><span></span><span></span>
@@ -48,16 +55,17 @@
                 </div>
                 <div class="rd-navbar-main-element">
                   <div class="rd-navbar-nav-wrap">
-                    <!------------------------------------ ICONO DE USUARIO ------------------------------------------>
-                    <i class="fa fa-user-o fa-2x ml-2 mr-2" aria-hidden="true"></i>
                     <!-- RD Navbar Nav-->
                     <ul class="rd-navbar-nav">
                       <li class="rd-nav-item active"><a class="rd-nav-link" href="tienda">Tienda</a></li>
                       <li class="rd-nav-item"><a class="rd-nav-link" href="quienesSomos">Quienes somos</a></li>
                       <li class="rd-nav-item"><a class="rd-nav-link" href="contacto">Contacto</a></li>
                     </ul>
+                    <!-- Zona donde irá el nombre de usuario si inicia sesión -->
+                    <p id="nombreUsuarioSesionCarrito" class="mb-2"></p>
+                    <!---------------------------------------------------------->
                   </div>
-                  <div class="rd-navbar-project-hamburger" data-multitoggle=".rd-navbar-main" data-multitoggle-blur=".rd-navbar-wrap" data-multitoggle-isolate>
+                  <div class="rd-navbar-project-hamburger datosAdicionales" data-multitoggle=".rd-navbar-main" data-multitoggle-blur=".rd-navbar-wrap" data-multitoggle-isolate>
                     <div class="project-hamburger"><span class="project-hamburger-arrow-top"></span><span class="project-hamburger-arrow-center"></span><span class="project-hamburger-arrow-bottom"></span></div>
                     <div class="project-hamburger-2"><span class="project-hamburger-arrow"></span><span class="project-hamburger-arrow"></span><span class="project-hamburger-arrow"></span>
                     </div>
@@ -107,6 +115,16 @@
           </nav>
         </div>
       </header>
+
+      <!-- Fragmento de código con el inicio de sesión del usuario -->
+      <div id="inicioSesionUsuario">
+          <?php require_once 'vista/inicioSesionUsuario.html'; ?>
+      </div>
+
+      <div id="registroUsuario">
+          <?php require_once 'vista/registroUsuario.php'; ?>
+      </div>
+
       <!-- Breadcrumbs -->
       <section class="breadcrumbs-custom-inset">
         <div class="breadcrumbs-custom context-dark bg-overlay-33">

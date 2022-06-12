@@ -154,6 +154,217 @@
 
         }
 
+        function insertarCliente($idUsuario, $empresa){
+
+            $conexion = $this->conexion;
+            $idCliente = $this->cliente->getIdCliente();
+            $token = $this->cliente->getToken();
+            $correcto = true;
+            $conexion->beginTransaction();//deshabilito el modo autocommit
+
+            try {
+
+                $sql = $conexion->prepare("INSERT INTO clientes (id_cliente, id_usuario, empresa, token) 
+                            VALUES (?,?,?,?)");
+                $sql->bindParam(1, $idCliente);
+                $sql->bindParam(2, $idUsuario);
+                $sql->bindParam(3, $empresa);
+                $sql->bindParam(4, $token);
+                $resultado = $sql->execute();
+
+                if ($resultado) {
+
+                    $conexion->commit();// Se confirma la transacción actual
+
+                } else {
+
+                    $conexion->rollBack();//si no se puede realizar la inserción la transacción vuelve atrás y no se realiza
+                    $correcto = false;
+
+                }
+
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                echo "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName;
+
+                $correcto = false;
+
+            }
+            unset($conexion);
+            return $correcto;
+
+        }
+
+        function tokenClientes($email, $clave){
+
+            $conexion = $this->conexion;
+            $token = null;
+            try {
+
+                $sql = "SELECT cli.token, u.email, u.password
+                        FROM clientes cli 
+                        INNER JOIN usuarios u ON cli.id_usuario = u.id_usuario      
+                        WHERE LOWER (u.email) = LOWER ('$email')";
+                $resultado = $conexion->query($sql);
+                if ($resultado) {
+
+                    while ($fila = $resultado->fetch(PDO::FETCH_OBJ)) {
+
+                        if ((password_verify($clave, $fila->password))){
+
+                            $token = $fila->token;
+                        }
+                    }
+                }
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+
+                echo "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName;
+
+                $token = null;
+
+            }
+
+            unset($conexion);
+            return $token;
+
+        }
+
+        function correoConfirmacionClientes($nombre, $clave, $email, $token){
+
+            $correcto = true;
+            $destinatario = $email;
+            $titulo = "Verificación de cuenta";
+            $mensaje = "¡Gracias por registrarte!\r\n
+                    Su cuenta ha sido creada. Puede iniciar sesión con\r\n 
+                    las siguientes credenciales después de haber activado\r\n 
+                    su cuenta haciendo click en la URL que encontrará a continuación.
+                -----------------------
+                Nombre de Usuario: $nombre
+                Contraseña: $clave
+                -----------------------
+                \r\n
+                Por favor, pulsa el siguiente link para activar tu cuenta:
+                \r\n
+                http://server.edu/ProyectoFinalDAW_AlmazaraAceite/index.php?controlador=verificacion&accion=activar&email=$email&token=$token
+                \r\n
+                Por favor, guarde su clave en un sitio seguro. \r\n
+                Un saludo y gracias por confiar en nosotros\r\n\r\n
+                ALMAZARA COOPERATIVA MOLINO DEL SUR.";
+
+            $mail = new PHPMailer(true);
+
+            try {
+                //Server settings
+                $mail->CharSet = "UTF-8";
+                $mail->Encoding = "quoted-printable";
+                //$mail->SMTPDebug = SMTP::DEBUG_SERVER;//Enable verbose debug output Modo desarrollo
+                $mail->SMTPDebug = SMTP::DEBUG_OFF;//Modo producción
+                $mail->isSMTP();                                            //Send using SMTP
+                $mail->Host       = 'in-v3.mailjet.com';                     //Set the SMTP server to send through
+                $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+                $mail->Username   = 'c1ae0c1d43cc1a7cb45d63e468a4ce78';                     //SMTP username
+                $mail->Password   = 'eee413e8a167317b3a2f11de712eabf6';                               //SMTP password
+                $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
+                $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+                //Recipients
+                $mail->setFrom('molino_sur_coop@hotmail.com', 'Correo');
+                $mail->addAddress($destinatario, $nombre);
+                $mail->addReplyTo('molino_sur_coop@hotmail.com', 'Información');
+
+                //Content
+                $mail->Subject = $titulo;
+                $mail->Body    = $mensaje;
+
+                $mail->send();
+                //echo "<script>alert('¡¡MENSAJE ENVIADO CORRECTAMENTE!!')</script>";
+
+            } catch (\Exception) {
+
+                echo "<script>alert('¡¡EL MENSAJE NO HA PODIDO SER ENVIADO!!. Mailer Error: {$mail->ErrorInfo}')</script>";
+                $correcto = false;
+
+            }
+
+            return $correcto;
+
+        }
+
+        function comprobarURL($email, $token){
+
+            $conexion = $this->conexion;
+            $encontrado = 0;
+            try {
+
+                $sql = "SELECT u.email, u.activo, cli.token 
+                        FROM usuarios u 
+                        INNER JOIN clientes cli ON cli.id_usuario = u.id_usuario
+                        WHERE u.email = '$email'  
+                        AND u.activo = '0' 
+                        AND cli.token = '$token'";
+                $resultado = $conexion->query($sql);
+                if ($resultado->rowCount() !== 0){
+
+                    $encontrado = 1;
+
+                }
+
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+
+                echo "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName;
+
+            }
+
+            unset($conexion);
+            return $encontrado;
+
+        }
+
+        function actualizarActivado($email, $token){
+
+            $conexion = $this->conexion;
+            $conexion->beginTransaction();//deshabilito el modo autocommit
+            try {
+
+                $sql = $conexion->prepare("UPDATE usuarios u
+                                                 INNER JOIN clientes cli ON cli.id_usuario = u.id_usuario
+                                                 SET u.activo = '1' 
+                                                 WHERE u.email = ? 
+                                                 AND cli.token = ? 
+                                                 AND u.activo = '0'");
+                $sql->bindParam(1, $email);
+                $sql->bindParam(2, $token);
+                $resultado = $sql->execute();
+                if ($resultado) {
+
+                    $conexion->commit();
+                    $actualizado = 1;
+
+                }else{
+
+                    $conexion->rollBack();
+                    $actualizado = 0;
+
+                }
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+
+                echo "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName;
+                $actualizado = 0;
+
+            }
+
+            unset($conexion);
+            return $actualizado;
+
+        }
+
         function correoConfirmacionSocios($nombre, $dni, $clave, $email): bool{
 
             $correcto = true;

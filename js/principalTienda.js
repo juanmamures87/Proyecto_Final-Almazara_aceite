@@ -2,6 +2,8 @@
 
 //Referencia al cuerpo de la tienda que contiene los productos
 const cuerpoPaginaTienda = $('#cuerpoPaginaTienda');
+
+//Array que contiene los datos del carrito de la compra
 let carritoCompra = [];
 
 //Referencia a la muestra del carrito de la compra que se puede consultar en cualquier momento al inicio de la página
@@ -174,7 +176,7 @@ quiere mostrar, como correcto o como erróneo. A su vez también se oculta con u
 pueda leer su contenido sin problema*/
 function mensajesInfoCorrecto(mensaje, claseMensaje) {
 
-    //mensajeCorrecto o mensajeErrorneo son las clases para definir el tipo de mensaje
+    //mensajeCorrecto o mensajeErroneo son las clases para definir el tipo de mensaje
     mensajeTienda.text(mensaje.toUpperCase())
     mensajeTienda.removeClass().addClass(claseMensaje);
     mensajeTienda.fadeIn(200);

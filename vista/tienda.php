@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/principalTienda.css">
     <link rel="stylesheet" href="../css/inicioSesionUsuario.css">
+    <link rel="stylesheet" href="../css/registroUsuario.css">
   </head>
   <body>
   <!-- Contenedor que hará de pantalla para oscurecer la página y resaltar el inicio de sesión -->
@@ -45,7 +46,7 @@
                   <!-- RD Navbar Brand-->
                   <div class="rd-navbar-brand">
                     <a class="brand" href="portada">
-                      <img id="logoEmpresaIndex" class="mt-2" src="../images/LogoFinal-200px.png" alt="Logo Molino del sur"/>
+                      <img id="logoEmpresaIndex" src="../images/LogoFinal-200px.png" alt="Logo Molino del sur"/>
                       <span id="nombreEmpresaInicio" class="h3">Molino del Sur</span>
                     </a>
                   </div>
@@ -69,19 +70,27 @@
                       </div>
                     </div>
                     <!------------------------------------ ICONO DE USUARIO ------------------------------------------>
-                    <i class="fa fa-user-o fa-2x ml-2 mr-2" aria-hidden="true"></i>
+                    <i id="iconoUsuarioTienda" class="fa fa-user-o fa-2x ml-2 mr-2" aria-hidden="true"></i>
                     <!-- RD Navbar Nav-->
                     <ul class="rd-navbar-nav">
                       <li class="rd-nav-item active"><a class="rd-nav-link" href="tienda">Tienda</a></li>
                       <li class="rd-nav-item"><a class="rd-nav-link" href="quienesSomos">Quienes somos</a></li>
                       <li class="rd-nav-item"><a class="rd-nav-link" href="contacto">Contacto</a></li>
                     </ul>
+                    <!-- Zona donde irá el nombre de usuario si inicia sesión -->
+                    <div class="m-auto w-100 border" id="nombreUsuarioSesionTienda">
+                      <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span></span>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#"><u>Cerrar Sesión</u></a>
+                        </div>
+                      </div>
+                    </div>
+                    <!---------------------------------------------------------->
                   </div>
-                  <!-- Zona donde irá el nombre de usuario si inicia sesión -->
-                  <p id="nombreUsuarioSession"></p>
-                  <!---------------------------------------------------------->
-
-                  <div class="rd-navbar-project-hamburger datosAdicionales" data-multitoggle=".rd-navbar-main" data-multitoggle-blur=".rd-navbar-wrap" data-multitoggle-isolate>
+                  <div class="rd-navbar-project-hamburger datosAdicionales border" data-multitoggle=".rd-navbar-main" data-multitoggle-blur=".rd-navbar-wrap" data-multitoggle-isolate>
                     <div class="project-hamburger"><span class="project-hamburger-arrow-top"></span><span class="project-hamburger-arrow-center"></span><span class="project-hamburger-arrow-bottom"></span></div>
                     <div class="project-hamburger-2"><span class="project-hamburger-arrow"></span><span class="project-hamburger-arrow"></span><span class="project-hamburger-arrow"></span>
                     </div>
@@ -135,6 +144,10 @@
       <!-- Fragmento de código con el inicio de sesión del usuario -->
       <div id="inicioSesionUsuario">
           <?php require_once 'vista/inicioSesionUsuario.html'; ?>
+      </div>
+
+      <div id="registroUsuario">
+          <?php require_once 'vista/registroUsuario.php'; ?>
       </div>
       <!------------------------------------------------------------->
       <!-- Breadcrumbs -->
@@ -393,5 +406,6 @@
     <script src="../js/script.js"></script>
     <script src="../js/principal.js"></script>
     <script src="../js/principalTienda.js"></script>
+    <script src="../js/principalCarrito.js"></script>
   </body>
 </html>

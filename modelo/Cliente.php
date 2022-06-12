@@ -10,6 +10,7 @@
         public function __construct(){
 
             $this->id_cliente = null;
+            $this->token = md5(rand(0,1000));
 
         }
 
