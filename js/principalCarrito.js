@@ -59,6 +59,11 @@ const munReg = document.getElementById('munReg');
 const dirReg = document.getElementById('dirReg');
 const cpReg = document.getElementById('cpReg');
 
+//Referencia a los campos del formulario de inicio de sesión
+const formularioInicioSesion = document.getElementById('formularioInicioSesion');
+const emailInicioSesion = $('#emailInicioSesion');
+const psswInicioSesion = $('#psswInicioSesion');
+
 /*/////////////////////////////////////////// UTILIZACIÓN DE FUNCIONES /////////////////////////////////////////////*/
 
 /*Función anónima que carga el carrito del usuario que está almacenado en la memoria del navegador. Después de cargar
@@ -464,6 +469,80 @@ btnRegistroUsuario.on('click',function (e) {
 
 })
 
+//Evento sobre el botón de iniciar sesión para que un cliente pueda logearse
+btnIniciarSesion.on('click',function (e) {
+
+    e.preventDefault();
+    if (validacionInicioSesion() && !validaUnicaClave()) {
+
+        let datos = new FormData(formularioInicioSesion);
+        datos.append('controlador', 'login');
+        datos.append('accion', 'inicioUsuarios');
+
+        fetch("index.php", {
+
+            method: "POST",
+            body: datos
+
+        })
+
+            .then(response => {
+
+                if (response.ok) {
+
+                    return response.json();//tipo de respuesta que esperamos recibir
+
+                } else {
+
+                    throw 'ERROR EN LA LLAMADA AJAX';
+
+                }
+
+            })
+
+            .then(data => {
+
+                if (data !== null) {
+
+                    if (data.codigo === 1) {
+
+                        mensajesInfoCorrecto(data.msg, 'mensajeCorrecto');
+                        console.log(data.usuario.nombre);
+                        formularioInicioSesion.reset();
+                        contenedorOscuro.fadeOut(500);
+                        inicioSesionUsuario.slideUp(200);
+
+                    } else if (data.codigo === 2 || data.codigo === -1) {
+
+                        psswInicioSesion.val('');
+                        emailInicioSesion.val('');
+                        mensajesInfoCorrecto(data.msg, 'mensajeErroneo');
+
+                    } else if (data.codigo === 0) {
+
+                        psswInicioSesion.val('');
+                        psswInicioSesion.focus();
+                        mensajesInfoCorrecto(data.msg, 'mensajeErroneo');
+
+                    }
+
+                } else {
+
+                    alert('ERROR EN EL OBJETO RECIBIDO')
+
+                }
+
+            })
+            .catch(err => {
+
+                alert(err);
+
+            })
+
+    }
+
+})
+
 
 /*/////////////////////////////////////////////////// FUNCIONES ////////////////////////////////////////////////////////*/
 
@@ -724,6 +803,23 @@ function validaDatosEnvioRegistro() {
 
 }
 
+//Función de validación de los campos de inicio de sesión
+function validacionInicioSesion() {
+
+    let exprEmail = /^([\da-z_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;
+    if (emailInicioSesion.val() === '' || !exprEmail.test(emailInicioSesion.val())){
+
+        mensajesInfoCorrecto('introduzca un email correcto','mensajeErroneo');
+        emailInicioSesion.val('');
+        emailInicioSesion.focus();
+        return false;
+
+    }
+
+    return true;
+
+}
+
 //Función que valida el dni
 function validacionDNI(dni){
 
@@ -788,6 +884,47 @@ function validarPasswd(){
         return true;
 
     }
+
+}
+
+//Función para validar solamente una contraseña, la de inicio de sesión
+function validaUnicaClave(){
+
+    let espacios = false;
+    let cont = 0;
+
+    if (psswInicioSesion.val() === '') {
+
+        mensajesInfoCorrecto('introduzca una contraseña válida','mensajeErroneo');
+        psswInicioSesion.val('');
+        psswInicioSesion.focus();
+        espacios = true;
+
+    }else if (psswInicioSesion.val().length < 4 || psswInicioSesion.val().length > 10) {
+
+        mensajesInfoCorrecto('longitud de la contraseña min.4-max.10','mensajeErroneo');
+        psswInicioSesion.val('');
+        psswInicioSesion.focus();
+        espacios = true;
+
+    }else {
+
+        while (!espacios && (cont < psswInicioSesion.val().length)) {
+
+            if (psswInicioSesion.val().charAt(cont) === " ") {
+
+                mensajesInfoCorrecto('la contraseña no puede tener espacios','mensajeErroneo');
+                psswInicioSesion.val('');
+                psswInicioSesion.focus();
+                espacios = true;
+            }
+
+            cont++;
+
+        }
+    }
+
+    return espacios;
 
 }
 

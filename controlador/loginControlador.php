@@ -15,7 +15,7 @@
 
     function inicioSocios(){
 
-        //Si la el dni y la contraseña que se le proporciona al socio concuerdan, puede acceder.
+        //Si el dni y la contraseña que se le proporciona al socio concuerdan, puede acceder.
         if (isset($_POST['dni'], $_POST['pass']) && !empty($_POST['dni']) && !empty($_POST['pass'])){
 
             $dni = $_POST['dni'];
@@ -114,5 +114,79 @@
         }
 
 
+
+    }
+
+    function inicioUsuarios(){
+
+        //Si el dni y la contraseña que se le proporciona al socio concuerdan, puede acceder.
+        if (isset($_POST['emailInicioSesion'], $_POST['psswInicioSesion']) && !empty($_POST['emailInicioSesion']) &&
+            !empty($_POST['psswInicioSesion'])){
+
+            $email = $_POST['emailInicioSesion'];
+            $clave = $_POST['psswInicioSesion'];
+
+            global $logeos;
+            $inicioCliente = $logeos->aceptarClienteLogin($email,$clave);
+
+            if ($inicioCliente['codigo'] === 1){
+
+                $resultado = [
+
+                    'codigo' => 1,
+                    'usuario' => $inicioCliente['usuario'],
+                    'msg' => 'USUARIO VERIFICADO'
+
+                ];
+
+                echo json_encode($resultado);
+
+            }elseif ($inicioCliente['codigo'] === 2){
+
+                $resultado = [
+
+                    'codigo' => 2,
+                    'msg' => "SOCIO SIN PERMISO PARA ACCEDER. PÓNGASE EN CONTACTO CON EL ADMINISTRADOR"
+
+                ];
+
+                echo json_encode($resultado);
+
+            }elseif ($inicioCliente['codigo'] === 0){
+
+                $resultado = [
+
+                    'codigo' => 0,
+                    'msg' => "CONTRASEÑA INCORRECTA VUELVA A INTRODUCIRLA"
+
+                ];
+
+                echo json_encode($resultado);
+
+            }elseif ($inicioCliente['codigo'] === -1){
+
+                $resultado = [
+
+                    'codigo' => -1,
+                    'msg' => "LOS DATOS INTRODUCIDOS NO CORRESPONDEN A NINGÚN SOCIO"
+
+                ];
+
+                echo json_encode($resultado);
+
+            }
+
+        }else{
+
+            $resultado = [
+
+                'codigo' => -2,
+                'msg' => "ERROR EN LOS DATOS INTRODUCIDOS"
+
+            ];
+
+            echo json_encode($resultado);
+
+        }
 
     }
