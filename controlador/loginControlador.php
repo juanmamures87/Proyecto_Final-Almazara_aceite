@@ -146,7 +146,7 @@
                 $resultado = [
 
                     'codigo' => 2,
-                    'msg' => "SOCIO SIN PERMISO PARA ACCEDER. PÓNGASE EN CONTACTO CON EL ADMINISTRADOR"
+                    'msg' => "USUARIO SIN PERMISO PARA ACCEDER. PÓNGASE EN CONTACTO CON EL ADMINISTRADOR"
 
                 ];
 
@@ -168,7 +168,7 @@
                 $resultado = [
 
                     'codigo' => -1,
-                    'msg' => "LOS DATOS INTRODUCIDOS NO CORRESPONDEN A NINGÚN SOCIO"
+                    'msg' => "LOS DATOS INTRODUCIDOS NO CORRESPONDEN A NINGÚN CLIENTE"
 
                 ];
 

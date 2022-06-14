@@ -14,6 +14,7 @@
         private $usuario;
         private $socio;
         private $cliente;
+        private $anonimo;
 
         public function __construct(){
 
@@ -25,6 +26,8 @@
             $this->socio = new Socio();
             require_once "Cliente.php";
             $this->cliente = new Cliente();
+            require_once 'Anonimo.php';
+            $this->anonimo = new Anonimo();
 
         }
 
@@ -32,7 +35,17 @@
 
             $conexion = $this->conexion;
             $idUsuario = $this->usuario->getIdUsuario();
-            $hasheada = password_hash($pass, PASSWORD_DEFAULT);
+
+            if ($pass !== '-'){
+
+                $hasheada = password_hash($pass, PASSWORD_DEFAULT);
+
+            }else{
+
+                $hasheada = $pass;
+
+            }
+
 
             $usuarioInsertado = [];
             $correcto = true;
@@ -91,14 +104,8 @@
                 $errorName = $e->getMessage();
                 $correcto = false;
 
-                $usuarioInsertado = [
+                    //echo "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName;
 
-                    "resultado" => $correcto,
-                    //"idUsuario" => $lastId,
-                    'msg'       => 'ERROR AL REGISTRAR AL USUARIO. ALGUNO DE LOS DATOS YA SE ENCUENTRA EN EL REGISTRO'
-                    //"msg"       => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
-
-                ];
 
             }
             unset($conexion);
@@ -196,6 +203,45 @@
 
         }
 
+        function insertarAnonimo($idUsuario){
+
+            $conexion = $this->conexion;
+            $idAnonimo = $this->anonimo->getIdAnonimo();
+            $correcto = true;
+            $conexion->beginTransaction();//deshabilito el modo autocommit
+
+            try {
+
+                $sql = $conexion->prepare("INSERT INTO anonimos (id_anonimo, id_usuario) 
+                            VALUES (?,?)");
+                $sql->bindParam(1, $idAnonimo);
+                $sql->bindParam(2, $idUsuario);
+                $resultado = $sql->execute();
+
+                if ($resultado) {
+
+                    $conexion->commit();// Se confirma la transacción actual
+
+                } else {
+
+                    $conexion->rollBack();//si no se puede realizar la inserción la transacción vuelve atrás y no se realiza
+                    $correcto = false;
+
+                }
+
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                echo "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName;
+
+                $correcto = false;
+
+            }
+            unset($conexion);
+            return $correcto;
+
+        }
+
         function tokenClientes($email, $clave){
 
             $conexion = $this->conexion;
@@ -248,6 +294,7 @@
                 \r\n
                 Por favor, pulsa el siguiente link para activar tu cuenta:
                 \r\n
+                (Si el enlace no funcionara. Copie el enlace y péguelo en la barra de búsqueda de su navegador)a
                 http://server.edu/ProyectoFinalDAW_AlmazaraAceite/index.php?controlador=verificacion&accion=activar&email=$email&token=$token
                 \r\n
                 Por favor, guarde su clave en un sitio seguro. \r\n

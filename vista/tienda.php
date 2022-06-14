@@ -77,18 +77,44 @@
                       <li class="rd-nav-item"><a class="rd-nav-link" href="quienesSomos">Quienes somos</a></li>
                       <li class="rd-nav-item"><a class="rd-nav-link" href="contacto">Contacto</a></li>
                     </ul>
-                    <!-- Zona donde irá el nombre de usuario si inicia sesión -->
-                    <div class="m-auto w-100 border" id="nombreUsuarioSesionTienda">
+
+                    <!----------------------- Zona donde irá el nombre de usuario si inicia sesión -------------------->
+                    <div class="m-auto w-100" id="nombreUsuarioSesionTienda">
                       <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span></span>
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div id="cerrarSesion" class="dropdown-menu" data-toggle="modal" data-target="#confirmacionCerrarSesion"
+                             aria-labelledby="dropdownMenuButton">
                           <a class="dropdown-item" href="#"><u>Cerrar Sesión</u></a>
                         </div>
                       </div>
                     </div>
-                    <!---------------------------------------------------------->
+
+                    <div class="modal fade" id="confirmacionCerrarSesion" tabindex="-1" role="dialog" aria-labelledby="confirmacionCerrarSesion" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="confirmacionCerrarSesion">Cierre de sesión</h5>
+                            <button type="button" id="equisCierreSesion" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            Va a cerrar la sesión.<br>
+                            Los productos se mantendrán por unas horas por si desea volver.<br>
+                            Cuando cierre la pestaña del navegador también se eliminará.<br>
+                            ¿Está seguro de que desea cerrar sesión?
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="eliminarCierreSesion" data-dismiss="modal">Cerrar</button>
+                            <button type="button" id="cierreSesionModal" data-dismiss="modal" class="btn btn-primary">Cerrar Sesión</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!------------------------------------------------------------------------------------------------->
+
                   </div>
                   <div class="rd-navbar-project-hamburger datosAdicionales border" data-multitoggle=".rd-navbar-main" data-multitoggle-blur=".rd-navbar-wrap" data-multitoggle-isolate>
                     <div class="project-hamburger"><span class="project-hamburger-arrow-top"></span><span class="project-hamburger-arrow-center"></span><span class="project-hamburger-arrow-bottom"></span></div>

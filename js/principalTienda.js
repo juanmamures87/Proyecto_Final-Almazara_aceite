@@ -24,8 +24,19 @@ $(function () {
     let tarjetaCarritoSuperior = $('div.cart-inline-item');
     let sumaTotal = 0;
     let productosTotales = 0;
+
+    let activo = JSON.parse(sessionStorage.getItem('idClienteActivo'));
+
+    if (activo !== null){
+
+        despUsuario.text(activo.nombre + " " + activo.apellidos);
+        nombreUsuarioSesionTienda.show();
+
+    }
+
     if (sessionStorage.getItem('carrito') !== null) {
         let carrito = JSON.parse(sessionStorage.getItem('carrito'));
+
         if (tarjetaCarritoSuperior.length === 0 && carrito.length > 0) {
 
             for (const i in carrito) {

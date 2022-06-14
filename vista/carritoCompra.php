@@ -48,7 +48,7 @@
                   <!-- RD Navbar Brand-->
                   <div class="rd-navbar-brand">
                     <a class="brand" href="portada">
-                      <img id="logoEmpresaIndex" class="mt-2" src="../images/LogoFinal-200px.png" alt="Logo Molino del sur"/>
+                      <img id="logoEmpresaIndex" src="../images/LogoFinal-200px.png" alt="Logo Molino del sur"/>
                       <span id="nombreEmpresaInicio" class="h3">Molino del Sur</span>
                     </a>
                   </div>
@@ -62,7 +62,9 @@
                       <li class="rd-nav-item"><a class="rd-nav-link" href="contacto">Contacto</a></li>
                     </ul>
                     <!-- Zona donde irá el nombre de usuario si inicia sesión -->
-                    <p id="nombreUsuarioSesionCarrito" class="mb-2"></p>
+                    <div class="nombreUsuarioSesionCarrito">
+                      <p id="nombreUsuarioSesionCarrito"></p>
+                    </div>
                     <!---------------------------------------------------------->
                   </div>
                   <div class="rd-navbar-project-hamburger datosAdicionales" data-multitoggle=".rd-navbar-main" data-multitoggle-blur=".rd-navbar-wrap" data-multitoggle-isolate>
@@ -124,7 +126,7 @@
       <div id="registroUsuario">
           <?php require_once 'vista/registroUsuario.php'; ?>
       </div>
-
+      <!------------------------------------------------------------->
       <!-- Breadcrumbs -->
       <section class="breadcrumbs-custom-inset">
         <div class="breadcrumbs-custom context-dark bg-overlay-33">
@@ -168,9 +170,16 @@
             <div class="w-100 text-left mt-3"><b>Total</b><div class="text-right mr-2" id="totalCompra"></div></div>
             <hr>
             <button id="finalizarCompra">Finalizar compra</button>
-
+            <br>
+            <button id="imprimeFactura">Descargar Factura</button>
           </div>
         </div>
+
+          <div id="albaranCompra" hidden>
+
+            <?php require_once 'vista/albaranFinal.html';?>
+
+          </div>
       </section>
       <!-- Footer de la página-->
       <footer class="section footer-variant-2 footer-modern context-dark section-top-image section-top-image-dark">
@@ -291,10 +300,14 @@
     <div class="snackbars" id="form-output-global"></div>
     <!-- Salida de mensaje para las diferentes acciones -->
     <div id="mensajeTienda"></div>
-    <!-- Javascript-->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script></script>
+
+  <!-- Javascript-->
     <script src="../js/core.min.js"></script>
     <script src="../js/script.js"></script>
     <script src="../js/principal.js"></script>
+    <script src="../js/zonaAdmin.js"></script>
     <script src="../js/principalTienda.js"></script>
     <script src="../js/principalCarrito.js"></script>
   </body>

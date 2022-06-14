@@ -612,5 +612,93 @@
 
             echo json_encode($resultado);
             //var_dump($resultado);
+
+        }elseif(empty($_POST['passReg'])){
+
+            $nombre = $_POST['nombreReg'];
+            $apellidos = $_POST['apeReg'];
+            $dni = $_POST['dniReg'];
+            $tel = $_POST['telReg'];
+            $prov = $_POST['provReg'];
+            $mun = $_POST['munReg'];
+            $dir = $_POST['dirReg'];
+            $cp = $_POST['cpReg'];
+            $num = $_POST['numCasaReg'];
+            $piso = $_POST['pisoReg'];
+            $puerta = $_POST['puertaReg'];
+            $email = $_POST['emailReg'];
+            $clave = '-';
+            $empresa = '-';
+            $activado = 0;
+
+            if ($dni === ''){
+
+                $dni = '-';
+
+            }
+            if ($piso === "") {
+
+                $piso = "-";
+
+            }
+            if ($puerta === "") {
+
+                $puerta = "-";
+
+            }
+
+            require_once "modelo/RegistroModelo.php";
+            $usuarios = new RegistroModelo();
+            $anonimo = $usuarios->insertarUsuario($nombre, $apellidos, $dni, $tel, $prov, $mun, $dir, $cp, $num, $piso, $puerta, $email, $clave, $activado);
+
+            if ($anonimo['resultado'] === true) {
+
+                $registroAnonimo = $usuarios->insertarAnonimo($anonimo['idUsuario']);
+
+                if ($registroAnonimo) {
+
+                    require_once 'modelo/LoginModelo.php';
+                    $logeos = new LoginModelo();
+                    $anonimoActio = $logeos->aceptarAnonimos($anonimo['idUsuario']);
+
+                    $resultado = [
+
+                        'codigo'    => 10,
+                        'usuario'   => $anonimoActio['anonimo'],
+                        'msg'       => 'DATOS DE ENVÍO CORRECTOS'
+
+                    ];
+
+                    echo json_encode($resultado);
+                    //var_dump($resultado);
+
+                }else{
+
+                    $resultado = [
+
+                        'codigo'    => 20,
+                        'msg'       => 'ERROR AL INTRODUCIR EL USUARIO INVITADO'
+
+                    ];
+
+                    echo json_encode($resultado);
+                    //var_dump($resultado);
+
+                }
+            }else{
+
+                $resultado = [
+
+                    'codigo' => 30,
+                    'msg'    => 'NO SE HA PODIDO REGISTRAR AL USUARIO'
+
+                ];
+
+                echo json_encode($resultado);
+                //var_dump($resultado);
+
+            }
+
         }
+
     }

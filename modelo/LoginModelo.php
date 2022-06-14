@@ -95,7 +95,7 @@
             try {
 
                 $sql = "SELECT * FROM usuarios u 
-                        INNER JOIN clientes cli ON cli.id_usuario = u.id_usuario 
+                        INNER JOIN clientes cli ON cli.id_usuario = u.id_usuario
                         WHERE lower(u.email) LIKE lower('$email')";
                 $resultado = $conexion->query($sql);
                 if ($resultado->rowCount() !== 0){
@@ -148,6 +148,51 @@
 
             unset($conexion);
             return $datos;
+
+        }
+
+        function aceptarAnonimos($idUsuario){
+
+            $conexion = $this->conexion;
+            $anonimo = [];
+
+            try {
+
+                $sql = "SELECT * FROM usuarios u 
+                        INNER JOIN anonimos a ON a.id_usuario = u.id_usuario
+                        WHERE u.id_usuario = $idUsuario";
+                $resultado = $conexion->query($sql);
+                if ($resultado->rowCount() !== 0){
+
+                    $fila = $resultado->fetch(PDO::FETCH_OBJ);
+
+                    $anonimo = [
+
+                        'codigo' => 1,
+                        'anonimo'=> $fila
+
+                    ];
+
+                }else{
+
+                    $anonimo = [
+
+                        "codigo" => -1
+
+                    ];
+
+                }
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                echo "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName;
+
+
+            }
+
+            unset($conexion);
+            return $anonimo;
+
 
         }
 

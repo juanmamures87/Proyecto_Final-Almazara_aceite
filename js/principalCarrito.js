@@ -9,6 +9,10 @@ const subtotalCompra = $('#subtotalCompra');
 const envioCompra = $('#envioCompra');
 const totalCompra = $('#totalCompra');
 const finalizarCompra = $('#finalizarCompra');
+const imprimeFactura = $('#imprimeFactura')//Botón de descargar la factura. Oculto por defecto
+imprimeFactura.hide();
+const albaranCompra = $('#albaranCompra');
+const albaranFinal = document.getElementById('albaranFinal');
 
 /*Referencia a los contenedores que contienen los div de inicio de sesión, registro de sesión, pantalla de opacidad
 para la página y contenedor de registro de cliente en el formulario de registro de usuario. Todos ellos guardan relación
@@ -38,7 +42,8 @@ const iconoUsuarioTienda = $('#iconoUsuarioTienda');
 
 const nombreUsuarioSesionTienda = $('#nombreUsuarioSesionTienda');//Div con el botón desplegable con el nombre de usuario
 nombreUsuarioSesionTienda.hide();//Oculto por defecto
-const despUsuario = $('#nombreUsuarioSesionTienda button span').text();//Span del botón desplegable con el nombre de usuario
+const despUsuario = $('#nombreUsuarioSesionTienda button span');//Span del botón desplegable con el nombre de usuario
+const cierreSesionModal = $('#cierreSesionModal');//Botón de cerrar sesión del desplegable del Cliente activo
 
 const nombreUsuarioSesionCarrito = $('#nombreUsuarioSesionCarrito')//Nombre del usuario del carrito
 
@@ -54,6 +59,7 @@ const numCasaReg = $('#numCasaReg');
 const emailReg = $('#emailReg');
 const passReg = $('#passReg');
 const passReg2 = $('#passReg2');
+const emReg = $('#emReg');
 const provReg = document.getElementById('provReg');
 const munReg = document.getElementById('munReg');
 const dirReg = document.getElementById('dirReg');
@@ -64,6 +70,17 @@ const formularioInicioSesion = document.getElementById('formularioInicioSesion')
 const emailInicioSesion = $('#emailInicioSesion');
 const psswInicioSesion = $('#psswInicioSesion');
 
+//Referencia al albarán final de la compra
+const numeroPedido = $('#numeroPedido');
+const fechaPedido = $('#fechaPedido');
+const entregaA  = $('#entregaA');
+const dniEntrega  = $('#dniEntrega');
+const domicilioEntrega  = $('#domicilioEntrega');
+const cuerpoDetalles = $('#cuerpoDetalles');
+const baseImponible  = $('#baseImponible');
+const importeBruto  = $('#importeBruto');
+
+
 /*/////////////////////////////////////////// UTILIZACIÓN DE FUNCIONES /////////////////////////////////////////////*/
 
 /*Función anónima que carga el carrito del usuario que está almacenado en la memoria del navegador. Después de cargar
@@ -71,8 +88,17 @@ todos los productos en el carrito de la compra recoge los precios totales y actu
 compra*/
 $(function () {
 
+    let activo = JSON.parse(sessionStorage.getItem('idClienteActivo'));
+
+    if (activo !== null){
+
+        nombreUsuarioSesionCarrito.text(activo.nombre + " " + activo.apellidos);
+
+    }
+
     if (sessionStorage.getItem('carrito') !== null) {
         let carrito = JSON.parse(sessionStorage.getItem('carrito'));
+
         if (compruebaContenido === 0 && carrito.length > 0) {
 
             for (const i in carrito) {
@@ -141,29 +167,154 @@ cuerpoPaginaCarrito.on('click','.fa.fa-trash-o.fa-1x.basuraProducto.mr-2.mt-5.te
 //Evento sobre el botón de finalizar compra. Donde se revisará si hay un usuario logeado o se pedirá introducir los datos de envío
 finalizarCompra.on('click',function () {
 
-    if (nombreUsuarioSesionCarrito.text() === ''){
+    if (sessionStorage.getItem('idClienteActivo') === null){
 
         inicioSesionUsuario.fadeIn(500);
         contenedorOscuro.fadeIn(200);
 
-    }else if (nombreUsuarioSesionCarrito.text() !== '' && $('div.row.align-items-center.mt-1').length === 0){
+    }else if (sessionStorage.getItem('idClienteActivo') !== null && $('div.row.align-items-center.mt-1').length === 0){
 
         mensajesInfoCorrecto('el carrito está vacio','mensajeErroneo')
 
-    }else if (nombreUsuarioSesionCarrito.text() !== '' && $('div.row.align-items-center.mt-1').length !== 0){
+    }else if (sessionStorage.getItem('idClienteActivo') !== null && $('div.row.align-items-center.mt-1').length !== 0){
 
-        console.log('YA PUEDES COMPRAR');
+        let productosComprados = JSON.parse(sessionStorage.getItem('carrito'));
+        let datosCliente = JSON.parse(sessionStorage.getItem('idClienteActivo'));
+        let idCliente;
+        let idAnonimo;
+
+        let total = parseFloat(totalCompra.text());
+        total = String(total);
+        let productosCarrito = sessionStorage.getItem('carrito');
+
+        let datos = new FormData();
+        datos.append('controlador','carrito');
+        datos.append('accion','insertarCompra');
+        if (datosCliente.id_cliente) {
+
+            idCliente = datosCliente.id_cliente;
+            datos.append('idCliente', idCliente);
+
+        }else if(datosCliente.id_anonimo){
+
+            idAnonimo = datosCliente.id_anonimo;
+            datos.append('idAnonimo', idAnonimo);
+
+        }
+        datos.append('total',total);
+        datos.append('productos',productosCarrito);
+        //console.log(idAnonimo);
+        //console.log(idCliente);
+
+
+        fetch("index.php", {
+
+            method: "POST",
+            body: datos
+
+        })
+
+            .then(response => {
+
+                if (response.ok){
+
+                    return response.json();//tipo de respuesta que esperamos recibir
+
+                }else{
+
+                    throw 'ERROR EN LA LLAMADA AJAX';
+
+                }
+
+            })
+
+            .then(data => {
+
+                //console.log(data);
+                if (data !== null) {
+
+                    if (data.codigo === 1){
+
+                        mensajesInfoCorrecto(data.msg,'mensajeCorrecto');
+
+                        numeroPedido.text(data.idCompra)
+                        fechaPedido.text(dia + "/" + mes + "/" + year);
+                        entregaA.text(datosCliente.nombre + " " + datosCliente.apellidos);
+                        dniEntrega.text(datosCliente.dni);
+                        domicilioEntrega.text(datosCliente.direccion + " " + datosCliente.num_casa + " " +
+                            datosCliente.piso + " " + datosCliente.puerta + ", " + datosCliente.municipio + " - " +
+                            datosCliente.provincia + ", " + datosCliente.cp);
+                        cuerpoDetalles.empty();
+
+                        for (const i in productosComprados) {
+
+                            let importe = productosComprados[i].precioUni * parseFloat(productosComprados[i].cantidad) + '€';
+
+                            cuerpoDetalles.append('<tr>' +
+                                '<td>' + productosComprados[i].cantidad + '</td>' +
+                                '<td>' + productosComprados[i].nombre + '</td>' +
+                                '<td>' + productosComprados[i].precioUni + '€</td>' +
+                                '<td>' + importe + '</td>' +
+                                '</tr>')
+
+                        }
+
+                        let calculoBase = parseFloat(totalCompra.text()) - (parseFloat(totalCompra.text()) * 0.10)
+                        baseImponible.text(calculoBase + '€');
+                        importeBruto.text(parseFloat(totalCompra.text()) + '€');
+                        imprimeFactura.show();
+                        let datosTablaCompras = $('div.row.align-items-center.mt-1')
+                        datosTablaCompras.each(function () {
+
+                            $(this).remove();
+
+                        })
+                        sessionStorage.removeItem('carrito');
+                        if (datosCliente.id_anonimo){
+
+                            sessionStorage.removeItem('idClienteActivo');
+
+                        }
+
+                    }else if (data.codigo === 0 || data.codigo === -1 || data.codigo === -2 || data.codigo === -3){
+
+                        mensajesInfoCorrecto(data.msg,'mensajeErroneo');
+
+                    }
+
+                }else{
+
+                    alert('ERROR EN EL OBJETO RECIBIDO')
+
+                }
+
+            })
+            .catch(err => {
+
+                alert(err);
+
+            })
+
+
 
     }
 
 })
+
+//Evento sobre el botón de imprimir la factura cuando ya se harealizado la venta
+imprimeFactura.on('click',function () {
+
+    imprimeAlbaranFinal();
+    $(this).hide();
+
+});
 
 /*Evento sobre el icono de usuario de la página de la tienda que te da la posibilidad de iniciar sesión. También te
 * ofrece la posibilidad de registrarte abriendo el formulario de datos de envío */
 iconoUsuarioTienda.on('click',function () {
 
 
-    if (despUsuario === "" && nombreUsuarioSesionCarrito.text() === "") {
+    if (sessionStorage.getItem('idClienteActivo') === null) {
 
         inicioSesionUsuario.fadeIn(500);
         contenedorOscuro.fadeIn(200);
@@ -214,6 +365,9 @@ permitirReg.on('click',function () {
     }else{
 
         apartadoRegCLiente.hide();
+        passReg.val('');
+        passReg2.val('');
+        emReg.val('');
 
     }
 
@@ -438,17 +592,44 @@ btnRegistroUsuario.on('click',function (e) {
 
                         },3000);
 
+                        reiniciaOcultaRegistro()
 
                     }else if (data.codigo === 0 || data.codigo === -1){
 
-                        mensajesInfoCorrecto(data.msg,'mensajeCorrecto');
+                        mensajesInfoCorrecto(data.msg,'mensajeErroneo');
+                        reiniciaOcultaRegistro()
 
+                    }else if (data.codigo === 10){
+
+                        let clienteActivo = {
+
+                            id_anonimo: data.usuario.id_anonimo,
+                            id_usuario: data.usuario.id_usuario,
+                            nombre:     data.usuario.nombre,
+                            apellidos:  data.usuario.apellidos,
+                            dni:        data.usuario.dni,
+                            provincia:  data.usuario.provincia,
+                            municipio:  data.usuario.municipio,
+                            direccion: data.usuario.direccion,
+                            cp:         data.usuario.cp,
+                            num_casa:   data.usuario.num_casa,
+                            piso:       data.usuario.piso,
+                            puerta:     data.usuario.puerta
+
+                        };
+
+                        mensajesInfoCorrecto(data.msg,'mensajeCorrecto');
+                        sessionStorage.setItem('idClienteActivo',JSON.stringify(clienteActivo));
+                        reiniciaOcultaRegistro();
+
+                    }else if (data.codigo === 20 || data.codigo === 30){
+
+                        mensajesInfoCorrecto(data.msg,'mensajeErroneo');
+                        reiniciaOcultaRegistro()
+                        
                     }
 
-                    reinicioSelectDir(munReg,dirReg,cpReg);
-                    formularioRegistroUsuarios.reset();
-                    registroUsuario.slideUp(200);
-                    contenedorOscuro.fadeOut(500);
+
 
                 }else{
 
@@ -507,7 +688,26 @@ btnIniciarSesion.on('click',function (e) {
                     if (data.codigo === 1) {
 
                         mensajesInfoCorrecto(data.msg, 'mensajeCorrecto');
-                        console.log(data.usuario.nombre);
+                        despUsuario.text(data.usuario.nombre + " " + data.usuario.apellidos);
+                        nombreUsuarioSesionTienda.show();
+                        nombreUsuarioSesionCarrito.text(data.usuario.nombre + " " + data.usuario.apellidos);
+                        let clienteActivo = {
+
+                            id_cliente: data.usuario.id_cliente,
+                            id_usuario: data.usuario.id_usuario,
+                            nombre:     data.usuario.nombre,
+                            apellidos:  data.usuario.apellidos,
+                            dni:        data.usuario.dni,
+                            provincia:  data.usuario.provincia,
+                            municipio:  data.usuario.municipio,
+                            direccion: data.usuario.direccion,
+                            cp:         data.usuario.cp,
+                            num_casa:   data.usuario.num_casa,
+                            piso:       data.usuario.piso,
+                            puerta:     data.usuario.puerta
+
+                        };
+                        sessionStorage.setItem('idClienteActivo',JSON.stringify(clienteActivo));
                         formularioInicioSesion.reset();
                         contenedorOscuro.fadeOut(500);
                         inicioSesionUsuario.slideUp(200);
@@ -540,6 +740,15 @@ btnIniciarSesion.on('click',function (e) {
             })
 
     }
+
+})
+
+//Evento sobre el botón de cerrar sesión del desplegable del usuario activo
+cierreSesionModal.on('click',function (e) {
+
+    sessionStorage.removeItem('idClienteActivo');
+    despUsuario.text('');
+    nombreUsuarioSesionTienda.hide();
 
 })
 
@@ -631,6 +840,16 @@ function guardarCarritoPaginaCompras() {
     sessionStorage.setItem('carrito',JSON.stringify(carritoCompra));
     setTimeout(eliminaCarritoMemoria,14400000)
 
+}
+
+//Función que reinicia y oculta el formulario de registro
+function reiniciaOcultaRegistro() {
+
+    reinicioSelectDir(munReg,dirReg,cpReg);
+    formularioRegistroUsuarios.reset();
+    registroUsuario.slideUp(200);
+    contenedorOscuro.fadeOut(500);
+    
 }
 
 //Función que muestra los códigos postales en un select según el municipio seleccionado anteriormente
@@ -952,5 +1171,35 @@ function reinicioSelectDir(campoMun, campoDir, campoCp) {
     optionCp.value = "COD.POSTAL";
     optionCp.style.textAlign = "center";
     campoCp.appendChild(optionCp);
+
+}
+
+//Función que crea el pdf a partir de los datos de compra del cliente
+function imprimeAlbaranFinal() {
+
+    html2pdf()
+        .set({
+
+            margin: [-210,-70,0,0],
+            filename: 'Albarán_compra.pdf',
+            image:{
+                type: 'png',
+                quality: 0.98
+            },
+            html2canvas:{
+                scale: 2, // A mayor escala mejores gráficos pero más peso
+                letterRendering: true,
+            },
+            jsPDF:{
+                unit: 'pt',
+                format: 'a4',
+                orientation: 'portrait' //orientación landscape o portrait
+            }
+
+        })
+        .from(albaranFinal)
+        .save()
+        .catch(err => console.log(err))
+        .finally()
 
 }

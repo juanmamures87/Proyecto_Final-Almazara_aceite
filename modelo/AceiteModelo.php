@@ -175,4 +175,47 @@
 
         }
 
+        function actualizaLitrosDeCompra($litros, $idCategoria){
+
+            $conexion = $this->conexion;
+
+            $correcto = true;
+            $conexion->beginTransaction();//deshabilito el modo autocommit
+
+            try {
+
+                $sql = $conexion->prepare("UPDATE aceite SET cantidad_litros = cantidad_litros - ? 
+                                                 WHERE id_cat_aceite = ?");
+                $sql->bindParam(1, $litros);
+                $sql->bindParam(2, $idCategoria);
+                $resultado = $sql->execute();
+
+                if ($resultado) {
+
+                    $conexion->commit();// Se confirma la transacción actual
+
+                } else {
+
+                    $conexion->rollBack();//si no se puede realizar la inserción la transacción vuelve atrás y no se realiza
+                    $correcto = false;
+
+                }
+
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                $usuarios = [
+
+                    "codigo" => -2,
+                    "msg" => "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName
+
+                ];
+                $correcto = false;
+
+            }
+            unset($conexion);
+            return $correcto;
+
+        }
+
     }
