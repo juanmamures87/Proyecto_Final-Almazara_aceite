@@ -1,5 +1,6 @@
 <?php
 
+    //Cargamos los diferentes modelos de la aplicación que nos harán falta
     require_once "modelo/SocioModelo.php";
     $socios = new SocioModelo();
 
@@ -11,6 +12,12 @@
 
     require_once 'modelo/ProductoModelo.php';
     $productos = new ProductoModelo();
+
+    require_once 'modelo/ClienteModelo.php';
+    $clientes = new ClienteModelo();
+
+    require_once 'modelo/DetallaCompraModelo.php';
+    $detalles = new DetallaCompraModelo();
 
     function eliminarSocio(){
 
@@ -55,6 +62,94 @@
         //var_dump($resultado);
 
     }
+
+    function eliminarCliente(){
+
+        if (isset($_POST['idBorrar']) && !empty($_POST['idBorrar'])){
+
+            global $socios;
+
+            $socioEliminado = $socios->eliminarCliente($_POST['idBorrar']);
+
+            if ($socioEliminado){
+
+                $resultado = [
+
+                    "codigo"    => 1,
+                    "msg"       => "ClIENTE ELIMINADO CORRECTAMENTE"
+
+                ];
+
+            }else{
+
+                $resultado = [
+
+                    "codigo"    => 0,
+                    "msg"       => "EL CLIENTE NO PUDO ELIMINARSE"
+
+                ];
+
+            }
+
+        }else{
+
+            $resultado = [
+
+                "codigo"    => -1,
+                "msg"       => "ERROR!! NO SE HA RECIBIDO EL ID DE CLIENTE A BORRAR"
+
+            ];
+
+        }
+
+        echo json_encode($resultado);
+        //var_dump($resultado);
+
+    }
+
+    function eliminarAnonimo(){
+
+    if (isset($_POST['idBorrar']) && !empty($_POST['idBorrar'])){
+
+        global $socios;
+
+        $socioEliminado = $socios->eliminarAnonimo($_POST['idBorrar']);
+
+        if ($socioEliminado){
+
+            $resultado = [
+
+                "codigo"    => 1,
+                "msg"       => "INVITADO ELIMINADO CORRECTAMENTE"
+
+            ];
+
+        }else{
+
+            $resultado = [
+
+                "codigo"    => 0,
+                "msg"       => "EL INVITADO NO PUDO ELIMINARSE"
+
+            ];
+
+        }
+
+    }else{
+
+        $resultado = [
+
+            "codigo"    => -1,
+            "msg"       => "ERROR!! NO SE HA RECIBIDO EL ID DE USUARIO A BORRAR"
+
+        ];
+
+    }
+
+    echo json_encode($resultado);
+    //var_dump($resultado);
+
+}
 
     function actualizarSocio(){
 
@@ -121,6 +216,31 @@
         }
 
     }
+
+    function paginarClientes(){
+
+        if (isset($_POST['pagina'])) {
+
+            global $clientes;
+            $paginar = $clientes->mostrarClientes($_POST['pagina']);
+            echo json_encode($paginar);
+
+        }
+
+    }
+
+    function paginarVentas(){
+
+        if (isset($_POST['pagina'])) {
+
+            global $detalles;
+            $paginar = $detalles->mostrarVentas($_POST['pagina']);
+            echo json_encode($paginar);
+
+        }
+
+    }
+
 
     //////////////////////////////////////////// ZONA DE LAS PARCELAS /////////////////////////////////////////////////
 

@@ -177,6 +177,79 @@
 
         }
 
+        function eliminarCliente($idSocio){
+
+            $correcto = true;
+            $conexion = $this->conexion;
+            $conexion->beginTransaction();//deshabilito el modo autocommit
+
+            try {
+
+                $sql = $conexion->prepare("DELETE usuarios, clientes 
+                                                 FROM usuarios 
+                                                 JOIN clientes ON usuarios.id_usuario = clientes.id_usuario 
+                                                 WHERE clientes.id_usuario = ?");
+                $sql->bindParam(1, $idSocio);
+                $resultado = $sql->execute();
+                if ($resultado) {
+
+                    $conexion->commit();// Se confirma la transacción actual
+
+                } else {
+
+                    $conexion->rollBack();//si no se puede realizar la inserción la transacción vuelve atrás y no se realiza
+                    $correcto = false;
+
+                }
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                echo "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName;
+
+                $correcto = false;
+            }
+
+            unset($conexion);
+            return $correcto;
+
+        }
+
+        function eliminarAnonimo($idAnonimo){
+
+            $correcto = true;
+            $conexion = $this->conexion;
+            $conexion->beginTransaction();//deshabilito el modo autocommit
+
+            try {
+
+                $sql = $conexion->prepare("DELETE usuarios, anonimos 
+                                                 FROM usuarios 
+                                                 JOIN anonimos ON usuarios.id_usuario = anonimos.id_usuario 
+                                                 WHERE anonimos.id_usuario = ?");
+                $sql->bindParam(1, $idAnonimo);
+                $resultado = $sql->execute();
+                if ($resultado) {
+
+                    $conexion->commit();// Se confirma la transacción actual
+
+                } else {
+
+                    $conexion->rollBack();//si no se puede realizar la inserción la transacción vuelve atrás y no se realiza
+                    $correcto = false;
+
+                }
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                echo "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName;
+                $correcto = false;
+            }
+
+            unset($conexion);
+            return $correcto;
+
+        }
+
         function actualizarSocio($id, $tel, $prov, $mun, $dir, $cp, $num_casa, $piso, $puerta, $email, $acceso, $tipo, $fechaBaja){
 
             $conexion = $this->conexion;

@@ -1,5 +1,6 @@
 <?php
 
+    //Cargamos los diferentes modelos de la aplicación que nos harán falta
     require_once 'modelo/DetallaCompraModelo.php';
     $detalles = new DetallaCompraModelo();
 
@@ -82,7 +83,7 @@
 
                             "codigo" => 1,
                             'idCompra' => $insertaCompra['idCompra'],
-                            "msg" => 'COMPRA REALIZADA CORRECTAMENTE. PUEDE DESCARGAR EL ALBARÁN'
+                            "msg" => 'COMPRA CORRECTA. PUEDE DESCARGAR EL ALBARÁN'
 
                         ];
 

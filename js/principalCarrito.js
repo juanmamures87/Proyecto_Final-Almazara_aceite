@@ -122,6 +122,11 @@ $(function () {
 y los precios a pagar*/
 cuerpoPaginaCarrito.on('input','.form-input.cantidadCarrito', function () {
 
+    if ($(this).val() < 1){
+
+        $(this).val(1);
+
+    }
     let filaProducto = $('div.row.align-items-center.mt-1');
     let sumaTotal = 0;
 
@@ -621,6 +626,7 @@ btnRegistroUsuario.on('click',function (e) {
                         mensajesInfoCorrecto(data.msg,'mensajeCorrecto');
                         sessionStorage.setItem('idClienteActivo',JSON.stringify(clienteActivo));
                         reiniciaOcultaRegistro();
+                        finalizarCompra.trigger('click');
 
                     }else if (data.codigo === 20 || data.codigo === 30){
 
@@ -1180,7 +1186,7 @@ function imprimeAlbaranFinal() {
     html2pdf()
         .set({
 
-            margin: [-210,-70,0,0],
+            margin: [-240,-70,0,0],
             filename: 'Albarán_compra.pdf',
             image:{
                 type: 'png',

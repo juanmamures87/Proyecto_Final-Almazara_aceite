@@ -1,5 +1,6 @@
 <?php
 
+    //Librería externa para crear un servicio soap y poder consultar el catastro
     require_once "librerias/nusoap/lib/nusoap.php";
 
     function muestraMunicipio(){

@@ -309,9 +309,92 @@
 
     <article id="seccionClientes" hidden>
 
-      <h1 class="tituloSeccion">Clientes</h1>
-      <div class="registroSeccion">Registro</div>
-      <div class="muestraSeccion">Mostrar</div>
+      <h1 class="tituloSeccion" id="tituloSeccionClientes">Clientes</h1>
+      <div class="muestraSeccion" id="mostrarSeccionClientes">
+
+        <table class="table table-striped" id="tablaClientes">
+          <thead>
+          <tr>
+            <th scope="col">Usuario</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellidos</th>
+            <th scope="col">Teléfono</th>
+            <th scope="col">Provincia</th>
+            <th scope="col">Municipio</th>
+            <th scope="col">Dirección</th>
+            <th scope="col">Cp</th>
+            <th scope="col">Número</th>
+            <th scope="col">Piso</th>
+            <th scope="col">Puerta</th>
+            <th scope="col">Email</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Eliminar</th>
+          </tr>
+          </thead>
+          <tbody>
+          <?php
+
+              if (isset($mostrarClientes) && !empty($mostrarClientes)){
+
+                  //Aquí guardamos el número de páginas que tendremos en la paginación, recogido del modelo a través del controlador
+                  $paginasPaginacion = $mostrarClientes['paginas'];
+                  //Eliminamos el valor de la paginación del array de los usuarios para no tener problemas al sacar datos
+                  unset($mostrarClientes['paginas']);
+                  foreach ($mostrarClientes as $valor){
+
+                      foreach ($valor as $cliente){
+
+                        $cliente->password === '-' ? $tipo = 'Anónimo' : $tipo = 'Cliente';
+
+                          ?>
+                        <tr>
+                          <th><?php echo $cliente->id_usuario; ?></th>
+                          <td><?php echo $cliente->nombre; ?></td>
+                          <td><?php echo $cliente->apellidos; ?></td>
+                          <td><?php echo $cliente->telefono; ?></td>
+                          <td><?php echo $cliente->provincia; ?></td>
+                          <td><?php echo $cliente->municipio; ?></td>
+                          <td><?php echo $cliente->direccion; ?></td>
+                          <td><?php echo $cliente->cp; ?></td>
+                          <td><?php echo $cliente->num_casa; ?></td>
+                          <td><?php echo $cliente->piso; ?></td>
+                          <td><?php echo $cliente->puerta; ?></td>
+                          <td><?php echo $cliente->email; ?></td>
+                          <td><?php echo $tipo ?></td>
+                          <td><i title="Pulse para eliminar el cliente seleccionado" class="fa fa-trash-o fa-2x clientes" aria-hidden="true"></i></td>
+                        </tr>
+
+                          <?php
+                      }
+                  }
+
+              }
+
+          ?>
+          </tbody>
+        </table>
+
+        <nav aria-label="Page navigation example" id="navPaginacionClientes">
+          <ul title="Pulse para cambiar de página o actualizar" class="pagination justify-content-center">
+              <?php
+
+                  if (isset($paginasPaginacion)) {
+                      for ($i = 1; $i <= $paginasPaginacion;$i++){
+                          ?>
+
+                        <li data-pagina="<?php echo $i ?>" class="page-item"><a class="page-link" href=""><?php echo $i ?></a></li>
+
+                          <?php
+                      }
+                  }
+              ?>
+          </ul>
+          <div class="text-center w-25 m-auto text-decoration-underline">
+            <span id="muestraPaginaClientes"></span>
+          </div>
+        </nav>
+
+      </div>
 
     </article>
 
@@ -333,6 +416,11 @@
             <select class="form-select" name="selSocioParcela" id="selSocioParcela">
               <option class="text-center" value="SOCIOS">SOCIOS</option>
             </select>
+          </div>
+          <div class="col-sm-2">
+            <label class="visually-hidden" for="refCatParcela">Ref. Catastral</label>
+            <input type="text" class="form-control" minlength="14" maxlength="20" id="refCatParcela" name="refCatParcela"
+                   placeholder="Ref. Catastral">
           </div>
           <div class="col-sm-2">
             <label class="visually-hidden" for="selProvParcela">Provincia</label>
@@ -365,11 +453,6 @@
               <option class="text-center" value="MUNICIPIO">MUNICIPIO</option>
 
             </select>
-          </div>
-          <div class="col-sm-2">
-            <label class="visually-hidden" for="refCatParcela">Ref. Catastral</label>
-            <input type="text" class="form-control" minlength="14" maxlength="20" id="refCatParcela" name="refCatParcela"
-                   placeholder="Ref. Catastral">
           </div>
           <div class="col-sm-1">
             <label class="visually-hidden" for="polParcela">Polígono</label>
@@ -943,9 +1026,86 @@
 
     <article id="seccionVentas" hidden>
 
-      <h1 class="tituloSeccion">Ventas</h1>
-      <div class="registroSeccion">Registro</div>
-      <div class="muestraSeccion">Mostrar</div>
+      <h1 class="tituloSeccion" id="tituloVentas">Ventas</h1>
+      <div class="muestraSeccion" id="mostrarVentas">
+
+        <table class="table table-striped" id="tablaVentas">
+          <thead>
+          <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellidos</th>
+            <th scope="col">Email</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Dcto.</th>
+            <th scope="col">Unidades</th>
+            <th scope="col">Pvp</th>
+            <th scope="col">Total</th>
+            <th scope="col">Fecha Compra</th>
+          </tr>
+          </thead>
+          <tbody>
+          <?php
+
+              if (isset($mostrarVentas) && !empty($mostrarVentas)){
+
+                  //Aquí guardamos el número de páginas que tendremos en la paginación, recogido del modelo a través del controlador
+                  $paginasPaginacion = $mostrarVentas['paginas'];
+                  //Eliminamos el valor de la paginación del array de los usuarios para no tener problemas al sacar datos
+                  unset($mostrarVentas['paginas']);
+                  foreach ($mostrarVentas as $valor){
+
+                      foreach ($valor as $ventas){
+
+                          $ventas->password === '-' ? $tipoVenta = 'Anónimo' : $tipoVenta = 'Cliente';
+
+                          $extraerFecha = explode('-',$ventas->fecha_compra) ;//date($socio->fecha_alta);
+                          $nuevaFechaCompra = $extraerFecha[2] . "/" . $extraerFecha[1] . "/" . $extraerFecha[0];
+                          ?>
+                        <tr>
+                          <td><?php echo $ventas->nombre; ?></td>
+                          <td><?php echo $ventas->apellidos; ?></td>
+                          <td><?php echo $ventas->email; ?></td>
+                          <td><?php echo $tipoVenta ?></td>
+                          <td><?php echo $ventas->descripcion; ?></td>
+                          <td><?php echo $ventas->dcto; ?></td>
+                          <td><?php echo $ventas->unidades; ?></td>
+                          <td><?php echo $ventas->pvp; ?></td>
+                          <td><?php echo $ventas->total; ?></td>
+                          <td><?php echo $nuevaFechaCompra; ?></td>
+                        </tr>
+
+                          <?php
+                      }
+                  }
+
+              }
+
+          ?>
+          </tbody>
+        </table>
+
+        <nav aria-label="Page navigation example" id="navPaginacionVentas">
+          <ul title="Pulse para cambiar de página o actualizar" class="pagination justify-content-center">
+              <?php
+
+                  if (isset($paginasPaginacion)) {
+                      for ($i = 1; $i <= $paginasPaginacion;$i++){
+                          ?>
+
+                        <li data-pagina="<?php echo $i ?>" class="page-item"><a class="page-link" href=""><?php echo $i ?></a></li>
+
+                          <?php
+                      }
+                  }
+              ?>
+          </ul>
+          <div class="text-center w-25 m-auto text-decoration-underline">
+            <span id="muestraPaginaVentas"></span>
+          </div>
+        </nav>
+
+      </div>
 
     </article>
 

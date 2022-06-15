@@ -123,6 +123,11 @@ cuerpoPaginaTienda.on('click','.btn.btn-primary.addCarrito',function (e) {
 las cantidades de producto y con lo cual el precio a pagar*/
 cuerpoZonaCarritoSuperior.on('input','input.form-input.cantidad',function () {
 
+    if ($(this).val() < 1){
+
+        $(this).val(1);
+
+    }
     calculoCarrito();
     guardarCarrito();
 

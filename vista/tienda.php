@@ -215,9 +215,11 @@
                 <h5 class="card-title precio">
                     <?php
                         $precioProducto = ($producto->litros_recipiente * $producto->recipiente) * $producto->precio;
+                        $precioProducto = round($precioProducto,2);
                         if ($producto->dcto > 0){
 
                             $precioDcto = $precioProducto - ($precioProducto * ($producto->dcto/100));
+                            $precioDcto = round($precioDcto,2);
                             echo "<del>$precioProducto €</del> $precioDcto €";
 
                         }else{
@@ -268,9 +270,11 @@
                 <h5 class="card-title precio">
                     <?php
                         $precioProducto = ($producto->litros_recipiente * $producto->recipiente) * $producto->precio;
+                        $precioProducto = round($precioProducto,2);
                         if ($producto->dcto > 0){
 
                             $precioDcto = $precioProducto - ($precioProducto * ($producto->dcto/100));
+                            $precioDcto = round($precioDcto,2);
                             echo "<del>$precioProducto €</del> $precioDcto €";
 
                         }else{

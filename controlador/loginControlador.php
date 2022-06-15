@@ -1,5 +1,6 @@
 <?php
 
+    //Cargamos los diferentes modelos de la aplicación que nos harán falta
     require_once "librerias/nusoap/lib/nusoap.php";
     require_once "modelo/LoginModelo.php";
     $logeos = new LoginModelo();
@@ -12,6 +13,12 @@
 
     require_once "modelo/ProductoModelo.php";
     $productos = new ProductoModelo();
+
+    require_once 'modelo/ClienteModelo.php';
+    $clientes = new ClienteModelo();
+
+    require_once 'modelo/DetallaCompraModelo.php';
+    $detalles = new DetallaCompraModelo();
 
     function inicioSocios(){
 
@@ -45,6 +52,15 @@
                 global $socios;
                 $pagina = 1;
                 $mostrarSocios = $socios->mostrarSocios($pagina);
+
+                //Llamamos a la función para mostrar todos los clientes y anónimos en la página del administrador
+                global $clientes;
+                $mostrarClientes = $clientes->mostrarClientes($pagina);
+
+                /*Llamamos a la función para mostrar todas las ventas que se han realizado en la tienda indicando los
+                datos más relevantes de cada una*/
+                global $detalles;
+                $mostrarVentas = $detalles->mostrarVentas($pagina);
 
                 //Llamamos a la función que mostrará las categorías de aceite registradas, para poder insertar un producto
                 global $productos;
@@ -146,7 +162,7 @@
                 $resultado = [
 
                     'codigo' => 2,
-                    'msg' => "USUARIO SIN PERMISO PARA ACCEDER. PÓNGASE EN CONTACTO CON EL ADMINISTRADOR"
+                    'msg' => "USUARIO SIN PERMISO. CONTACTE CON EL ADMINISTRADOR"
 
                 ];
 
@@ -168,7 +184,7 @@
                 $resultado = [
 
                     'codigo' => -1,
-                    'msg' => "LOS DATOS INTRODUCIDOS NO CORRESPONDEN A NINGÚN CLIENTE"
+                    'msg' => "LOS DATOS NO COINCIDEN CON NINGÚN USUARIO"
 
                 ];
 

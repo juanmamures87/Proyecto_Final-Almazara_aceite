@@ -1,5 +1,6 @@
 <?php
 
+    //Controlador que verificará el correo de un usuario registrado como cliente y al que se le requiere confirmación
     function activar(){
 
         if (isset($_GET['email']) && !empty($_GET['email']) && isset($_GET['token']) && !empty($_GET['token'])) {

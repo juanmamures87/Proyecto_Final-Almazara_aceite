@@ -48,7 +48,8 @@
 
 /* Tarjetas donde se renderizan las imágenes y datos del producto */
 .card.tarjetaAOVE, .card.tarjetaAOV{width: 45%;
-    margin-bottom: 10px;}
+    margin-bottom: 10px;
+    height: 550px;}
 
 /* Posición y color de los datos de la tarjeta */
 .card-img-top{height: 50%}
@@ -73,10 +74,10 @@
     }
 
 .mensajeCorrecto{background-color: #CDFFAE;
-    max-width: 100%;}
+    min-width: 50%;}
 
 .mensajeErroneo{background-color: #FCA8A8;
-    max-width: 100%;}
+    min-width: 50%;}
 
 /*********************************************************************************************************************/
 /******************************************* FIN DE PÁGINA DE LA TIENDA ************************************************/

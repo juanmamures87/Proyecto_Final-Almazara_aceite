@@ -1,5 +1,6 @@
 <?php
 
+    //Inicio de las diferentes secciones de la aplicación. Se utiliza un archivo htacces para que la url sea más amigable
     function portada(){
 
         require_once "vista/index.html";

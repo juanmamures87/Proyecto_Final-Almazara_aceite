@@ -69,6 +69,8 @@ for (let i = 0; i < enlaces.length; i++){
 
 //Referencia al apartado solo de socios
 const seccionSocios = $("#seccionSocios");
+const seccionClientes = $('#seccionClientes')
+const seccionVentas = $('#seccionVentas');
 
 //Referencia a los campos de provincia, municipio, dirección y código postal y sus respectivos campos alternativos.
 const provSocio = document.getElementById("provSocio");
@@ -94,12 +96,23 @@ const muestraActiv = document.getElementById("muestraActiv");
 
 /** Evento sobre los botones de las páginas de paginación de la zona de los socios **/
 const tablaJQsocios = $("#tablaSocios tbody");
+const tablaClientes = $('#tablaClientes tbody');
+const tablaVentas = $('#tablaVentas tbody')
 const numeracionPaginacion = $("#navPaginacionSocios ul");
 const muestraPaginaSocios = $("#muestraPaginaSocios");
+const navPaginacionClientes = $('#navPaginacionClientes ul');
+const muestraPaginaClientes = $('#muestraPaginaClientes');
+const navPaginacionVentas = $('#navPaginacionVentas ul');
+const muestraPaginaVentas = $('#muestraPaginaVentas');
 
 
 ////////////////////////////////////////////// UTILIZACIÓN DE FUNCIONES //////////////////////////////////////////////
 
+//Elimina un usuario de la tabla de socios
+eliminarUsuario(seccionSocios);
+
+//Elimina un cliente de la tabla de clientes
+eliminarUsuario(seccionClientes);
 
 /////////////////////////////////////////////////// EVENTOS /////////////////////////////////////////////////////////
 
@@ -496,74 +509,6 @@ activoSocio.addEventListener("click",function (){
 
 })
 
-//Evento sobre el icono de la papelera de la tabla para eliminar a los socios y, por lo tanto, al usuario de la BBDD
-seccionSocios.on("click", ".fa.fa-trash-o.fa-2x",function () {
-
-    //Seleccionamos el primer hermano td que contiene el id de socio
-    let idUsuarioBorrar = $(this).parent().siblings(':first').html();
-    sessionStorage.setItem("idBorrar",idUsuarioBorrar);
-
-    if (confirm('¿Está seguro de eliminar a ' + $(this).parent().siblings(':nth-child(3)').html() + ", "
-        + $(this).parent().siblings(':nth-child(2)').html() + '?')) {
-
-        $(this).closest('tr').remove();
-        let datos = new FormData();
-        datos.append("controlador", "admin");
-        datos.append("accion", "eliminarSocio");
-        datos.append("idBorrar", sessionStorage.getItem("idBorrar"));
-        fetch("index.php", {
-
-            method: "POST",
-            body: datos
-
-        })
-
-            .then(response => {
-
-                if (response.ok) {
-
-                    return response.json();//tipo de respuesta que esperamos recibir
-
-                } else {
-
-                    throw 'alert("¡¡ERROR EN LA RESPUESTA DEL SERVIDOR!!")'
-
-                }
-
-            })
-
-            .then(data => {
-
-                if (data !== null) {
-
-                    if (data.codigo === 1) {
-
-                        mostrarMsgCorrecto(data.msg);
-                        ocultarMsgRetardo();
-
-                    } else if (data.codigo === 0 || data.codigo === -1) {
-
-                        mostrarMsgError(data.msg);
-                        ocultarMsgRetardo();
-
-                    }
-
-                } else {
-
-                    alert("¡¡OBJETO RECIBIDO INCORRECTO!!")
-
-                }
-
-            })
-            .catch(err => {
-
-                alert(err);
-
-            })
-    }
-
-})
-
 //Evento sobre el icono de modificar socio
 seccionSocios.on("click",".fa.fa-pencil-square-o.fa-2x",function () {
 
@@ -771,6 +716,198 @@ seccionSocios.on("click",".page-item",function (e) {
 
 })
 
+//Evento sobre los botones de la paginación de la tabla de los clientes
+seccionClientes.on("click",".page-item",function (e) {
+
+    e.preventDefault();
+
+    let datos = new FormData();
+    datos.append("pagina",this.dataset.pagina);
+    datos.append("controlador","admin");
+    datos.append("accion","paginarClientes");
+
+    fetch("index.php", {
+
+        method: "POST",
+        body: datos
+
+    })
+
+        .then(response => {
+
+            if (response.ok){
+
+                return response.json();//tipo de respuesta que esperamos recibir
+
+            }else{
+
+                throw 'alert("¡¡ERROR EN LA RESPUESTA DEL SERVIDOR!!")'
+
+            }
+
+        })
+
+        .then(data => {
+
+            if (data !== null) {
+
+                let paginas = data.paginas;
+                tablaClientes.empty();
+                let tipo;
+
+                for (let j = 0; j < data.usuarios.length; j++) {
+
+                    if (data.usuarios[j].password === '-'){
+
+                        tipo = 'Anónimo';
+
+                    }else{
+
+                        tipo = 'Cliente';
+
+                    }
+
+                    tablaClientes.append('<tr>' +
+                        '<th>' + data.usuarios[j].id_usuario + '</th>' +
+                        '<td>' + data.usuarios[j].nombre + '</td>' +
+                        '<td>' + data.usuarios[j].apellidos + '</td>' +
+                        '<td>' + data.usuarios[j].telefono + '</td>'+
+                        '<td>' + data.usuarios[j].provincia + '</td>'+
+                        '<td>' + data.usuarios[j].municipio + '</td>' +
+                        '<td>' + data.usuarios[j].direccion + '</td>' +
+                        '<td>' + data.usuarios[j].cp + '</td>' +
+                        '<td>' + data.usuarios[j].num_casa + '</td>' +
+                        '<td>' + data.usuarios[j].piso + '</td>' +
+                        '<td>' + data.usuarios[j].puerta + '</td>' +
+                        '<td>' + data.usuarios[j].email + '</td>' +
+                        '<td>' + tipo + '</td>' +
+                        '<td><i title="Pulse para eliminar el socio seleccionado" class="fa fa-trash-o fa-2x" aria-hidden="true"></i></td>' +
+                        '</tr>');
+
+                }
+
+                navPaginacionClientes.empty();
+
+                for (let i = 1; i <= paginas; i++) {
+
+                    navPaginacionClientes.append('<li data-pagina="' + i + '" class="page-item"><a class="page-link" ' +
+                        'href="">' + i + '</a></li>');
+
+                }
+
+                muestraPaginaClientes.text(this.dataset.pagina);
+
+            }else{
+
+                alert("¡¡OBJETO RECIBIDO INCORRECTO!!")
+
+            }
+
+        })
+        .catch(err => {
+
+            alert(err);
+
+        })
+
+})
+
+//Evento sobre los botones de la paginación de la tabla de las ventas
+seccionVentas.on("click",".page-item",function (e) {
+
+    e.preventDefault();
+
+    let datos = new FormData();
+    datos.append("pagina",this.dataset.pagina);
+    datos.append("controlador","admin");
+    datos.append("accion","paginarVentas");
+
+    fetch("index.php", {
+
+        method: "POST",
+        body: datos
+
+    })
+
+        .then(response => {
+
+            if (response.ok){
+
+                return response.json();//tipo de respuesta que esperamos recibir
+
+            }else{
+
+                throw 'alert("¡¡ERROR EN LA RESPUESTA DEL SERVIDOR!!")'
+
+            }
+
+        })
+
+        .then(data => {
+
+            if (data !== null) {
+
+                let paginas = data.paginas;
+                tablaVentas.empty();
+                let tipo;
+
+                for (let j = 0; j < data.usuarios.length; j++) {
+
+
+                    let extraerFecha = data.usuarios[j].fecha_compra.split("-");
+                    let nuevaFechaCompra = extraerFecha[2] + "/" + extraerFecha[1] + "/" + extraerFecha[0];
+
+                    if (data.usuarios[j].password === '-'){
+
+                        tipo = 'Anónimo';
+
+                    }else{
+
+                        tipo = 'Cliente';
+
+                    }
+
+                    tablaVentas.append('<tr>' +
+                        '<td>' + data.usuarios[j].nombre + '</td>' +
+                        '<td>' + data.usuarios[j].apellidos + '</td>' +
+                        '<td>' + data.usuarios[j].email + '</td>' +
+                        '<td>' + tipo + '</td>' +
+                        '<td>' + data.usuarios[j].descripcion + '</td>' +
+                        '<td>' + data.usuarios[j].dcto + '</td>' +
+                        '<td>' + data.usuarios[j].unidades + '</td>' +
+                        '<td>' + data.usuarios[j].pvp + '</td>' +
+                        '<td>' + data.usuarios[j].total + '</td>' +
+                        '<td>' + nuevaFechaCompra + '</td>' +
+                        '</tr>');
+
+                }
+
+                navPaginacionVentas.empty();
+
+                for (let i = 1; i <= paginas; i++) {
+
+                    navPaginacionVentas.append('<li data-pagina="' + i + '" class="page-item"><a class="page-link" ' +
+                        'href="">' + i + '</a></li>');
+
+                }
+
+                muestraPaginaVentas.text(this.dataset.pagina);
+
+            }else{
+
+                alert("¡¡OBJETO RECIBIDO INCORRECTO!!")
+
+            }
+
+        })
+        .catch(err => {
+
+            alert(err);
+
+        })
+
+})
+
 //////////////////////////////////////////////////// FUNCIONES ////////////////////////////////////////////////////////
 
 //Función que muestra los códigos postales en un select según el municipio seleccionado anteriormente
@@ -858,6 +995,92 @@ function reinicioSelectDir(campoProv, campoMun, campoDir, campoCp) {
 
 }
 
+/*Función que eliminará un usuario de la base de datos. Se le pasa por parámetro la sección donde se encuentra la tabla que contenga
+los usuarios que se desean eliminar también se eliminarán de la base de datos*/
+function eliminarUsuario(seccion) {
+
+    seccion.on("click", ".fa.fa-trash-o.fa-2x",function () {
+
+        //Seleccionamos el primer hermano td que contiene el id de socio
+        let idUsuarioBorrar = $(this).parent().siblings(':first').html();
+        let tipo = $(this).parent().siblings(':nth-child(13)').html();
+
+        if (confirm('¿Está seguro de eliminar a ' + $(this).parent().siblings(':nth-child(3)').html() + ", "
+            + $(this).parent().siblings(':nth-child(2)').html() + '?')) {
+
+            $(this).closest('tr').remove();
+            let datos = new FormData();
+            datos.append("controlador", "admin");
+
+            if(tipo === 'Anónimo') {
+
+                datos.append("accion", "eliminarAnonimo");
+
+            }else if(tipo === 'Cliente'){
+
+                datos.append("accion", "eliminarCliente");
+
+            }else{
+
+                datos.append("accion", "eliminarSocio");
+
+            }
+
+            datos.append("idBorrar", idUsuarioBorrar);
+            fetch("index.php", {
+
+                method: "POST",
+                body: datos
+
+            })
+
+                .then(response => {
+
+                    if (response.ok) {
+
+                        return response.json();//tipo de respuesta que esperamos recibir
+
+                    } else {
+
+                        throw 'alert("¡¡ERROR EN LA RESPUESTA DEL SERVIDOR!!")'
+
+                    }
+
+                })
+
+                .then(data => {
+
+                    if (data !== null) {
+
+                        if (data.codigo === 1) {
+
+                            mostrarMsgCorrecto(data.msg);
+                            ocultarMsgRetardo();
+
+                        } else if (data.codigo === 0 || data.codigo === -1) {
+
+                            mostrarMsgError(data.msg);
+                            ocultarMsgRetardo();
+
+                        }
+
+                    } else {
+
+                        alert("¡¡OBJETO RECIBIDO INCORRECTO!!")
+
+                    }
+
+                })
+                .catch(err => {
+
+                    alert(err);
+
+                })
+        }
+
+    })
+
+}
 
 
 

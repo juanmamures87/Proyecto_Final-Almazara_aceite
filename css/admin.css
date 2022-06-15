@@ -170,6 +170,26 @@ body {
 .fa.fa-trash-o:hover, .fa.fa-pencil-square-o:hover{cursor: pointer;}
 
 /********************************************************************************************************************/
+/************************** CONTENEDOR DEL APARTADO DE LOS CLIENTES ******************************************/
+/********************************************************************************************************************/
+
+
+#seccionClientes{display: grid;
+    gap: 10px;
+    grid-template: "tituloClientes"     50px
+                   "mostrarClientes"    100vh/
+                    100vw;}
+
+#tituloSeccionClientes{grid-area: tituloClientes;
+    background-color: white;
+}
+
+#mostrarSeccionClientes{grid-area: mostrarClientes;
+    background-color: #fffcc2;
+}
+
+#tablaClientes{width: 100%}
+/********************************************************************************************************************/
 /************************** CONTENEDOR DEL APARTADO DE LAS PARCELAS ******************************************/
 /********************************************************************************************************************/
 
@@ -331,3 +351,23 @@ body {
     width: 15%;}
 
 #mostrarLitosDisponibles label{font-weight: bold;}
+
+/********************************************************************************************************************/
+/************************** CONTENEDOR DEL APARTADO DE LAS VENTAS ******************************************/
+/********************************************************************************************************************/
+
+#seccionVentas{display: grid;
+    gap: 10px;
+    grid-template: "tituloVentas"     50px
+                   "mostrarVentas"    100vh/
+                    100vw;}
+
+#tituloVentas{grid-area: tituloVentas;
+    background-color: white;
+}
+
+#mostrarVentas{grid-area: mostrarVentas;
+    background-color: #fffcc2;
+}
+
+#tablaVentas{width: 100%}
