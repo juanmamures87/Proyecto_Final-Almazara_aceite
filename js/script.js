@@ -527,8 +527,7 @@
 				}
 			}
 
-			//Clave puesta de Pablo para el mapa de contacto
-			/*AIzaSyDVY7ecjisONwD60ie5YnHTkVQ0xyWZf0o*/
+
 			$.getScript('//maps.google.com/maps/api/js?key=CLAVE_DE_GOOGLE_MAPS&sensor=false&libraries=geometry,places&v=quarterly', function () {
 				var head = document.getElementsByTagName('head')[0],
 					insertBefore = head.insertBefore;
