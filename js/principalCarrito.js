@@ -265,7 +265,7 @@ finalizarCompra.on('click',function () {
                         }
 
                         let calculoBase = parseFloat(totalCompra.text()) - (parseFloat(totalCompra.text()) * 0.10)
-                        baseImponible.text(calculoBase + '€');
+                        baseImponible.text(calculoBase.toFixed(2) + '€');
                         importeBruto.text(parseFloat(totalCompra.text()) + '€');
                         imprimeFactura.show();
                         let datosTablaCompras = $('div.row.align-items-center.mt-1')
@@ -599,7 +599,7 @@ btnRegistroUsuario.on('click',function (e) {
 
                         reiniciaOcultaRegistro()
 
-                    }else if (data.codigo === 0 || data.codigo === -1){
+                    }else if (data.codigo === 0 || data.codigo === -1 || data.codigo === -2){
 
                         mensajesInfoCorrecto(data.msg,'mensajeErroneo');
                         reiniciaOcultaRegistro()

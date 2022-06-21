@@ -564,57 +564,68 @@
 
             require_once "modelo/RegistroModelo.php";
             $usuarios = new RegistroModelo();
-            $cliente = $usuarios->insertarUsuario($nombre, $apellidos, $dni, $tel, $prov, $mun, $dir, $cp, $num, $piso, $puerta, $email, $clave, $activado);
 
-            if ($cliente['resultado'] === true) {
+            $compruebaUsuarios = $usuarios->compruebaUsuarios($nombre, $apellidos, $dni, $tel, $email);
+            if ($compruebaUsuarios > 0){
 
-                $registroCliente = $usuarios->insertarCliente($cliente['idUsuario'],$empresa);
+                $resultado = [
 
-                if ($registroCliente) {
+                    "codigo" => -2,
+                    "msg" => 'ESTE USUARIO YA SE ENCUENTRA REGISTRADO. INICIE SESIÓN'
 
-                    $token = $usuarios->tokenClientes($email, $clave);
+                ];
 
-                    $nombreCompleto = $nombre . " " . $apellidos;
-                    $mailConfirm = $usuarios->correoConfirmacionClientes($nombreCompleto, $clave, $email, $token);
+            }else {
 
-                    $mailConfirm ? $envio = "Consulte su correo para verificar la cuenta" : $envio = "El correo de verificación no pudo ser enviado";
+                $cliente = $usuarios->insertarUsuario($nombre, $apellidos, $dni, $tel, $prov, $mun, $dir, $cp, $num, $piso, $puerta, $email, $clave, $activado);
 
-                    $resultado = [
+                if ($cliente['resultado'] === true) {
 
-                        "codigo" => 1,
-                        "msgCorreo" => $envio,
-                        "msg" => "CLIENTE REGISTRADO CORRECTAMENTE"
+                    $registroCliente = $usuarios->insertarCliente($cliente['idUsuario'], $empresa);
 
-                    ];
+                    if ($registroCliente) {
 
-                    //var_dump($resultado);
+                        $token = $usuarios->tokenClientes($email, $clave);
+
+                        $nombreCompleto = $nombre . " " . $apellidos;
+                        $mailConfirm = $usuarios->correoConfirmacionClientes($nombreCompleto, $clave, $email, $token);
+
+                        $mailConfirm ? $envio = "Consulte su correo para verificar la cuenta" : $envio = "El correo de verificación no pudo ser enviado";
+
+                        $resultado = [
+
+                            "codigo" => 1,
+                            "msgCorreo" => $envio,
+                            "msg" => "CLIENTE REGISTRADO CORRECTAMENTE"
+
+                        ];
+
+                    } else {
+
+                        $resultado = [
+
+                            "codigo" => 0,
+                            "msg" => "DATOS INVÁLIDOS. NO PUDO REGISTRARSE EL USUARIO"
+
+                        ];
+
+                    }
 
                 } else {
 
                     $resultado = [
 
-                        "codigo" => 0,
-                        "msg" => "DATOS ERRONEOS. NO PUDO REGISTRARSE EL USUARIO"
+                        "codigo" => -1,
+                        "msg" => $cliente['msg']
 
                     ];
 
                 }
-
-            } else {
-
-                $resultado = [
-
-                    "codigo" => -1,
-                    "msg" => $cliente['msg']
-
-                ];
-
             }
 
             echo json_encode($resultado);
-            //var_dump($resultado);
 
-        }elseif(empty($_POST['passReg'])){
+        }elseif(empty($_POST['passReg'])) {
 
             $nombre = $_POST['nombreReg'];
             $apellidos = $_POST['apeReg'];
@@ -632,7 +643,7 @@
             $empresa = '-';
             $activado = 0;
 
-            if ($dni === ''){
+            if ($dni === '') {
 
                 $dni = '-';
 
@@ -650,56 +661,67 @@
 
             require_once "modelo/RegistroModelo.php";
             $usuarios = new RegistroModelo();
-            $anonimo = $usuarios->insertarUsuario($nombre, $apellidos, $dni, $tel, $prov, $mun, $dir, $cp, $num, $piso, $puerta, $email, $clave, $activado);
 
-            if ($anonimo['resultado'] === true) {
+            require_once 'modelo/LoginModelo.php';
+            $logeos = new LoginModelo();
 
-                $registroAnonimo = $usuarios->insertarAnonimo($anonimo['idUsuario']);
+            $compruebaUsuarios = $usuarios->compruebaUsuarios($nombre, $apellidos, $dni, $tel, $email);
+            if ($compruebaUsuarios > 0) {
 
-                if ($registroAnonimo) {
-
-                    require_once 'modelo/LoginModelo.php';
-                    $logeos = new LoginModelo();
-                    $anonimoActio = $logeos->aceptarAnonimos($anonimo['idUsuario']);
-
-                    $resultado = [
-
-                        'codigo'    => 10,
-                        'usuario'   => $anonimoActio['anonimo'],
-                        'msg'       => 'DATOS DE ENVÍO CORRECTOS'
-
-                    ];
-
-                    echo json_encode($resultado);
-                    //var_dump($resultado);
-
-                }else{
-
-                    $resultado = [
-
-                        'codigo'    => 20,
-                        'msg'       => 'ERROR AL INTRODUCIR EL USUARIO INVITADO'
-
-                    ];
-
-                    echo json_encode($resultado);
-                    //var_dump($resultado);
-
-                }
-            }else{
+                $anonimoActio = $logeos->aceptarAnonimos($compruebaUsuarios);
 
                 $resultado = [
 
-                    'codigo' => 30,
-                    'msg'    => 'NO SE HA PODIDO REGISTRAR AL USUARIO'
+                    'codigo' => 10,
+                    'usuario' => $anonimoActio['anonimo'],
+                    'msg' => 'ESTE USUARIO YA SE ENCUENTRA REGISTRADO. DATOS RECUPERADOS'
 
                 ];
 
-                echo json_encode($resultado);
-                //var_dump($resultado);
+            } else {
+
+                $anonimo = $usuarios->insertarUsuario($nombre, $apellidos, $dni, $tel, $prov, $mun, $dir, $cp, $num, $piso, $puerta, $email, $clave, $activado);
+
+                if ($anonimo['resultado'] === true) {
+
+                    $registroAnonimo = $usuarios->insertarAnonimo($anonimo['idUsuario']);
+
+                    if ($registroAnonimo) {
+
+                        $anonimoActio = $logeos->aceptarAnonimos($anonimo['idUsuario']);
+
+                        $resultado = [
+
+                            'codigo' => 10,
+                            'usuario' => $anonimoActio['anonimo'],
+                            'msg' => 'DATOS DE ENVÍO CORRECTOS'
+
+                        ];
+
+                    } else {
+
+                        $resultado = [
+
+                            'codigo' => 20,
+                            'msg' => 'ERROR AL INTRODUCIR EL USUARIO INVITADO'
+
+                        ];
+
+                    }
+
+                } else {
+
+                    $resultado = [
+
+                        'codigo' => 30,
+                        'msg' => 'NO SE HA PODIDO REGISTRAR AL USUARIO'
+
+                    ];
+
+                }
 
             }
-
+            echo json_encode($resultado);
         }
 
     }

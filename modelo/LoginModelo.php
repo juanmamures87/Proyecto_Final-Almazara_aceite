@@ -193,7 +193,6 @@
             unset($conexion);
             return $anonimo;
 
-
         }
 
     }

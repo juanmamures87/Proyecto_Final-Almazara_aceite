@@ -242,6 +242,41 @@
 
         }
 
+        function compruebaUsuarios($nombre, $ape, $dni, $tel, $email){
+
+            $conexion = $this->conexion;
+            $encontrado = 0;
+
+            try{
+
+                $sql = "SELECT id_usuario, nombre, apellidos, dni, telefono, email
+                        FROM usuarios
+                        WHERE UPPER(nombre) = UPPER('$nombre')
+                        AND UPPER(apellidos) = UPPER('$ape')
+                        AND UPPER(dni) = UPPER('$dni')
+                        AND UPPER(telefono) = UPPER('$tel')
+                        AND UPPER(email) = UPPER('$email')";
+                $resultado = $conexion->query($sql);
+                if ($resultado->rowCount() !== 0) {
+
+                    $fila = $resultado->fetch(PDO::FETCH_OBJ);
+                    $encontrado = $fila->id_usuario;
+
+
+                }
+
+            }catch (PDOException $e){
+
+                $errorName = $e->getMessage();
+                //echo "ERROR DE CONEXIÓN CON LA BASE DE DATOS \n Modelo: " . get_class($this) . "\nMensaje: " . $errorName;
+
+            }
+
+            unset($conexion);
+            return $encontrado;
+
+        }
+
         function tokenClientes($email, $clave){
 
             $conexion = $this->conexion;
